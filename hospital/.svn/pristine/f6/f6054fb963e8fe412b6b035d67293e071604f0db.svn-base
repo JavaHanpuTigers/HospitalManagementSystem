@@ -1,0 +1,115 @@
+ /* 卡片样式 */
+ 
+ .text {
+     font-size: 16px;
+ }
+ 
+ .item {
+     margin-bottom: 18px;
+ }
+ 
+ .clearfix:before,
+ .clearfix:after {
+     display: table;
+     content: " ";
+ }
+ 
+ .clearfix:after {
+     clear: both;
+ }
+ 
+ .box-card {
+     width: 80%;
+     height: 600px;
+     margin: auto;
+ }
+ /* 导航菜单背景样式 */
+ 
+ .head-bdc {
+     opacity: 0.8;
+     margin-left: -20px;
+     margin-top: -100px;
+     padding-top: 80px;
+     padding-left: 20px;
+     height: 800px;
+     width: 18%;
+     background-color: hotpink;
+     position: relative;
+ }
+ 
+ .head-title {
+     margin-top: -40px;
+     margin-bottom: 18px;
+ }
+ /*  主体内容样式*/
+ 
+ .body-content {
+     width: 90%;
+     margin: 0px auto;
+     /* background-color: hotpink; */
+ }
+ 
+ .el-collapse-item__header {
+     background-color: hotpink;
+ }
+ 
+ .el-collapse-item__content {
+     background-color: hotpink;
+ }
+ /* 下拉菜单样式 */
+ 
+ .el-dropdown-link {
+     cursor: pointer;
+     color: #409EFF;
+ }
+ 
+ .el-icon-arrow-down {
+     font-size: 12px;
+ }
+ 
+ .demonstration {
+     display: block;
+     color: #8492a6;
+     font-size: 14px;
+     margin-bottom: 20px;
+ }
+ /* routerlink的样式控制 */
+ 
+ .router-link {
+     text-decoration: none;
+     font-weight: bold;
+ }
+ 
+ .dditem>.router-link {
+     text-decoration: none;
+     color: #409EFF;
+ }
+ /* 天气插件样式 */
+ 
+ .clearfix {
+     position: relative;
+     height: 33px;
+     padding-top: 10px;
+ }
+ 
+ .clearfix-frame {
+     position: absolute;
+     margin-left: 230px;
+     margin-top: -30px;
+ }
+ 
+ .el-button--text {
+     margin-top: 20px;
+ }
+ /* 徽章样式 */
+ 
+ .badge-item {
+     margin-top: 15px;
+     /* margin-left: 20px; */
+     margin-left: 85%;
+ }
+ /* 界面样式调整 */
+ 
+ .el-collapse {
+     border-top: none;
+ }

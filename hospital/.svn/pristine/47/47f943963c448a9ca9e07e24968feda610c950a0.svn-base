@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="css/element_ui.css">
+    <link rel="stylesheet" href="css/index.css">
+    <!-- 引入组件库 -->
+    <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
+    <script src="js/axios.js"></script>
+    <script src="js/element_ui.js"></script>
+    <script src="components/home.js"></script>
+</head>
+
+<body>
+    <div id="dv">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <!-- 长沙的温度情况 -->
+                <iframe class="clearfix-frame" allowtransparency="true" frameborder="0" width="385" height="96" scrolling="no" src="http://tianqi.2345.com/plugin/widget/index.htm?s=1&z=1&t=0&v=0&d=3&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=385&h=90&align=center"></iframe>
+                <el-badge :value="1" class="badge-item">
+                    <el-button type="primary" icon="el-icon-message-solid" size="mini" circle></el-button>
+                </el-badge>
+                <el-button style="float: right; padding: 3px 0" type="text"><i class="el-icon-user-solid"></i>
+                    <el-dropdown trigger="click">
+                        <span class="el-dropdown-link">
+        张三<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item class="dditem">
+                                <router-link to="/userinfo" class="router-link">个人信息</router-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item class="dditem">
+                                <router-link to="/userset" class="router-link">用户设置</router-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item class="dditem">
+                                <router-link to="/useredit" class="router-link">注销账号</router-link>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-button>
+            </div>
+            <!-- 核心界面 -->
+            <el-row>
+                <el-col :span="4" class="head-bdc">
+                    <div class="head-title">
+                        <span style="font-weight: bold;">医院管理系统&nbsp;<i class="el-icon-first-aid-kit" style="font-size: 20px;font-weight: bold;color: rgb(160, 16, 16);"></i></span>
+                    </div>
+                    <div class="text item">
+                        <!--菜单部分-->
+                        <el-collapse v-model="activeName" accordion>
+                            <el-collapse-item title="首页" name="0">
+                                <router-link to="/" class="router-link">欢迎使用医院管理系统</router-link>
+                            </el-collapse-item>
+                            <el-collapse-item title="挂号收费" name="1">
+                                <router-link to="/user" class="router-link">病人挂号</router-link>
+                            </el-collapse-item>
+                            <el-collapse-item title="门诊管理" name="2">
+                            <ul style="list-style: none;padding: 0px;margin: 0px;">
+                                <li><router-link to="/prescribe">面诊</router-link></li>
+                                <li><router-link to="/call">叫号信息</router-link></li>
+                                <li><router-link to="/prescriptionRecords">处方记录</router-link></li>
+                                <li><router-link to="/lookAppointment">查看预约</router-link></li>
+                             </ul>
+                            </el-collapse-item>
+                            <el-collapse-item title="员工管理" name="3">
+                                <router-link to="/person" class="router-link">人事管理</router-link>
+                            </el-collapse-item>
+                            <el-collapse-item title="待建设" name="4">
+                                <router-link to="/other" class="router-link">其他</router-link>
+                            </el-collapse-item>
+                        </el-collapse>
+                        <!-- 温馨提示 -->
+                        <div style="padding-top: 20px;">
+                            <h3>温馨提示：</h3>
+                            {{ganmao}}<br/><br/>
+                            <span>当前温度：<i>{{wendu}}℃</i></span>
+                            <!-- <img src="images/hope2.png" style="width: 200px;height: 130px;margin-left: -20px;margin-top: 5px;" alt="祝愿您早日康复"> -->
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="20">
+                    <div class="body-content">
+                        <router-view></router-view>
+                    </div>
+                </el-col>
+            </el-row>
+        </el-card>
+    </div>
+</body>
+
+<script>
+    new Vue({
+        el: "#dv ",
+        router,
+        data: {
+            activeName: '0',
+            wendu: "",
+            ganmao: "",
+        },
+        methods: {
+            // 获取长沙当天的天气情况
+            getWea: function() {
+                axios.get("http://wthrcdn.etouch.cn/weather_mini?city=长沙")
+                    .then(res => {
+                        // 获取实时感冒风险评估
+                        this.ganmao = res.data.data.ganmao;
+                        // 获取实时温度
+                        this.wendu = res.data.data.wendu;
+                    })
+            }
+        },
+        created() {
+            this.getWea();
+        }
+    })
+</script>
+
+</html>

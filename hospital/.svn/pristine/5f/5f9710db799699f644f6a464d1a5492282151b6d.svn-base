@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="css/element_ui.css">
+    <!-- 引入组件库 -->
+    <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
+    <script src="js/element_ui.js"></script>
+</head>
+
+<body>
+    <div id="dv">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>医院管理系统</span>
+                <el-button style="float: right; padding: 3px 0" type="text"><i class="el-icon-user-solid"></i>账户信息</el-button>
+            </div>
+
+            <!-- 核心界面 -->
+            <el-row>
+                <el-col :span="3">
+                    <div class="text item">
+                        <!--菜单部分-->
+                        <el-collapse v-model="activeName" accordion>
+                            <el-collapse-item title="首页" name="0">
+                                <router-link to="/">首页</router-link>
+                                <!-- <router-link to="/main">首页2</router-link> -->
+                            </el-collapse-item>
+                            <el-collapse-item title="挂号收费" name="1">
+                                <router-link to="/user">病人挂号</router-link>
+                            </el-collapse-item>
+                            <el-collapse-item title="门诊管理" name="2">
+                                <router-link to="/doctor">医生会诊</router-link>
+                            </el-collapse-item>
+                            <el-collapse-item title="员工管理" name="3">
+                                <router-link to="/person">人事管理</router-link>
+                            </el-collapse-item>
+                            <el-collapse-item title="待建设" name="4">
+                                <router-link to="/other">其他</router-link>
+                            </el-collapse-item>
+                        </el-collapse>
+                    </div>
+                </el-col>
+                <el-col :span="21">
+                    <div class="body-content">
+                        <router-view></router-view>
+                    </div>
+                </el-col>
+            </el-row>
+        </el-card>
+
+    </div>
+</body>
+<style>
+    /* 卡片样式 */
+    
+    .text {
+        font-size: 14px;
+    }
+    
+    .item {
+        margin-bottom: 18px;
+    }
+    
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    
+    .clearfix:after {
+        clear: both;
+    }
+    
+    .box-card {
+        width: 90%;
+        height: 600px;
+        margin: auto;
+    }
+    /* 导航菜单背景样式 */
+    
+    .head-bdc {
+        background-color: #165E82;
+        opacity: 0.8;
+        margin-top: -20px;
+        margin-left: -20px;
+        text-align: center;
+    }
+    /*  主体内容样式*/
+    
+    .body-content {
+        /* background-color: hotpink; */
+        width: 90%;
+        margin: 0px auto;
+    }
+</style>
+
+<script>
+    // const MainContent = resolve => require.ensure([], () => resolve(require('@/components/Index')))
+    // 导入相关组件
+    // const index = () =>
+    //     import ('@/components/Index.vue')
+    let index = {
+        template: `
+            <div>
+                 欢迎来到医院管理系统
+            </div>
+        `
+    }
+    let user = {
+        template: `
+            <div>
+                 这里您可以进行挂号服务
+            </div>
+        `
+    }
+    let doctor = {
+        template: `
+            <div>
+                 医生可以叫病人啦
+            </div>
+        `
+    }
+    let person = {
+        template: `
+            <div>
+                 在这里可以进行员工管理
+            </div>
+        `
+    }
+    let other = {
+            template: `
+            <div>
+                 未开发的模块....
+            </div>
+        `
+        }
+        // 新建路由
+    const router = new VueRouter({
+        routes: [{
+            path: '/',
+            component: index
+        }, {
+            path: '/user',
+            component: user
+        }, {
+            path: '/doctor',
+            component: doctor
+        }, {
+            path: '/person',
+            component: person
+        }, {
+            path: '/other',
+            component: other
+        }]
+    })
+    new Vue({
+        el: "#dv",
+        router,
+        data: {
+            activeName: '0'
+        }
+    })
+</script>
+
+</html>
