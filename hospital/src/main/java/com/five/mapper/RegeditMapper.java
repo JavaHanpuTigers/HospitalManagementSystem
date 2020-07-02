@@ -22,7 +22,7 @@ import com.five.pojo.User;
 @Mapper
 public interface RegeditMapper {
 	
-	@Select("select * from doctor ")
+	@Select("select * from doctor where s_id = #{id}")
 	@Results( id="doctMap",value =  {
 		@Result(id = true,column = "d_id",property  = "id"),
 		@Result(column = "d_name",property  = "name"),
@@ -39,7 +39,7 @@ public interface RegeditMapper {
 			)
 	
 	})
-	public List<Doctor> doctorAll();
+	public List<Doctor> doctorAll(int id);
 	
 	@Select("select * from doctor where d_id = #{id}")
 	@ResultMap({"doctMap"})

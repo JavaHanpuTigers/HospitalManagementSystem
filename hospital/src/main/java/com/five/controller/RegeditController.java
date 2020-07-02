@@ -25,8 +25,7 @@ public class RegeditController {
 	RegeditMapper regMapper;
 	@GetMapping
 	public List<Doctor> home() {
-		
-		return regMapper.doctorAll();
+		return regMapper.doctorAll(1);
 	}
 	@GetMapping("/{id}")
 	public Doctor get( @PathVariable int id) {
