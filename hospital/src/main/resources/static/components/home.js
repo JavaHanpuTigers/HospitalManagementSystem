@@ -80,7 +80,7 @@ const router = new VueRouter({
             component: useredit
         }, {
             path: '/user',
-            component: user
+            component: registration
         },
         {
             path: '/call',
