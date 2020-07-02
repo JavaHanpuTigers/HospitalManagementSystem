@@ -1,47 +1,72 @@
 package com.five.pojo;
 
-import java.io.Serializable;
 
-/**    
-* @author: yesenchao
-* @date: 2020年7月2日 上午10:48:40 
-* @Description: 处方实体
-*/
-public class Prescript implements Serializable{
-	private static final long serialVersionUID = -290666639087527383L;
-	int id; //处方id
-	String Sym; //症状信息 
-	String content; //处方内容
-	String time; //开处方时间
-	int reg;   //挂号id
+/**
+ * 处方表
+ * @author 俞峰龙
+ *
+ */
+public class Prescript {
+	
+	// 处方编号
+	private int id;
+	
+	// 症状信息
+	private String sym;
+	
+	// 处方内容
+	private String content;
+	
+	// 开处方内容
+	private String time;
+	
+	// 挂号编号
+	Regedit reg;
+
+	// 构造方法
+	public Prescript() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	// 属性的get和set的方法
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getSym() {
-		return Sym;
+		return sym;
 	}
+
 	public void setSym(String sym) {
-		Sym = sym;
+		this.sym = sym;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	public String getTime() {
 		return time;
 	}
+
 	public void setTime(String time) {
 		this.time = time;
 	}
-	public int getReg() {
+
+	public Regedit getReg() {
 		return reg;
 	}
-	public void setReg(int reg) {
+
+	public void setReg(Regedit reg) {
 		this.reg = reg;
 	}
 	
