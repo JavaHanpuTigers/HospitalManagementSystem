@@ -20,9 +20,9 @@ public class Doctor {
 	
 	private double fee; // 就诊费用
 	
-	private Subment subment;
+	private Subment subment; // 子科室信息
 	
-	private User user;
+	private User user; // 用户信息角色
 
 	public int getId() {
 		return id;

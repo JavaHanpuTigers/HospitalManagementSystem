@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.five.service.RegeditService;
@@ -33,10 +34,13 @@ public class RegeditSerivceImpl implements RegeditService{
 	}
 	public static void main(String[] args) {
 
-		 Calendar calendar=Calendar.getInstance();   
-		 calendar.setTime(new Date()); 
-		 System.out.println(calendar.get(Calendar.DAY_OF_MONTH));//今天的日期 
-		 calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)+15);//让日期加1  
-		 System.out.println(calendar.get(Calendar.DATE));//加1之后的日期Top 
+//		 Calendar calendar=Calendar.getInstance();   
+//		 calendar.setTime(new Date()); 
+//		 System.out.println(calendar.get(Calendar.DAY_OF_MONTH));//今天的日期 
+//		 calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)+15);//让日期加1  
+//		 System.out.println(calendar.get(Calendar.DATE));//加1之后的日期Top 
+//		 
+		 ;
+		 System.out.println(new BCryptPasswordEncoder().encode("123456"));
 	}
 }
