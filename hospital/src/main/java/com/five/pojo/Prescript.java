@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Prescript implements Serializable{
 	private static final long serialVersionUID = -290666639087527383L;
 	int id; //处方id
-	String Sym; //症状信息
+	String Sym; //症状信息 
 	String content; //处方内容
 	String time; //开处方时间
 	int reg;   //挂号id
