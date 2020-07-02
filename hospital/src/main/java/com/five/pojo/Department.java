@@ -9,11 +9,11 @@ import java.util.List;
  */
 public class Department {
 	
-	int id; // 科室id
+	private int id; // 科室id
 	
-	String name; // 科室名称
+	private String name; // 科室名称
 	
-	List<Subment> subdept; // 子科室信息
+	private List<Subment> subdept; // 子科室信息
 
 	
 	

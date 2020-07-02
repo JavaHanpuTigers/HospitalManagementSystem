@@ -7,11 +7,11 @@ package com.five.pojo;
  */
 public class Subment {
 	
-	int id; // 子科室id
+	private int id; // 子科室id
 	
-	String name; // 子科室名称
+	private String name; // 子科室名称
 	 
-	Department dept; // 科室id
+	private Department dept; // 科室id
 
 	public Subment() {
 		super();
