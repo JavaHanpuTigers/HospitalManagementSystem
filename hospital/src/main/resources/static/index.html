@@ -6,12 +6,17 @@
     <title>首页啊</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="css/element_ui.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/index.css">
     <!-- 引入组件库 -->
     <script src="js/vue.js"></script>
     <script src="js/vue-router.js"></script>
     <script src="js/axios.js"></script>
     <script src="js/element_ui.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="components/personnel.js"></script>
     <script src="components/outpatient.js"></script>
     <script src="components/registration.js"></script>
     <script src="components/home.js"></script>
@@ -76,8 +81,18 @@
                                     </li>
                                 </ul>
                             </el-collapse-item>
-                            <el-collapse-item title="员工管理" name="3">
-                                <router-link to="/person" class="router-link">人事管理</router-link>
+                            <el-collapse-item title="人事管理" name="3">
+                                <div class="personnel">
+                                    <el-row>
+                                        <router-link tag="p" to="/staff">员工管理</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link tag="p" to="/dept">科室管理</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link tag="p" to="/scheduling">工作排班</router-link>
+                                    </el-row>
+                                </div>
                             </el-collapse-item>
                             <el-collapse-item title="待建设" name="4">
                                 <router-link to="/other" class="router-link">其他</router-link>

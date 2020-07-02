@@ -95,9 +95,47 @@ const router = new VueRouter({
             path: '/lookAppointment',
             component: lookAppointment
         }, {
-            path: '/person',
-            component: person
+        path: '/staff',
+        component: staff,
+        children: [{
+            path: '/',
+            component: checkStaff
         }, {
+            path: 'addStaff',
+            component: addStaff
+        }, {
+            path: 'checkStaff',
+            component: checkStaff
+        }]
+
+    }, {
+        path: '/dept',
+        component: dept,
+        children: [{
+            path: '/',
+            component: checkDept
+        }, {
+            path: 'addDept',
+            component: addDept
+        }, {
+            path: 'checkDept',
+            component: checkDept
+        }]
+    }, {
+        path: '/scheduling',
+        component: scheduling,
+        children: [{
+            path: '/',
+            component: checkScheduling
+        }, {
+            path: 'addScheduling',
+            component: addScheduling
+        }, {
+            path: 'checkScheduling',
+            component: checkScheduling
+        }]
+
+    }, {
             path: '/other',
             component: other
         }
