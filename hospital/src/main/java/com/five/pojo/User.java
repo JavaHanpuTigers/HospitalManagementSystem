@@ -9,7 +9,7 @@ public class User {
 	
 	private String password; //用户密码
 	
-	private int role; // 用户角色
+	private Role role; // 用户角色
 
 	
 	
@@ -18,7 +18,7 @@ public class User {
 
 
 
-	public User(int id, String name, String password, int role) {
+	public User(int id, String name, String password, Role role) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -64,13 +64,13 @@ public class User {
 
 
 
-	public int getRole() {
+	public Role getRole() {
 		return role;
 	}
 
 
 
-	public void setRole(int role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
