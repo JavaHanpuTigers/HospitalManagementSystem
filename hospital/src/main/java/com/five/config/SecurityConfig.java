@@ -67,6 +67,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/").permitAll()
 			.antMatchers("/reg","/reg/*").hasRole("患者")
 			.antMatchers("/hr","/hr/*").hasRole("人事")
+			//.antMatchers("/reg","/reg/*").hasRole("患者")
+			// 添加api接口实现查询挂号信息，实现查询全部科室
 			//.antMatchers("/admin","/admin/*").hasRole("ADMIN")
 			//.anyRequest().authenticated()
 			.and()
