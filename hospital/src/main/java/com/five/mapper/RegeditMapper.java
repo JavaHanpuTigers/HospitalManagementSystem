@@ -2,6 +2,7 @@ package com.five.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Result;
@@ -9,7 +10,9 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
+import com.five.pojo.Department;
 import com.five.pojo.Doctor;
+import com.five.pojo.Regedit;
 import com.five.pojo.Subment;
 import com.five.pojo.User;
 
@@ -34,15 +37,14 @@ public interface RegeditMapper {
 		@Result(column = "s_id",property  = "subment" ,javaType = Subment.class,
 			one = @One(select = "com.five.mapper.RegeditMapper.getSubmentByid")
 				),
-		@Result(column = "u_id",property  = "user" ,javaType = User.class,
-		one = @One(select = "com.five.mapper.RegeditMapper.getUserByid")
-			)
 	
 	})
+	// 获取指定科室的全部医生
 	public List<Doctor> doctorAll(int id);
 	
 	@Select("select * from doctor where d_id = #{id}")
 	@ResultMap({"doctMap"})
+	// 获取指定的医生
 	public Doctor getDoctorByid(int id);
 	
 	
@@ -52,6 +54,7 @@ public interface RegeditMapper {
 		@Result(id = true ,column = "s_name",property = "name")
 		
 	})
+	//  查询指定id的子科室信息
 	public Subment getSubmentByid(int id);
 	
 	@Select("select * from user where u_id = #{id}")
@@ -59,5 +62,39 @@ public interface RegeditMapper {
 		@Result(id = true,column = "u_id" ,property = "id"),
 		@Result(column = "u_name",property = "name")
 	})
+	// 查询指定id的user信息
 	public User getUserByid(int id);
+	
+	
+	@Select("SELECT * FROM department ") //LEFT JOIN subment ON department.`dp_id` = subment.`dp_id`
+	@Results( id="deparMap" ,value = {
+		@Result(id = true,column = "dp_id",property = "id"),
+		@Result(column = "dp_name",property = "name"),
+		@Result(
+				column = "dp_id",property = "subdept",javaType = List.class,
+				many = @Many(select = "com.five.mapper.RegeditMapper.selectsubmAll")
+				) 
+	})
+	// 查询全部科室和子科室
+	public List<Department>  selectDeparAll();
+	
+	// 查询科室id下的子科室
+	@Select("select * from subment where dp_id = #{id}")
+	@ResultMap({"submentMap"})
+	public List<Subment> selectsubmAll(int id);
+	
+	//查询全部挂号信息
+	@Select("SELECT * FROM register where p_id = #{id}")
+	@Results({
+		@Result(column = "rt_id",property = "id"),
+		@Result(column = "rt_time",property = "time"),
+		@Result(column = "rt_date",property = "date"),
+		@Result(column = "rt_name",property = "name"),
+		@Result(column = "rt_sex",property = "sex"),
+		@Result(column = "rt_card",property = "card"),
+		@Result(column = "rt_nation",property = "nation"),
+		@Result(column = "rt_fee",property = "fee"),
+		@Result(column = "rt_state",property = "state"),
+	})
+	public List<Regedit> selectRegAll(int id);
 }

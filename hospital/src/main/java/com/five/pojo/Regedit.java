@@ -8,7 +8,7 @@ public class Regedit {
 	
 		private int id; // 挂号ID
 		
-		private User user; // 用户
+		private Patient pant; // 用户
 	
 		private Doctor doct; // 医生
 	
@@ -28,6 +28,29 @@ public class Regedit {
 		
 		private String state; // 患者状态
 
+		
+		
+		public Regedit() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+
+		public Regedit(int id, Patient pant, Doctor doct, String time, String date, String name, String sex,
+				String card, String nation, double fee, String state) {
+			super();
+			this.id = id;
+			this.pant = pant;
+			this.doct = doct;
+			this.time = time;
+			this.date = date;
+			this.name = name;
+			this.sex = sex;
+			this.card = card;
+			this.nation = nation;
+			this.fee = fee;
+			this.state = state;
+		}
+
 		public int getId() {
 			return id;
 		}
@@ -36,12 +59,12 @@ public class Regedit {
 			this.id = id;
 		}
 
-		public User getUser() {
-			return user;
+		public Patient getPant() {
+			return pant;
 		}
 
-		public void setUser(User user) {
-			this.user = user;
+		public void setPant(Patient pant) {
+			this.pant = pant;
 		}
 
 		public Doctor getDoct() {
@@ -116,4 +139,12 @@ public class Regedit {
 			this.state = state;
 		}
 
+		@Override
+		public String toString() {
+			return "Regedit [id=" + id + ", pant=" + pant + ", doct=" + doct + ", time=" + time + ", date=" + date
+					+ ", name=" + name + ", sex=" + sex + ", card=" + card + ", nation=" + nation + ", fee=" + fee
+					+ ", state=" + state + "]";
+		}
+
+		
 }
