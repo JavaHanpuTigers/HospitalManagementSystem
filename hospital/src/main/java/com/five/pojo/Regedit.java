@@ -8,7 +8,7 @@ public class Regedit {
 	
 		private int id; // 挂号ID
 		
-		private User user; // 用户
+		private Patient pant; // 用户
 	
 		private Doctor doct; // 医生
 	
@@ -27,6 +27,16 @@ public class Regedit {
 		private double fee; // 就诊费用
 		
 		private String state; // 患者状态
+		
+		private String phone; // 患者电话
+
+		public String getPhone() {
+			return phone;
+		}
+
+		public void setPhone(String phone) {
+			this.phone = phone;
+		}
 
 		public int getId() {
 			return id;
@@ -36,12 +46,12 @@ public class Regedit {
 			this.id = id;
 		}
 
-		public User getUser() {
-			return user;
+		public Patient getPant() {
+			return pant;
 		}
 
-		public void setUser(User user) {
-			this.user = user;
+		public void setPant(Patient pant) {
+			this.pant = pant;
 		}
 
 		public Doctor getDoct() {

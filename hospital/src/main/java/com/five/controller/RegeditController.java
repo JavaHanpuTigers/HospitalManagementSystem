@@ -37,4 +37,6 @@ public class RegeditController {
 		
 		return regSerivce.getDate();
 	}
+	
+	
 }
