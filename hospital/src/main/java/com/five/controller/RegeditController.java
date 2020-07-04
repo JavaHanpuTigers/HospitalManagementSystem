@@ -35,12 +35,20 @@ public class RegeditController {
 		//return regSerivce.getDoctorByid(id);
 		return null;
 	}
+	
+	
+	
+	
 	// 获取当前时间 返回当前时间和结束时间
 	@GetMapping("/date")
 	public Map<String, String> nowDate(){
 		
 		return regSerivce.getDate();
 	}
+	
+	
+	
+	
 	// 查询全部科室信息
 	@GetMapping("/dept")
 	public List<Department> allDepart(){
@@ -51,7 +59,7 @@ public class RegeditController {
 	@GetMapping("/{id}")
 	public List<Regedit> regByidAll( 
 			@PathVariable int id){
-		System.out.println("asdfasd");
+		
 		return regSerivce.regAll(id);
 	}
 }
