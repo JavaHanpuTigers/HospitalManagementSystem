@@ -47,6 +47,7 @@ public class RegeditController {
 	}
 	
 	
+
 	
 	
 	// 查询全部科室信息
@@ -62,4 +63,5 @@ public class RegeditController {
 		
 		return regSerivce.regAll(id);
 	}
+
 }

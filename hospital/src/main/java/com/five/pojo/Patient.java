@@ -19,7 +19,7 @@ public class Patient {
 	
 	String sex; // 患者性别
 	
-	User uer; // 用户id
+	User user; // 用户id
 
 	
 	
@@ -30,7 +30,7 @@ public class Patient {
 
 
 
-	public Patient(int id, String name, String card, int age, String nation, String sex, User uer) {
+	public Patient(int id, String name, String card, int age, String nation, String sex, User user) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -38,7 +38,7 @@ public class Patient {
 		this.age = age;
 		this.nation = nation;
 		this.sex = sex;
-		this.uer = uer;
+		this.user = user;
 	}
 
 	 
@@ -115,14 +115,14 @@ public class Patient {
 
 
 
-	public User getUer() {
-		return uer;
+	public User getUser() {
+		return user;
 	}
 
 
 
-	public void setUer(User uer) {
-		this.uer = uer;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 
@@ -130,7 +130,7 @@ public class Patient {
 	@Override
 	public String toString() {
 		return "Patient [id=" + id + ", name=" + name + ", card=" + card + ", age=" + age + ", nation=" + nation
-				+ ", sex=" + sex + ", uer=" + uer + "]";
+				+ ", sex=" + sex + ", user=" + user + "]";
 	}
 	
 	

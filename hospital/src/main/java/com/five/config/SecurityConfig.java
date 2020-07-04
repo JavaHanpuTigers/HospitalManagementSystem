@@ -66,6 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 			.antMatchers("/").permitAll()
 			//.antMatchers("/reg","/reg/*").hasRole("患者")
+			.antMatchers("/reg","/reg/*").hasRole("患者")
+			.antMatchers("/hr","/hr/*").hasRole("人事")
+			//github.com/JavaHanpuTigers/HospitalManagementSystem.git
 			//.antMatchers("/admin","/admin/*").hasRole("ADMIN")
 			//.anyRequest().authenticated()
 			.and()

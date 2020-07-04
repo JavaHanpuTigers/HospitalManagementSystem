@@ -27,6 +27,16 @@ public class Regedit {
 		private double fee; // 就诊费用
 		
 		private String state; // 患者状态
+		
+		private String phone; // 患者电话
+
+		public String getPhone() {
+			return phone;
+		}
+
+		public void setPhone(String phone) {
+			this.phone = phone;
+		}
 
 		
 		
