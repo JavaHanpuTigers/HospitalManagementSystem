@@ -2,6 +2,8 @@ package com.five.mapper;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
@@ -10,6 +12,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
+import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
 import com.five.pojo.Regedit;
@@ -97,4 +100,19 @@ public interface RegeditMapper {
 		@Result(column = "rt_state",property = "state"),
 	})
 	public List<Regedit> selectRegAll(int id);
+	
+	// 查询医生的排班时间
+	@Select("select * from arrange where d_id = #{id}")
+	@Results({
+		@Result(id = true,column = "a_id",property = "id"),
+		@Result(column = "a_time",property = "time")
+	})
+	public Arrange selectByDoctArrange(int id);
+	
+	// 查询当前时间下的医生
+	@Select("SELECT doctor.* FROM doctor LEFT JOIN arrange ON doctor.`d_id` = arrange.`d_id` "
+			+ "WHERE arrange.`a_time` LIKE'%${date}%' AND s_id = #{id}")//
+	//@Select("select * from doctor where s_id = #{id}")
+	@ResultMap({"doctMap"})
+	List<Doctor> doctorDateAll( int id,int date);
 }

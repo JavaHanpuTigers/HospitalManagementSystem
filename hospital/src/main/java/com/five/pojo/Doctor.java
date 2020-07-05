@@ -23,7 +23,9 @@ public class Doctor {
 	private Subment subment; // 子科室信息
 	
 	private User user; // 用户信息角色
-
+	
+	private Arrange arrange; // 医生排班信息
+	
 	public int getId() {
 		return id;
 	}
@@ -95,5 +97,14 @@ public class Doctor {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public Arrange getArrange() {
+		return arrange;
+	}
+
+	public void setArrange(Arrange arrange) {
+		this.arrange = arrange;
+	}
+	
 	
 }
