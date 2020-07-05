@@ -228,7 +228,7 @@ public class PersonnelController {
 		ps.delArge(id);
 	}
 	
-	// 获取分页后得到的排班
+	// 获取分页后得到的挂号记录
 	@GetMapping("/reg")
 	public Map<String , Object> allReg(@RequestParam( name = "p",defaultValue = "0") int page){
 		Map<String , Object> map = new HashMap<>();
@@ -246,7 +246,7 @@ public class PersonnelController {
 		return map;
 	}
 	
-	// 获取分页后得到的排班
+	// 获取分页后得到的处方记录
 	@GetMapping("/prescript")
 	public Map<String , Object> allPrescript(@RequestParam( name = "p",defaultValue = "0") int page){
 		Map<String , Object> map = new HashMap<>();
@@ -263,25 +263,5 @@ public class PersonnelController {
 		// 返回集合
 		return map;
 	}
-	
-	
-
-//	// 获取所有挂号相关的信息
-//	@GetMapping("/reg")
-//	public List<Regedit> allReg(){
-//		return personnelMapper.regAll();
-//	}
-//	
-//	// 获取指定挂号的信息
-//	@GetMapping("/reg/{id}")
-//	public Regedit getReg(@PathVariable int id){
-//		return personnelMapper.getRegByid(id);
-//	}
-//	
-//	// 获取所有的处方的信息
-//	@GetMapping("/prescript")
-//	public List<Prescript> allPrescript(){
-//		return personnelMapper.prescriptAll();
-//	}
 	
 }
