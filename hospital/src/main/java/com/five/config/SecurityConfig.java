@@ -55,8 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authoritiesByUsernameQuery("SELECT u_name,r_name FROM role LEFT JOIN USER ON role.`r_id` = `user`.`r_id` WHERE u_name = ?");
 	}
 	
-	// 权限
-	
+	// 权限	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
@@ -72,8 +71,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			//.antMatchers("/admin","/admin/*").hasRole("ADMIN")
 			//.anyRequest().authenticated()
 			.and()
-		.formLogin().and()
-		.csrf().disable()
+		.formLogin()
+		.and()
+		.logout().logoutSuccessUrl("/")
+		.and()
+		// 关闭网站拦截工具
+//		.csrf().disable()
 		.httpBasic();
+		http.authorizeRequests().and().csrf().disable();
 	}
 }

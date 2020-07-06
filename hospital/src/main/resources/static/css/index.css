@@ -45,7 +45,8 @@
  /*  主体内容样式*/
  
  .body-content {
-     width: 90%;
+     width: 96%;
+     height:100%;
      margin: 0px auto;
      /* background-color: hotpink; */
  }
@@ -111,7 +112,7 @@
  .clearfix-frame {
      position: absolute;
      margin-left: 230px;
-     margin-top: -30px;
+     margin-top: -37px;
  }
  
  .el-button--text {
@@ -129,3 +130,14 @@
  .el-collapse {
      border-top: none;
  }
+ /* user相关的链接样式*/
+.user-oper{
+	text-decoration: none;
+    font-weight: bold;
+    color:blue; 
+}
+.user-oper:hover{
+	text-decoration: none;
+    font-weight: bold;
+    color:green; 
+}

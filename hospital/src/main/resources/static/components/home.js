@@ -2,13 +2,29 @@
 let index = {
         template: `
             <div>
-                 欢迎使用医院管理系统
-                <div style="background:url('images/hope.jpg') no-repeat 4px 5px;
+                 <h3 style="text-align:center;margin-right:30px;">欢迎使用医院管理系统</h3><br>
+            	<el-carousel :interval="4000" type="card" height="200px">
+                <el-carousel-item v-for="item in imgs" :key="item">
+                    <img :src="item" alt="图片" style="width: 400px;height: 200px;">
+                </el-carousel-item>
+        		</el-carousel>
+            	<div style="background:url('images/hope.jpg') no-repeat 4px 5px;
                             width: 639px;
-                            height: 300px;">
-                </div>
+                            height: 300px;margin-left:70px;border:1px blue solid">
+        		</div>
             </div>
-        `
+        `,
+        data() {
+            return {
+                imgs: ['images/yy1.jpg',
+                    'images/yy2.jpg',
+                    'images/yy3.jpg',
+                    'images/yy4.jpg',
+                    'images/yy5.jpg',
+                    'images/yy6.jpg'
+                ]
+            }
+        }
     }
     // 用户信息组件
 let userinfo = {
@@ -27,36 +43,14 @@ let userset = {
     `
     }
     // 注销账号组件
-let useredit = {
+let userregit = {
     template: `
              <div>
-                账户注销
+                这里是注册界面
             </div>
     `
 }
 
-// 主界面暂时使用的组件路由
-let user = {
-    template: `
-            <div>
-                 这里您可以进行挂号服务
-            </div>
-        `
-}
-let doctor = {
-    template: `
-            <div>
-                 医生可以叫病人啦
-            </div>
-        `
-}
-let person = {
-    template: `
-            <div>
-                 在这里可以进行员工管理
-            </div>
-        `
-}
 let other = {
         template: `
             <div>
@@ -76,8 +70,8 @@ const router = new VueRouter({
             path: '/userset',
             component: userset
         }, {
-            path: '/useredit',
-            component: useredit
+            path: '/userregit',
+            component: userregit
         }, {
             path: '/user',
             component: registration
@@ -95,47 +89,47 @@ const router = new VueRouter({
             path: '/lookAppointment',
             component: lookAppointment
         }, {
-        path: '/staff',
-        component: staff,
-        children: [{
-            path: '/',
-            component: checkStaff
-        }, {
-            path: 'addStaff',
-            component: addStaff
-        }, {
-            path: 'checkStaff',
-            component: checkStaff
-        }]
+            path: '/staff',
+            component: staff,
+            children: [{
+                path: '/',
+                component: checkStaff
+            }, {
+                path: 'addStaff',
+                component: addStaff
+            }, {
+                path: 'checkStaff',
+                component: checkStaff
+            }]
 
-    }, {
-        path: '/dept',
-        component: dept,
-        children: [{
-            path: '/',
-            component: checkDept
         }, {
-            path: 'addDept',
-            component: addDept
+            path: '/dept',
+            component: dept,
+            children: [{
+                path: '/',
+                component: checkDept
+            }, {
+                path: 'addDept',
+                component: addDept
+            }, {
+                path: 'checkDept',
+                component: checkDept
+            }]
         }, {
-            path: 'checkDept',
-            component: checkDept
-        }]
-    }, {
-        path: '/scheduling',
-        component: scheduling,
-        children: [{
-            path: '/',
-            component: checkScheduling
-        }, {
-            path: 'addScheduling',
-            component: addScheduling
-        }, {
-            path: 'checkScheduling',
-            component: checkScheduling
-        }]
+            path: '/scheduling',
+            component: scheduling,
+            children: [{
+                path: '/',
+                component: checkScheduling
+            }, {
+                path: 'addScheduling',
+                component: addScheduling
+            }, {
+                path: 'checkScheduling',
+                component: checkScheduling
+            }]
 
-    }, {
+        }, {
             path: '/other',
             component: other
         }
