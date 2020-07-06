@@ -58,7 +58,9 @@ var registration = {
                 </el-aside>
                 <!-- 侧边栏结束 -->
                 <el-main >
-                    <el-tabs :stretch="true" value="date" v-if="active>=1">
+                    <div class="infinite-list-wrapper"  style=" width:100%;height:398px;overflow:auto">
+                    <el-tabs :stretch="true" value="date" v-if="active>=1" >
+                       
                         <el-tab-pane label="按日期预约" name="date">
                             
                             <!-- 时间标签 -->
@@ -109,10 +111,12 @@ var registration = {
                         
                        
                         </el-tab-pane>
-
+                        
                     </el-tabs>
                     <button @click="active != 4 ? active++:active ">下一步</button>
                     <button @click="active != 0 ? active--:active ">返回上一步</button>
+
+                    </div>
                 </el-main>
             </el-container>
         </el-container>
