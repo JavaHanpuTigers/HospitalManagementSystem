@@ -44,37 +44,21 @@ var registration = {
                 <!-- 侧边栏 -->
                 <el-aside width="150px">
                     <el-menu default-active="1" class="el-menu-vertical-demo" @select="selectOK" @open="handleOpen" @close="handleClose">
-                        <el-menu-item index="1">
-                            <i class="el-icon-menu"></i>
-                            <span slot="title">急诊科</span>
-                        </el-menu-item>
-                        <el-submenu index="2">
+                       
+                        <el-submenu :index="li.id+''" v-for="li in deptdata">
                             <template slot="title">
                                 <i class="el-icon-location"></i>
-                                <span>内科</span>
+                                <span>{{li.name}}</span>
                             </template>
-                            <el-menu-item index="2-1">风湿科</el-menu-item>
-                            <el-menu-item index="2-2">感染病科</el-menu-item>
-                            <el-menu-item index="2-3">呼吸内科</el-menu-item>
-                            <el-menu-item index="2-4">内分泌科</el-menu-item>
-                            <el-menu-item index="2-5">神经内科</el-menu-item>
-                            <el-menu-item index="2-6">消化内科</el-menu-item>
-                            <el-menu-item index="2-7">心血管内科</el-menu-item>
+                            <el-menu-item :index="li.id+'-'+lime.id"  v-for="lime in li.subdept">{{lime.name}}</el-menu-item>
                         </el-submenu>
-                        <el-submenu index="3">
-                            <template slot="title">
-                                <i class="el-icon-location"></i>
-                                <span>外科</span>
-                            </template>
-                            <el-menu-item index="3-1">选项1</el-menu-item>
-                            <el-menu-item index="3-2">选项2</el-menu-item>
-                        </el-submenu>
+                        
 
                     </el-menu>
                 </el-aside>
                 <!-- 侧边栏结束 -->
                 <el-main >
-                    <el-tabs :stretch="true" value="date" v-show="active>=1">
+                    <el-tabs :stretch="true" value="date" v-if="active>=1">
                         <el-tab-pane label="按日期预约" name="date">
                             
                             <!-- 时间标签 -->
@@ -91,7 +75,9 @@ var registration = {
                             <el-table height="250" :data="ysdata.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())  || data.rank.toLowerCase().includes(search.toLowerCase()) )" style="width: 100%">
                                 <el-table-column label="名称" prop="name">
                                 </el-table-column>
-                                <el-table-column label="级别" prop="rank">
+                                <el-table-column label="年龄" prop="age">
+                                </el-table-column>
+                                <el-table-column label="级别" prop="title">
                                 </el-table-column>
                                 <el-table-column align="right">
                                     <template slot="header" slot-scope="scope">
@@ -143,26 +129,9 @@ var registration = {
             active: 0,
             // 查询医生的数据
             search: "",
+            deptdata: [],
             // 医生数据
-            ysdata: [{
-                "name": "张三",
-                rank: "主任医生"
-            }, {
-                "name": "李四",
-                rank: "副主任医生"
-            }, {
-                "name": "张力",
-                rank: "副主任医生"
-            }, {
-                "name": "王西",
-                rank: "主任医生"
-            }, {
-                "name": "张三峰",
-                rank: "副主任医生"
-            }, {
-                "name": "李莉",
-                rank: "主任医生"
-            }, ],
+            ysdata: [],
             // 当前显示的时间
             now: [],
             day: new Date().getDay(),
@@ -180,7 +149,6 @@ var registration = {
 
     },
     created() {
-
         this.initDate();
         console.log("created");
     },
@@ -193,12 +161,24 @@ var registration = {
     methods: {
         // 初始化时间方法
         initDate() {
-            let datetiem = new Date();
-            this.now[0] = datetiem.format("yyyy-MM-dd");
-            datetiem = datetiem.setDate(new Date().getDate() + 6);
-            this.now[1] = new Date(datetiem).format("yyyy-MM-dd");
+            // let datetiem = new Date();
+            // this.now[0] = datetiem.format("yyyy-MM-dd");
+            // datetiem = datetiem.setDate(new Date().getDate() + 6);
+            // this.now[1] = new Date(datetiem).format("yyyy-MM-dd");
+            // console.log("xxxxxxxxxxxxxxxxxx");
+
+            axios.get("reg/dept")
+                .then(res => {
+                    console.log(res);
+                    this.deptdata = res.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+            this.getDate();
 
         },
+
         // 下一个事件
         next() {
             if (this.active++ > 2) this.active = 0;
@@ -215,6 +195,35 @@ var registration = {
         selectOK(key, keyPath) {
             console.log(key, keyPath);
             this.active = 2;
+
+            let da = key.split('-');
+            console.log(da);
+            this.getdeptid(da[1]);
+
+        },
+        // 传入子科室id得到医生
+        getdeptid(i) {
+            axios.get("reg/dept/" + i)
+                .then(res => {
+                    console.log(res);
+                    this.ysdata = res.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        getDate() {
+            axios.get('reg/date')
+                .then(res => {
+                    console.log(res);
+                    this.now[0] = res.data.startdate;
+                    this.now[1] = res.data.tailDate;
+                    console.log("adfasdf");
+                    console.log(this.now);
+                })
+                .catch(err => {
+                    console.error(err);
+                })
         },
         dealMyDate(v) {
             console.log(v)
