@@ -22,6 +22,7 @@
      width: 80%;
      height: 600px;
      margin: auto;
+     margin-top:15px;
  }
  /* 导航菜单背景样式 */
  
@@ -140,4 +141,13 @@
 	text-decoration: none;
     font-weight: bold;
     color:green; 
+}
+/* 主页样式*/
+.hospital-info {
+     padding-left: 15px;
+     padding-top: 15px;
+}
+        
+.hospital-info>p {
+     text-indent: 2em;
 }
