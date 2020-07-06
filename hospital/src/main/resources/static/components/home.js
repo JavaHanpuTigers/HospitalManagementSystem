@@ -34,19 +34,83 @@ let index = {
             }
         }
     }
-    // 用户信息组件
+    // 修改密码组件
 let userinfo = {
         template: `
             <div>
-                 
+                 	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">         
+	            	<h5>修改界面</h5><hr>
+	            	<span style="color:red;margin-left:100px;">修改账户信息后，再次登录即生效!</span>
+	            	<el-form label-width="80px" style="width:500px;">
+	                <el-form-item label="用户名">
+	                    <el-input maxlength="20" v-model="ruleForm.username"></el-input>
+	                </el-form-item>
+	                <el-form-item label="用户密码">
+	                    <el-input v-model="ruleForm.password" maxlength="18" show-password placeholder="建议字母大小写区分+数字+符号"></el-input>
+	                </el-form-item>
+	                <el-form-item label="确认密码">
+	                    <el-input show-password placeholder="请再次确认你的密码..." maxlength="18" v-model="ruleForm.again"></el-input>
+	                </el-form-item>
+	                	<el-row>
+					  <el-col :span="12">
+					  		<el-button type="primary" style="width:80%;margin-left:25px;">立即修改</el-button>
+					  </el-col>
+					  <el-col :span="12">
+    						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
+					  </el-col>
+					</el-row> 
+	            	</el-form>
+	        		</div>
             </div>
-    `
+    `,data() {
+            return {
+                labelPosition: 'right',
+                ruleForm: {
+                    name: '',
+                    sex: '',
+                    age: '',
+                    nation: '',
+                    card: '',
+                    username: '',
+                    password: '',
+                    again: ''
+                }
+            }
+        },
+        methods: {
+            resetForm() {
+                this.ruleForm = {
+                    name: '',
+                    sex: '',
+                    age: '',
+                    nation: '',
+                    card: '',
+                    username: '',
+                    password: '',
+                    again: ''
+                }
+            }
+        }
     }
-    // 用户设置组件
+    // 用户帮助使用组件
 let userset = {
         template: `
             <div>
-                 在这里进行你的账户设置
+                 <h5>用户使用手册</h5><hr>
+                 【用户注册】:<br>
+                   <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>用户可以注册属于自己的快捷账号，方便下次直接进入系统</span></div>
+	        	 【忘记密码】:<br>
+                   <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>用户忘记密码时，可以在首页填写实名信息，根据实名信息找回密码</span></div>
+	        	 【修改密码】:<br>
+	        	   <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>用户在登录后可直接通过原密码修改密码</span></div>
+	        	 【挂号收费】:<br>
+	        	   <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>用户可以在挂号收费一栏进行挂号面诊</span></div>
+	        	 【实时天气】:<br>
+	        	   <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>用户可以在系统中查看最近三天天气和当前气温等其他操作</span></div>
+	        	 【医院相关】:<br>
+	        	   <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>本系统不仅提供给患者，还有供本公司其他职工使用</span></div>
+	        	 【注意事项】:<br>
+	        	   <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>在使用系统的过程中如发现卡顿，代表是网络原因，是正常现象，如有其他使用不便请联系维护人员</span></div>
             </div>
     `
     }
@@ -54,10 +118,130 @@ let userset = {
 let userregit = {
     template: `
              <div>
-               
+	               	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">         
+	            	<h5>注册界面</h5><hr>
+	            	<span style="color:red;margin-left:100px;">请填写实名信息，方便医院登记!</span>
+	            	<el-form label-width="80px" style="width:500px;">
+	                <el-form-item label="姓名">
+	                    <el-input maxlength="30" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.name"></el-input>
+	                </el-form-item>
+	                <el-form-item label="年龄">
+	                    <el-input maxlength="2" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.sex"></el-input>
+	                </el-form-item>
+	                <el-form-item label="性别">
+	                    <el-input maxlength="2" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.age"></el-input>
+	                </el-form-item>
+	                <el-form-item label="民族">
+	                    <el-input maxlength="10" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.nation"></el-input>
+	                </el-form-item>
+	                <el-form-item label="身份证号">
+	                    <el-input maxlength="18" placeholder="提交后不可修改，请谨慎填写" show-word-limit v-model="ruleForm.card"></el-input>
+	                </el-form-item>
+	                <el-form-item label="用户名">
+	                    <el-input maxlength="20" v-model="ruleForm.username"></el-input>
+	                </el-form-item>
+	                <el-form-item label="用户密码">
+	                    <el-input v-model="ruleForm.password" maxlength="18" show-password placeholder="建议字母大小写区分+数字+符号"></el-input>
+	                </el-form-item>
+	                <el-form-item label="确认密码">
+	                    <el-input show-password placeholder="请再次确认你的密码..." maxlength="18" v-model="ruleForm.again"></el-input>
+	                </el-form-item>
+	                	<el-row>
+					  <el-col :span="12">
+					  		<el-button type="primary" style="width:80%;margin-left:25px;">立即注册</el-button>
+					  </el-col>
+					  <el-col :span="12">
+    						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
+					  </el-col>
+					</el-row> 
+	            	</el-form>
+	        		</div>
             </div>
-    `
+    `,data() {
+                return {
+                    labelPosition: 'right',
+                    ruleForm: {
+                        name: '',
+                        sex: '',
+                        age: '',
+                        nation: '',
+                        card: '',
+                        username: '',
+                        password: '',
+                        again: ''
+                    }
+                }
+            },
+            methods: {
+                resetForm() {
+                    this.ruleForm = {
+                        name: '',
+                        sex: '',
+                        age: '',
+                        nation: '',
+                        card: '',
+                        username: '',
+                        password: '',
+                        again: ''
+                    }
+                }
+            }
 }
+// 忘记密码模块
+let retrieve = {
+        template: `
+            <div>
+                 <div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">         
+	            	<h5>修改界面</h5><hr>
+	            	<span style="color:red;margin-left:100px;">只有填写正确的实名验证才可找回!</span>
+	            	<el-form label-width="80px" style="width:500px;">
+	                <el-form-item label="用户名">
+	                    <el-input maxlength="20" v-model="ruleForm.username" placeholder="请输入你上一次使用的用户名"></el-input>
+	                </el-form-item>
+	                <el-form-item label="身份证号">
+	                    <el-input v-model="ruleForm.card" maxlength="18" show-password placeholder="我们将根据实名信息找回"></el-input>
+	                </el-form-item>
+	                	<el-row>
+					  <el-col :span="12">
+					  		<el-button type="primary" style="width:80%;margin-left:25px;">立即找回</el-button>
+					  </el-col>
+					  <el-col :span="12">
+    						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
+					  </el-col>
+					</el-row> 
+	            	</el-form>
+	        		</div>
+            </div>
+        `,data() {
+            return {
+                labelPosition: 'right',
+                ruleForm: {
+                    name: '',
+                    sex: '',
+                    age: '',
+                    nation: '',
+                    card: '',
+                    username: '',
+                    password: '',
+                    again: ''
+                }
+            }
+        },
+        methods: {
+            resetForm() {
+                this.ruleForm = {
+                    name: '',
+                    sex: '',
+                    age: '',
+                    nation: '',
+                    card: '',
+                    username: '',
+                    password: '',
+                    again: ''
+                }
+            }
+        }
+    }
 
 let other = {
         template: `
@@ -66,7 +250,7 @@ let other = {
             </div>
         `
     }
-    // 新建路由
+    // 新建路由 
 const router = new VueRouter({
     routes: [{
             path: '/',
@@ -74,6 +258,9 @@ const router = new VueRouter({
         }, {
             path: '/userinfo',
             component: userinfo
+        },{
+            path: '/retrieve',
+            component: retrieve
         }, {
             path: '/userset',
             component: userset

@@ -45,10 +45,10 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	                </span>
 	                        <el-dropdown-menu slot="dropdown">
 	                            <el-dropdown-item class="dditem">
-	                                <router-link to="/userinfo" class="router-link">个人信息</router-link>
+	                                <router-link to="/userinfo" class="router-link">修改密码</router-link>
 	                            </el-dropdown-item>
 	                            <el-dropdown-item class="dditem">
-	                                <router-link to="/userset" class="router-link">用户设置</router-link>
+	                                <router-link to="/userset" class="router-link">用户手册</router-link>
 	                            </el-dropdown-item>
 	                            <el-dropdown-item class="dditem">
 	                                <a th:href="@{/logout}" class="router-link">注销账号</a>
@@ -58,8 +58,9 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	                </el-button>
                 </div>
                 <!-- 用户未登录显示区域 -->
-                <div sec:authorize="!isAuthenticated()" style="margin-left:70%;margin-top:10px;">
-                	<router-link to="/userregit" class="user-oper">【点击注册】</router-link>&nbsp;&nbsp;
+                <div sec:authorize="!isAuthenticated()" style="margin-left:60%;margin-top:10px;">
+                	<router-link to="/retrieve" class="user-oper">【忘记密码?】</router-link>
+                	<router-link to="/userregit" class="user-oper">【点击注册】</router-link>&nbsp;
                 	<span style="color:red;">当前您还未登录!</span>
             		<span><a th:href="@{/login}" class="user-oper" >登录</a></span>
         		</div>
