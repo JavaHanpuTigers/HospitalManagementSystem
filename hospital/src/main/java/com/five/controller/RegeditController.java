@@ -1,6 +1,7 @@
 package com.five.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,9 +37,9 @@ public class RegeditController {
 	}
 	// 传入子科室id得到下面的全部id
 	@GetMapping("/dept/{id}")
-	public Doctor get( @PathVariable int id) {
+	public List<Doctor> get( @PathVariable int id) {
 		//return regSerivce.getDoctorByid(id);
-		return null;
+		return regSerivce.doctorBydbAll(id);
 	}
 	
 	
@@ -76,12 +79,22 @@ public class RegeditController {
 	public List<Doctor> getByDateDoct(
 			@RequestParam(name = "d",required = false) Date date,
 			@PathVariable int id){
-		
+		// 判断传入时间是否为空
 		if(date == null) {
 			date = new Date();
 		}
 		System.out.println(date);
 		return regSerivce.doctorDateAll(date, id);
 		
+	}
+	
+	// 进行挂号
+	@PostMapping("/{id}")
+	public Map<String, Object> putReg(
+			@PathVariable int id,
+			@RequestBody Regedit reg) {
+		//Map<String, Object> map = new HashMap<String, Object>();
+		
+		return regSerivce.setRegedit(reg);
 	}
 } 

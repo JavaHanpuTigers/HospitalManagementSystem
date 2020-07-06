@@ -61,7 +61,7 @@ public interface RegeditService {
 	 * @param reg 挂号信息
 	 * @return
 	 */
-	Regedit setRegedit(Regedit reg);
+	Map<String, Object> setRegedit(Regedit reg);
 	
 	
 	/**
