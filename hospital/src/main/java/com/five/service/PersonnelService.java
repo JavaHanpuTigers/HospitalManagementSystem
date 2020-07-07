@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.five.exception.createPretException;
 import com.five.mapper.PersonnelMapper;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
@@ -14,6 +15,7 @@ import com.five.pojo.Patient;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.pojo.Subment;
+import com.five.pojo.User;
 
 /**
  * 	人事相关的接口
@@ -22,6 +24,8 @@ import com.five.pojo.Subment;
  *
  */
 public interface PersonnelService {
+	
+	void add(Doctor doct) throws createPretException;
 
 	// 获得所有患者信息
 	List<Patient> getPant(int page,int off);
@@ -45,8 +49,8 @@ public interface PersonnelService {
 	int countDoct();
 
 	// 添加医生信息
-	Doctor addDoct(Doctor doctor);
-
+	Doctor addDoct(Doctor doctor) throws createPretException;
+	
 	// 修改医生信息
 	void alterDoct(Doctor doctor);
 

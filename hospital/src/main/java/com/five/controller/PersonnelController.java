@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.five.exception.createPretException;
 import com.five.mapper.PersonnelMapper;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
@@ -23,6 +24,7 @@ import com.five.pojo.Patient;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.pojo.Subment;
+import com.five.pojo.User;
 import com.five.service.PersonnelService;
 import com.five.service.impl.PersonnelServiceImpl;
 
@@ -40,7 +42,7 @@ public class PersonnelController {
 	@Autowired
 	PersonnelService ps;
 	
-	// 获取分页后得到的患者
+	//	获取分页后得到的患者
 	@GetMapping("/pant")
 	public Map<String , Object> allPant(@RequestParam( name = "p",defaultValue = "0") int page){
 		Map<String , Object> map = new HashMap<>();
@@ -83,6 +85,7 @@ public class PersonnelController {
 		int off = 2;
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getDoct(page, off));
+		map.put("Allcontent", ps.getDoct(0, ps.countDoct()));
 		// 将当前页添加到集合中
 		map.put("size", off);
 		// 将总数据数添加到集合中
@@ -93,8 +96,13 @@ public class PersonnelController {
 	
 	// 添加医生
 	@PostMapping("/doct")
-	public Doctor addDoct(@RequestBody Doctor doctor) {
-		return ps.addDoct(doctor);
+	public void addDoct(@RequestBody Doctor doctor) {
+		try {
+			ps.addDoct(doctor);
+		} catch (createPretException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	// 修改医生
@@ -116,14 +124,13 @@ public class PersonnelController {
 		Map<String , Object> map = new HashMap<>();
 		// 设置一页显示多少数据
 		int off = 2;
-		// 获取表数据的数量
-		int count = ps.countDept();
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getDept(page, off));
+		map.put("Allcontent", ps.getDept(0, ps.countDept()));
 		// 将当前页添加到集合中
-		map.put("number", page);
-		// 将总页数添加到集合中
-		map.put("totalPages", count/off+(count%off==0?0:1));
+		map.put("size", off);
+		// 将总数据数添加到集合中
+		map.put("count", ps.countDept());
 		// 返回集合
 		return map;
 	}
@@ -140,7 +147,7 @@ public class PersonnelController {
 		dept.setId(id);
 		ps.alterDept(dept);
 	}
-		
+	
 	// 删除科室
 	@DeleteMapping("/dept/{id}")
 	public void deleteDept(@PathVariable int id) {
@@ -189,14 +196,13 @@ public class PersonnelController {
 		Map<String , Object> map = new HashMap<>();
 		// 设置一页显示多少数据
 		int off = 2;
-		// 获取表数据的数量
-		int count = ps.countArge();
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getArge(page, off));
+		map.put("Allcontent", ps.getArge(0, ps.countArge()));
 		// 将当前页添加到集合中
-		map.put("number", page);
-		// 将总页数添加到集合中
-		map.put("totalPages", count/off+(count%off==0?0:1));
+		map.put("size", off);
+		// 将总数据数添加到集合中
+		map.put("count", ps.countArge());
 		// 返回集合
 		return map;
 	}
@@ -226,14 +232,12 @@ public class PersonnelController {
 		Map<String , Object> map = new HashMap<>();
 		// 设置一页显示多少数据
 		int off = 2;
-		// 获取表数据的数量
-		int count = ps.countReg();
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getReg(page, off));
 		// 将当前页添加到集合中
-		map.put("number", page);
-		// 将总页数添加到集合中
-		map.put("totalPages", count/off+(count%off==0?0:1));
+		map.put("size", off);
+		// 将总数据数添加到集合中
+		map.put("count", ps.countReg());
 		// 返回集合
 		return map;
 	}
@@ -244,14 +248,12 @@ public class PersonnelController {
 		Map<String , Object> map = new HashMap<>();
 		// 设置一页显示多少数据
 		int off = 2;
-		// 获取表数据的数量
-		int count = ps.countPrescript();
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getPrescript(page, off));
 		// 将当前页添加到集合中
-		map.put("number", page);
-		// 将总页数添加到集合中
-		map.put("totalPages", count/off+(count%off==0?0:1));
+		map.put("size", off);
+		// 将总数据数添加到集合中
+		map.put("count", ps.countPrescript());
 		// 返回集合
 		return map;
 	}
