@@ -1,6 +1,10 @@
 package com.five.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +19,7 @@ import com.five.exception.createPretException;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.service.DoctorService;
+import com.five.util.AddWord;
 
 /**    
 * @author: yesenchao
@@ -69,5 +74,21 @@ public class DoctorController {
 			e.printStackTrace();
 		}
 		return pret;
+	}
+	//下载处方表(word)
+	@GetMapping("/pret/download/{id}")
+	public void download(HttpServletResponse response,@PathVariable int id) {
+		Prescript pret=ds.findPretById(id);
+	    Map<String, String> map=new HashMap<String, String>();
+	    map.put("name", pret.getReg().getName());
+	    map.put("nation", pret.getReg().getNation());
+	    map.put("sex",pret.getReg().getSex());
+	    map.put("id", pret.getId()+"");
+	    map.put("cardId", pret.getReg().getCard());
+	    map.put("type", pret.getReg().getDoct().getSubment().getName());
+	    map.put("time", pret.getTime());
+	    map.put("sym", pret.getSym());
+	    map.put("content", pret.getContent());
+	    AddWord.createWord(map, "prescript.xml", "/static/word/", "处方单", response);
 	}
 }

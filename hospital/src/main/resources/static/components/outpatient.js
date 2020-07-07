@@ -1,4 +1,4 @@
-//叫号信息
+//排队信息
 let call = {
         props: {
 
@@ -34,7 +34,7 @@ let call = {
         template: `<div>
 	<el-container>
         <el-main>
-            <span>叫号信息</span>
+            <span>排队信息</span>
             <el-divider></el-divider>
         <div>
             <el-row :gutter="5">

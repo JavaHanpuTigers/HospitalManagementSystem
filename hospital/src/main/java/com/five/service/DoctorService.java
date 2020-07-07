@@ -25,5 +25,7 @@ public interface DoctorService {
 	//查询处方记录信息
 	public List<Prescript> FindPretALL(int id);
 	//开处方
-	public void createPret(Prescript pret) throws createPretException ;
+	public void createPret(Prescript pret) throws createPretException;
+	//根据处方id查询处方记录
+	public Prescript findPretById(int id);
 }

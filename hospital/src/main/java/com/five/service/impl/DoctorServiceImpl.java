@@ -84,5 +84,10 @@ public class DoctorServiceImpl implements DoctorService{
 		}
 		dm.updateRegState("5", pret.getReg().getId());
 	}
+	@Override
+	public Prescript findPretById(int id) {
+		// TODO Auto-generated method stub
+		return dm.findPretById(id);
+	}
 
 }

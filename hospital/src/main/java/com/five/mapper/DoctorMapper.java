@@ -71,7 +71,7 @@ public interface DoctorMapper {
 			@Result(column = "pt_sym",property = "sym"),
 			@Result(column = "pt_content",property = "content"),
 			@Result(column = "pt_time",property = "time"),
-			@Result(column = "rt_id",property = "reg",javaType = Prescript.class,
+			@Result(column = "rt_id",property = "reg",javaType = Regedit.class,
 			one = @One(select = "com.five.mapper.DoctorMapper.findRegeditById"))
 	})
 	List<Prescript> FindPretALL(int id);
@@ -80,4 +80,8 @@ public interface DoctorMapper {
 	@Insert("INSERT INTO prescript(`rt_id`,`pt_sym`,`pt_content`,`pt_time`) "
 			+ "VALUES(#{reg.id},#{sym},#{content},#{time})")
 	int createPret(Prescript pre);
+	//根据id查询处方记录
+	@Select("select * from prescript where pt_id=#{id}")
+	@ResultMap("prescript")
+	Prescript findPretById(int id);
 }
