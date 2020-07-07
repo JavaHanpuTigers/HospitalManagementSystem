@@ -40,41 +40,50 @@ var registration = {
                 </el-steps>
             </el-header>
             <!-- 顶部内容结束 -->
-            <el-container>
+            <el-container v-loading="iszj">
                 <!-- 侧边栏 -->
-                <el-aside width="150px">
-                    <el-menu default-active="1" class="el-menu-vertical-demo" @select="selectOK" @open="handleOpen" @close="handleClose">
-                       
-                        <el-submenu :index="li.id+''" v-for="li in deptdata">
-                            <template slot="title">
-                                <i class="el-icon-location"></i>
-                                <span>{{li.name}}</span>
-                            </template>
-                            <el-menu-item :index="li.id+'-'+lime.id"  v-for="lime in li.subdept">{{lime.name}}</el-menu-item>
-                        </el-submenu>
+               
+                <el-aside width="200px">
+                <el-scrollbar style="height:398px;width:150px" class="scrollbar_df">
+                        <el-menu width="150px" default-active="1" class="el-menu-vertical-demo" @select="selectOK" @open="handleOpen" @close="handleClose">
                         
-
-                    </el-menu>
+                            <el-submenu :index="li.id+''" v-for="li in deptdata">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>{{li.name}}</span>
+                                </template>
+                                <el-menu-item :index="li.id+'-'+lime.id"  v-for="lime in li.subdept">{{lime.name}}</el-menu-item>
+                            </el-submenu>
+                        
+                          
+                        </el-menu>
+                        </el-scrollbar>
                 </el-aside>
+                
                 <!-- 侧边栏结束 -->
                 <el-main >
-                    <div class="infinite-list-wrapper"  style=" width:100%;height:398px;overflow:auto">
+
+                   
                     <el-tabs :stretch="true" value="date" v-if="active>=1" >
                        
                         <el-tab-pane label="按日期预约" name="date">
-                            
+                        	
+                            <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
                             <!-- 时间标签 -->
-                            <el-calendar :range="now" :first-day-of-week="day">
+                            <el-calendar :range="now" :first-day-of-week="day" >
                                 <template slot="dateCell" slot-scope="{date, data}">
                                     <p :class="data.isSelected ? 'is-selected' : ''">
-                                      {{ data.day.split('-').slice(1).join('-') }} {{ data.isSelected ? '✔️' : ''}}
+                                        {{ data.day.split('-').slice(1).join('-') }}
+                                        {{ data.isSelected ? '✔️' : ''}}
+                                        {{ data.day == now[0] && page.date == null? '✔️' : ''}}
                                       <br>
-                                      <!-- 中间可以添加方法 -->
-                                      {{dealMyDate(data.day)}}
+                                      <!-- 中间可以添加方法  {{dealMyDate(data.day)}} -->
+                                    
+                                      {{data.isSelected ? getdateysdata(page.dept,data.day):''}}
                                     </p>
                                   </template>
                             </el-calendar>
-                            <el-table height="250" :data="ysdata.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())  || data.rank.toLowerCase().includes(search.toLowerCase()) )" style="width: 100%">
+                            <el-table height="250" @row-click="setreg" :data="dateysdata.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())  || data.title.toLowerCase().includes(search.toLowerCase()) )" style="width: 100%">
                                 <el-table-column label="名称" prop="name">
                                 </el-table-column>
                                 <el-table-column label="年龄" prop="age">
@@ -83,40 +92,78 @@ var registration = {
                                 </el-table-column>
                                 <el-table-column align="right">
                                     <template slot="header" slot-scope="scope">
-                                        <el-input v-model="search" size="mini" placeholder="输入名字查询医生"/>
+                                        <el-input v-model="search" size="mini" placeholder="输入名字查询医生"  />
                                     </template>
                                     <template slot-scope="scope">
-                                        <el-button type="primary">查看</el-button>
+                                        <el-button type="primary"  >查看</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
+                            </el-scrollbar>
                         </el-tab-pane>
+                        
                         <el-tab-pane label="按专家预约" name="second" >
-                            <div style="overflow:hidden">
-                                <el-table :data="ysdata.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())  || data.rank.toLowerCase().includes(search.toLowerCase()) )" style="width: 100%">
+                            <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
+                                <el-table :data="ysdata.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())  || data.title.toLowerCase().includes(search.toLowerCase()) )" style="width: 100%">
                                 <el-table-column label="名称" prop="name">
                                 </el-table-column>
-                                <el-table-column label="级别" prop="rank">
+                                <el-table-column label="年龄" prop="age">
                                 </el-table-column>
-                                <el-table-column align="right">
-                                    <template slot="header" slot-scope="scope">
-                                        <el-input v-model="search" size="mini" placeholder="输入名字查询医生"/>
-                                    </template>
-                                    <template slot-scope="scope">
-                                        <el-button type="primary">查看</el-button>
-                                    </template>
+                                <el-table-column label="级别" prop="title">
                                 </el-table-column>
+                                    <el-table-column align="right">
+                                        <template slot="header" slot-scope="scope">
+                                            <el-input v-model="search" size="mini" placeholder="输入名字查询医生"/>
+                                        </template>
+                                        <template slot-scope="scope">
+                                            <el-button type="primary">查看</el-button>
+                                        </template>
+                                    </el-table-column>
                                 </el-table>
-                            </div>    
+                            </el-scrollbar>
                         
                        
                         </el-tab-pane>
                         
                     </el-tabs>
-                    <button @click="active != 4 ? active++:active ">下一步</button>
+                    <el-dialog   title="进行挂号"
+                    :visible.sync="dialogVisible"
+                    width="30%"  :before-close="handleClose">
+                    <el-tabs value="first">
+                        <el-tab-pane label="为自己挂号" name="first">
+                            <el-form :model="form">
+                                <el-form-item label="挂号时间" label-width="120px">
+                                    <el-time-picker
+                                        v-model="form.date"
+                                        :picker-options="{
+                                        selectableRange: '08:00:00 - 20:30:00'
+                                        }"
+                                        placeholder="选择时间">
+                                    </el-time-picker>
+                                </el-form-item>
+                                <el-form-item label="手机码号" label-width="120px">
+                                    <el-input v-model="form.phone"  ></el-input>
+                                </el-form-item>
+                                <el-form-item label="挂号金额" label-width="120px">
+                                        ￥{{form.fee}}
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+                        <el-tab-pane label="为他人挂号" name="second">配置管理</el-tab-pane>
+                       
+                    </el-tabs>
+                    
+                    
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                    </span>
+                    </el-dialog>
+                  <!--
+                    <button @click="active != 3 ? active++:active ">下一步</button>
                     <button @click="active != 0 ? active--:active ">返回上一步</button>
-
-                    </div>
+                    -->
+                    
                 </el-main>
             </el-container>
         </el-container>
@@ -129,15 +176,27 @@ var registration = {
             weekinfo: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"],
             // 用于保存当前时间显示
             dateActive: 1,
+            // 页面的科室信息
+            subment: 1,
             // 步骤条的位置
             active: 0,
+            // 加载信息
+            iszj: true,
             // 查询医生的数据
             search: "",
             deptdata: [],
-            // 医生数据
+            // 直接医生数据
             ysdata: [],
+            // 选择时间的医生数据
+            dateysdata: [],
+            // 是否显示弹出框
+            dialogVisible: false,
+            //  保存页面中的信息
+            page: {},
+            form: {},
             // 当前显示的时间
             now: [],
+
             day: new Date().getDay(),
             resDate: [{
                 "date": "2020-07-01",
@@ -175,6 +234,7 @@ var registration = {
                 .then(res => {
                     console.log(res);
                     this.deptdata = res.data;
+                    this.iszj = false;
                 })
                 .catch(err => {
                     console.error(err);
@@ -196,14 +256,17 @@ var registration = {
             console.log(key, keyPath);
 
         },
+        // 科室的点击事件
         selectOK(key, keyPath) {
             console.log(key, keyPath);
             this.active = 2;
-
+            // 进去进入加载状态
+            this.iszj = true;
             let da = key.split('-');
             console.log(da);
-            this.getdeptid(da[1]);
-
+            this.page.dept = da[1];
+            //this.getdeptid(da[1]);
+            this.getdateysdata(da[1], this.page.date);
         },
         // 传入子科室id得到医生
         getdeptid(i) {
@@ -211,11 +274,15 @@ var registration = {
                 .then(res => {
                     console.log(res);
                     this.ysdata = res.data;
+                    // 取消加载状态
+                    this.iszj = false;
                 })
                 .catch(err => {
                     console.error(err);
+                    this.iszj = false;
                 })
         },
+        // 从服务器获取时间
         getDate() {
             axios.get('reg/date')
                 .then(res => {
@@ -229,6 +296,37 @@ var registration = {
                     console.error(err);
                 })
         },
+        // 通过科室和时间
+        getdateysdata(k, d) {
+            this.iszj = true;
+            // p判断是否为空
+            if (d == null) {
+                console.log("d为空");
+                d = this.now[0];
+            }
+            // 页面上的科室信息
+            this.page.date = d;
+            axios.get(`reg/doct/${k}?d=${d}`)
+                .then(res => {
+                    console.log(res);
+                    this.dateysdata = res.data;
+                    // 取消加载状态
+                    this.iszj = false;
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+            console.log(k);
+            console.log(d);
+        },
+        // 进行挂号
+        setreg(doct) {
+            console.log(doct);
+            this.form.fee = doct.fee;
+            this.form.doct = doct;
+            this.dialogVisible = true;
+        },
+        // 日历的备注信息
         dealMyDate(v) {
             console.log(v)
             let len = this.resDate.length

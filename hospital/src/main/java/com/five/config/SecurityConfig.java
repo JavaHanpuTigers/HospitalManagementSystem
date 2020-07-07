@@ -2,58 +2,54 @@ package com.five.config;
 
 
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
+import com.five.filter.JWTAuthenticationFilter;
+import com.five.filter.JWTAuthorizationFilter;
+import com.five.service.impl.UserDetailsServiceImpl;
 
 // spring 安全访问配置
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	
-	@Value("${spring.datasource.url}")
-	String url ;
-	
-	@Value("${spring.datasource.username}")
-	String user;
-	
-	@Value("${spring.datasource.password}")
-	String password;
-	
-	@Bean
-	public DataSource getDataSource() {
-		
-		DataSource d = (DataSource) DataSourceBuilder.create()
-		.url(url)
-		.username(user)
-		.password(password)
-		.build();
-		
-		 return d;
-	}
+	@Autowired
+    @Qualifier("userDetailsServiceImpl")
+    private UserDetailsServiceImpl userDetailsService;
+
 	
 	// 认证
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// TODO Auto-generated method stub
-		//super.configure(auth);
-		//基于数据库的
-		auth.jdbcAuthentication()
-			.passwordEncoder(new BCryptPasswordEncoder())
-			.dataSource(getDataSource())
-			.usersByUsernameQuery("select u_name,u_password,r_id from user where u_name = ?")
-			.authoritiesByUsernameQuery("SELECT u_name,r_name FROM role LEFT JOIN USER ON role.`r_id` = `user`.`r_id` WHERE u_name = ?");
-	}
+	//@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		// TODO Auto-generated method stub
+//		//super.configure(auth);
+//		//基于数据库的
+//		auth.jdbcAuthentication()
+//			.passwordEncoder(new BCryptPasswordEncoder())
+//			.dataSource(getDataSource())
+//			.usersByUsernameQuery("select u_name,u_password,r_id from user where u_name = ?")
+//			.authoritiesByUsernameQuery("SELECT u_name,r_name FROM role LEFT JOIN USER ON role.`r_id` = `user`.`r_id` WHERE u_name = ?");
+//	}
 	
 	// 权限	
 	@Override
@@ -62,22 +58,81 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//super.configure(http);
 		
 		http
+		
 		.authorizeRequests()
-			.antMatchers("/","/hr","/hr/*").permitAll()
+			
+			.antMatchers("/","/hr","/hr/*","/login/*").permitAll()
 			//.antMatchers("/reg","/reg/*").hasRole("患者")
-//			.antMatchers("/reg","/reg/*").hasRole("患者")
+			.antMatchers("/reg","/reg/*").hasRole("患者")
 //			.antMatchers("/hr","/hr/*").hasRole("人事")
 			//github.com/JavaHanpuTigers/HospitalManagementSystem.git
 			//.antMatchers("/admin","/admin/*").hasRole("ADMIN")
 			//.anyRequest().authenticated()
 			.and()
 		.formLogin()
+		
 		.and()
-		.logout().logoutSuccessUrl("/")
-		.and()
+		
+		.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+        .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+        
+        .csrf().disable();
+       //.addFilter(new CorsFilter(this.corsConfigurationSource()))
+        	// 不需要session
+//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
 		// 关闭网站拦截工具
-//		.csrf().disable()
-		.httpBasic();
-		http.authorizeRequests().and().csrf().disable();
+		
+		//.httpBasic();
+		//http.authorizeRequests().and().csrf().disable();
 	}
+	
+
+
+	 @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
+    }
+	
+	// 加密密码的，安全第一嘛~
+    @Bean 
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+    @Autowired
+    MyAuthenticationProvider myAuthenticationProvider;
+    // 认证
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//    	auth.jdbcAuthentication()
+//		.passwordEncoder(new BCryptPasswordEncoder())
+//		.dataSource(getDataSource())
+//		.usersByUsernameQuery("select u_name,u_password,r_id from user where u_name = ?")
+//		.authoritiesByUsernameQuery("SELECT u_name,r_name FROM role LEFT JOIN USER ON role.`r_id` = `user`.`r_id` WHERE u_name = ?");
+        
+    	
+    	//
+//    	auth.userDetailsService(userDetailsService)
+//        .passwordEncoder(new BCryptPasswordEncoder());
+    	
+    	auth.authenticationProvider(myAuthenticationProvider);
+    	
+    	
+    }
+    @Configuration
+    public class CorsConf {
+        @Bean
+        public CorsFilter corsFilter() {
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.addAllowedOrigin("*");
+            corsConfiguration.addAllowedHeader("Content-Type,Authorization");
+            corsConfiguration.addAllowedMethod("*");
+            source.registerCorsConfiguration("/**", corsConfiguration);
+            System.out.println("CorsConf" +".corsFilter" );
+            return new CorsFilter(source);
+        }
+    }
+
 }

@@ -151,3 +151,12 @@
 .hospital-info>p {
      text-indent: 2em;
 }
+
+/* 滚动条样式 */
+.el-scrollbar__wrap {
+
+
+}
+body .el-scrollbar__wrap {
+    overflow-x: hidden;
+}

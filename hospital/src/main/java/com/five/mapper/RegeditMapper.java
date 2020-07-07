@@ -18,6 +18,7 @@ import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
 import com.five.pojo.Regedit;
+import com.five.pojo.Role;
 import com.five.pojo.Subment;
 import com.five.pojo.User;
 
@@ -129,4 +130,25 @@ public interface RegeditMapper {
 	@Select("SELECT COUNT(rt_id) FROM register WHERE "
 			+ "rt_date BETWEEN #{begin} AND #{finish};")
 	int selectDateCount(String begin ,String finish);
+	
+	
+	
+	@Select("select * from user where u_name = #{name}")
+	@Results({
+		@Result(column = "u_id",property = "id",id = true),
+		@Result(column = "u_name",property = "name"),
+		@Result(column = "u_password",property = "password"),
+		@Result(column = "r_id",property = "role" ,javaType = Role.class,
+				one = @One(select = "com.five.mapper.RegeditMapper.selectRole")
+		),
+	})
+	User selectOne(String name);
+	
+	@Select("select * from role where r_id = #{id}")
+	@Results({
+		@Result(column = "r_id",property = "id"),
+		@Result(column = "r_name",property = "name")
+	})
+	Role selectRole(int id);
+	
 }

@@ -101,6 +101,8 @@ public class RegeditSerivceImpl implements RegeditService{
 		
 		List<Doctor> list = regMapper.doctorDateAll(id,week_index);
 		
+		System.out.println(list);
+		
 		return list;
 	}
 

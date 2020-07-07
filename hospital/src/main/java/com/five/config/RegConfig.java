@@ -6,6 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 
+/**
+ * 挂号相关的配置类
+ * @author zll
+ *
+ */
 @Configuration
 @ConfigurationProperties(prefix = "reg")
 public class RegConfig {

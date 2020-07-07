@@ -10,7 +10,6 @@ public class HomeController {
 	// 静态主页 -- 已弃用
 	@GetMapping("/index")
 	public String home() {
-		System.out.println();
 		return "index.html";
 	}
 	
