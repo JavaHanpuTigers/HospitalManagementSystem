@@ -109,14 +109,26 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 		                            <el-collapse-item title="人事管理" name="3">
 		                                <div class="personnel">
 		                                    <el-row>
-		                                        <router-link tag="p" to="/staff" class="router-link">员工管理</router-link>
-		                                    </el-row>
-		                                    <el-row>
-		                                        <router-link tag="p" to="/dept" class="router-link">科室管理</router-link>
-		                                    </el-row>
-		                                    <el-row>
-		                                        <router-link tag="p" to="/scheduling" class="router-link">工作排班</router-link>
-		                                    </el-row>
+                                        <router-link to="/doct">医生管理</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link to="/dept">科室管理</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link to="/subment">子科室管理</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link to="/arge">排班管理</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link to="/pant">患者管理</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link to="/reg">挂号记录</router-link>
+                                    </el-row>
+                                    <el-row>
+                                        <router-link to="/prescript">处方记录</router-link>
+                                    </el-row>
 		                                </div>
 		                            </el-collapse-item>
 		                            <el-collapse-item title="待建设" name="4">

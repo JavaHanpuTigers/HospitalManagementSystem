@@ -36,10 +36,7 @@ import com.five.service.impl.PersonnelServiceImpl;
 @RequestMapping("/hr")
 public class PersonnelController {
 	
-	// 自动注入人事相关的mapper
-	@Autowired
-	PersonnelMapper personnelMapper;
-	
+	// 自动注入人事接口的实现类
 	@Autowired
 	PersonnelService ps;
 	
@@ -49,14 +46,12 @@ public class PersonnelController {
 		Map<String , Object> map = new HashMap<>();
 		// 设置一页显示多少数据
 		int off = 2;
-		// 获取表数据的数量
-		int count = ps.countPant();
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getPant(page, off));
 		// 将当前页添加到集合中
-		map.put("number", page);
-		// 将总页数添加到集合中
-		map.put("totalPages", count/off+(count%off==0?0:1));
+		map.put("size", off);
+		// 将总数据数添加到集合中
+		map.put("count", ps.countPant());
 		// 返回集合
 		return map;
 	}
@@ -86,14 +81,12 @@ public class PersonnelController {
 		Map<String , Object> map = new HashMap<>();
 		// 设置一页显示多少数据
 		int off = 2;
-		// 获取表数据的数量
-		int count = ps.countDoct();
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getDoct(page, off));
 		// 将当前页添加到集合中
-		map.put("number", page);
-		// 将总页数添加到集合中
-		map.put("totalPages", count/off+(count%off==0?0:1));
+		map.put("size", off);
+		// 将总数据数添加到集合中
+		map.put("count", ps.countDoct());
 		// 返回集合
 		return map;
 	}
@@ -160,14 +153,13 @@ public class PersonnelController {
 		Map<String , Object> map = new HashMap<>();
 		// 设置一页显示多少数据
 		int off = 2;
-		// 获取表数据的数量
-		int count = ps.countSubment();
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getSubment(page, off));
+		map.put("Allcontent", ps.getSubment(0, ps.countSubment()));
 		// 将当前页添加到集合中
-		map.put("number", page);
-		// 将总页数添加到集合中
-		map.put("totalPages", count/off+(count%off==0?0:1));
+		map.put("size", off);
+		// 将总数据数添加到集合中
+		map.put("count", ps.countSubment());
 		// 返回集合
 		return map;
 	}

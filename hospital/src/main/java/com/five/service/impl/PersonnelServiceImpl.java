@@ -67,7 +67,7 @@ public class PersonnelServiceImpl implements PersonnelService {
 	// 获取医生的数量
 	@Override
 	public int countDoct() {
-		return pm.countPant();
+		return pm.countDoct();
 	}
 
 	// 添加医生信息

@@ -89,7 +89,7 @@ public interface PersonnelMapper {
 	
 	// 获取医生的数量
 	@Select("SELECT count(d_id) FROM doctor")
-	int countDocr();
+	int countDoct();
 	
 	// 添加医生信息
 	@Insert("INSERT INTO doctor(u_id,s_id,d_age,d_name,d_sex,d_nation,d_title,d_fee) VALUES(#{user.id},#{subment.id},#{age},#{name},#{sex},#{nation},#{title},#{fee})")

@@ -284,17 +284,17 @@ const router = new VueRouter({
             path: '/lookAppointment',
             component: lookAppointment
         }, {
-            path: '/staff',
-            component: staff,
+            path: '/doct',
+            component: doct,
             children: [{
                 path: '/',
-                component: checkStaff
+                component: viewDoct
             }, {
-                path: 'addStaff',
-                component: addStaff
+                path: 'viewDoct',
+                component: viewDoct
             }, {
-                path: 'checkStaff',
-                component: checkStaff
+                path: 'addDoct',
+                component: addDoct
             }]
 
         }, {
@@ -302,29 +302,54 @@ const router = new VueRouter({
             component: dept,
             children: [{
                 path: '/',
-                component: checkDept
+                component: viewDept
+            }, {
+                path: 'viewDept',
+                component: viewDept
             }, {
                 path: 'addDept',
                 component: addDept
-            }, {
-                path: 'checkDept',
-                component: checkDept
             }]
         }, {
-            path: '/scheduling',
-            component: scheduling,
+            path: '/subment',
+            component: subment,
             children: [{
                 path: '/',
-                component: checkScheduling
+                component: viewSubment
             }, {
-                path: 'addScheduling',
-                component: addScheduling
+                path: 'viewSubment',
+                component: viewSubment
             }, {
-                path: 'checkScheduling',
-                component: checkScheduling
+                path: 'addSubment',
+                component: addSubment
+            }]
+        }, {
+            path: '/arge',
+            component: arge,
+            children: [{
+                path: '/',
+                component: viewArge
+            }, {
+                path: 'viewArge',
+                component: viewArge
+            }, {
+                path: 'addArge',
+                component: addArge
             }]
 
         }, {
+            path: '/pant',
+            component: pant
+
+        }, {
+            path: '/reg',
+            component: reg
+
+        }, {
+            path: '/prescript',
+            component: prescript
+
+        },  {
             path: '/other',
             component: other
         }
