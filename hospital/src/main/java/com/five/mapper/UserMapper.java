@@ -1,7 +1,10 @@
 package com.five.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -30,6 +33,7 @@ public interface UserMapper {
 	})
 	Role selectRole(int id);
 	
-	@Select("select p_id from patient where u_id = #{id}")
-	int selectId(int id);
+	@Select("select `${rid}` from `${from}` where u_id = #{uid}")
+	int selectId(Map<String, Object> map);
+	
 }
