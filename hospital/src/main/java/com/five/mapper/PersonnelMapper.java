@@ -23,6 +23,7 @@ import com.five.pojo.Doctor;
 import com.five.pojo.Patient;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
+import com.five.pojo.Role;
 import com.five.pojo.Subment;
 import com.five.pojo.User;
 /**
@@ -94,7 +95,7 @@ public interface PersonnelMapper {
 	// 添加医生信息
 	@Insert("INSERT INTO doctor(u_id,s_id,d_age,d_name,d_sex,d_nation,d_title,d_fee) VALUES(#{user.id},#{subment.id},#{age},#{name},#{sex},#{nation},#{title},#{fee})")
 	@Options(useGeneratedKeys = true, keyProperty = "id")
-	void addDoct(Doctor doctor);
+	int addDoct(Doctor doctor);
 	
 	// 修改医生信息
 	@Update("UPDATE doctor SET s_id=#{subment.id},d_age=#{age},d_name=#{name},d_sex=#{sex},d_nation=#{nation},d_title=#{title},d_fee=#{fee} WHERE d_id=#{id}")
@@ -153,7 +154,7 @@ public interface PersonnelMapper {
 	//添加科室信息
 	@Insert("INSERT INTO department(dp_name) VALUES(#{name})")
 	@Options(useGeneratedKeys = true, keyProperty = "id")
-	void addDept(Department department);
+	int addDept(Department department);
 	
 	//修改科室信息
 	@Update("UPDATE department SET dp_name=#{name} WHERE dp_id=#{id}")
@@ -180,7 +181,7 @@ public interface PersonnelMapper {
 	// 添加子科室的信息
 	@Insert("INSERT INTO subment(s_name,dp_id) VALUES(#{name},#{dept.id})")
 	@Options(useGeneratedKeys = true, keyProperty = "id")
-	void addSubment(Subment subment);
+	int addSubment(Subment subment);
 	
 	// 修改子科室的信息
 	@Update("UPDATE subment SET s_name=#{name},dp_id=#{dept.id} WHERE s_id=#{id}")
@@ -234,5 +235,11 @@ public interface PersonnelMapper {
 	// 获取处方的数量
 	@Select("SELECT count(pt_id) FROM prescript")
 	int countPrescript();
+	
+	// 添加用户
+	@Insert("insert into user(r_id,u_name,u_password) values(2,#{name},#{password})")
+	@Options(useGeneratedKeys = true, keyProperty = "id")
+	int addUser(User user);
+	
 	
 }

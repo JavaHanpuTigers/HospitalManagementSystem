@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.five.exception.createPretException;
 import com.five.mapper.PersonnelMapper;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
@@ -13,6 +16,7 @@ import com.five.pojo.Patient;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.pojo.Subment;
+import com.five.pojo.User;
 import com.five.service.PersonnelService;
 
 /**
@@ -26,6 +30,16 @@ public class PersonnelServiceImpl implements PersonnelService {
 	// 自动注入
 	@Autowired
 	PersonnelMapper pm;
+	
+	@Transactional(rollbackFor = createPretException.class,isolation = Isolation.SERIALIZABLE)
+	@Override
+	public void add(Doctor doctor)throws createPretException {
+		pm.addUser(doctor.getUser());
+		if(doctor.getUser().getId()==0) {
+			throw new createPretException();
+		}
+		pm.addDoct(doctor);
+	}
 
 	// 获得所有患者信息
 	@Override
@@ -71,8 +85,13 @@ public class PersonnelServiceImpl implements PersonnelService {
 	}
 
 	// 添加医生信息
+	@Transactional(rollbackFor = createPretException.class,isolation = Isolation.SERIALIZABLE)
 	@Override
-	public Doctor addDoct(Doctor doctor) {
+	public Doctor addDoct(Doctor doctor)throws createPretException {
+		pm.addUser(doctor.getUser());
+		if(doctor.getUser().getId()==0) {
+			throw new createPretException();
+		}
 		pm.addDoct(doctor);
 		return doctor;
 	}
