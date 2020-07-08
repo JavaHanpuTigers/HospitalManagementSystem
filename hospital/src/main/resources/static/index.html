@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" 
-xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -9,13 +8,12 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <link rel="stylesheet" href="css/element_ui.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/index.css">
-     
+
     <!-- 引入组件库 -->
     <script src="js/vue.js"></script>
     <script src="js/vue-router.js"></script>
     <script src="js/axios.js"></script>
     <script src="js/element_ui.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-3.1.1.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="components/personnel.js"></script>
@@ -27,128 +25,137 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <body>
     <div id="dv">
         <el-card class="box-card">
+            <!--登录弹框-->
+            <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+                <span>显示提示信息</span>
+                <el-input placeholder="请输入用户名..."></el-input>
+                <el-input placeholder="请输入密码..."></el-input>
+                <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!--登录弹框-->
             <div slot="header" class="clearfix">
                 <!-- 长沙的温度情况 -->
                 <iframe class="clearfix-frame" allowtransparency="true" frameborder="0" width="385" height="96" scrolling="no" src="http://tianqi.2345.com/plugin/widget/index.htm?s=1&z=1&t=0&v=0&d=3&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=385&h=90&align=center"></iframe>
-                <el-badge :value="1" class="badge-item">
-                    <el-button type="primary" icon="el-icon-message-solid" size="mini" circle></el-button>
-                </el-badge>
-                <!-- 用户已登录显示区域 -->
-                <div sec:authorize="isAuthenticated()">
-	                <el-button style="float: right; padding: 3px 0" type="text"><i class="el-icon-user-solid"></i>
-	                    <el-dropdown trigger="click">
-	                        <span class="el-dropdown-link">
-	                        <!-- 用户名显示 -->
-	                        <span sec:authentication="name"></span>
-	                        <span sec:authentication="principal.username"></span>
-	        				<i class="el-icon-arrow-down el-icon--right"></i>
-	                </span>
-	                        <el-dropdown-menu slot="dropdown">
-	                            <el-dropdown-item class="dditem">
-	                                <router-link to="/userinfo" class="router-link">个人信息</router-link>
-	                            </el-dropdown-item>
-	                            <el-dropdown-item class="dditem">
-	                                <router-link to="/userset" class="router-link">用户设置</router-link>
-	                            </el-dropdown-item>
-	                            <el-dropdown-item class="dditem">
-	                                <router-link to="@{/logout}" class="router-link">注销账号</router-link>
-	                            </el-dropdown-item>
-	                        </el-dropdown-menu>
-	                    </el-dropdown>
-	                </el-button>
+                <el-button style="float: right; padding: 3px 0" type="text"><i class="el-icon-user-solid"></i>{{token.sub}}
+                    <el-dropdown trigger="click">
+                        <span class="el-dropdown-link">
+                            <i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item class="dditem">
+                                <router-link to="/userinfo" class="router-link">修改密码</router-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item class="dditem">
+                                <router-link to="/userset" class="router-link">用户手册</router-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item class="dditem">
+                                <a href="/logout" class="router-link">注销账号</a>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-button>
+                <div style="margin-left:60%;margin-top:10px;">
+                    <!-- <button type="button" class="btn btn-large btn-block btn-primary" @click="aliveDialog()">对话框</button> -->
+                    <router-link to="/retrieve" class="user-oper">【忘记密码?】</router-link>
+                    <router-link to="/userregit" class="user-oper">【点击注册】</router-link>&nbsp;
+                    <span><a href="/login" class="user-oper" >登录</a></span>
+                    <!-- </div> -->
                 </div>
-                <!-- 用户未登录显示区域 -->
-                <div sec:authorize="!isAuthenticated()">
-            		<span><a th:href="/login">登录</a></span>
-        		</div>
-            </div>
-            <!-- 核心界面 -->
-            <el-row>
-                <el-col :span="4" class="head-bdc">
-                    <div class="head-title">
-                        <span style="font-weight: bold;">医院管理系统&nbsp;<i class="el-icon-first-aid-kit" style="font-size: 20px;font-weight: bold;color: rgb(160, 16, 16);"></i></span>
-                    </div>
-                    <div class="text item">
-                        <!--菜单部分-->
-                        <el-collapse v-model="activeName" accordion>
-                        	<!-- 公共部分 -->
-                            <el-collapse-item title="首页" name="0">
-                                <router-link to="/" class="router-link">欢迎使用医院管理系统</router-link>
-                            </el-collapse-item>
-                            <div sec:authorize="isAuthenticated()">
-	                            <!-- 患者用户可访问 -->
-	                            <div sec:authorize="hasRole('ROLE_患者')">
-		                            <el-collapse-item title="挂号收费" name="1">
-		                                <router-link to="/user" class="router-link">病人挂号</router-link>
-		                            </el-collapse-item>
-	                            </div>
-	                            <!-- 医生可访问 -->
-	                            <div sec:authorize="hasRole('ROLE_医生')">
-		                            <el-collapse-item title="门诊管理" name="2">
-		                                <ul style="list-style: none;padding: 0px;margin: 0px;">
-		                                    <li>
-		                                        <router-link to="/prescribe" class="router-link">面诊</router-link>
-		                                    </li>
-		                                    <li>
-		                                        <router-link to="/call" class="router-link">叫号信息</router-link>
-		                                    </li>
-		                                    <li>
-		                                        <router-link to="/prescriptionRecords" class="router-link">处方记录</router-link>
-		                                    </li>
-		                                    <li>
-		                                        <router-link to="/lookAppointment" class="router-link">查看预约</router-link>
-		                                    </li>
-		                                </ul>
-		                            </el-collapse-item>
-	                            </div>
-	                            <!-- 人事可访问 -->
-	                            <div sec:authorize="hasRole('ROLE_人事')">
-		                            <el-collapse-item title="人事管理" name="3">
-		                                <div class="personnel">
-		                                    <el-row>
-		                                        <router-link tag="p" to="/staff" class="router-link">员工管理</router-link>
-		                                    </el-row>
-		                                    <el-row>
-		                                        <router-link tag="p" to="/dept" class="router-link">科室管理</router-link>
-		                                    </el-row>
-		                                    <el-row>
-		                                        <router-link tag="p" to="/scheduling" class="router-link">工作排班</router-link>
-		                                    </el-row>
-		                                </div>
-		                            </el-collapse-item>
-		                            <el-collapse-item title="待建设" name="4">
-		                                <router-link to="/other" class="router-link">其他</router-link>
-		                            </el-collapse-item>
-	                            </div>
-                            </div>
-                        </el-collapse>
-                        <!-- 温馨提示 -->
-                        <div style="padding-top: 20px;">
-                            <h3>温馨提示：</h3>
-                            {{ganmao}}<br/><br/>
-                            <span>当前温度：<i>{{wendu}}℃</i></span>
-                            <!-- <img src="images/hope2.png" style="width: 200px;height: 130px;margin-left: -20px;margin-top: 5px;" alt="祝愿您早日康复"> -->
+                <!-- 核心界面 -->
+                <el-row>
+                    <el-col :span="4" class="head-bdc">
+                        <div class="head-title">
+                            <span style="font-weight: bold;">医院管理系统&nbsp;<i class="el-icon-first-aid-kit" style="font-size: 20px;font-weight: bold;color: rgb(160, 16, 16);"></i></span>
                         </div>
-                    </div>
-                </el-col>
-                <el-col :span="20">
-                    <div class="body-content">
-                        <router-view></router-view>
-                    </div>
-                </el-col>
-            </el-row>
+                        <div class="text item">
+                            <!--菜单部分-->
+                            <el-collapse v-model="activeName" accordion>
+                                <!-- 公共部分 -->
+                                <el-collapse-item title="首页" name="0">
+                                    <router-link to="/" class="router-link">欢迎使用医院管理系统</router-link>
+                                </el-collapse-item>
+                                <el-collapse-item title="挂号收费" name="1">
+                                    <router-link to="/user" class="router-link">病人挂号</router-link>
+                                </el-collapse-item>
+                                <el-collapse-item title="门诊管理" name="2">
+                                    <ul style="list-style: none;padding: 0px;margin: 0px;">
+                                        <li>
+                                            <router-link to="/prescribe" class="router-link">面诊</router-link>
+                                        </li>
+                                        <li>
+                                            <router-link to="/call" class="router-link">叫号信息</router-link>
+                                        </li>
+                                        <li>
+                                            <router-link to="/prescriptionRecords" class="router-link">处方记录</router-link>
+                                        </li>
+                                        <li>
+                                            <router-link to="/lookAppointment" class="router-link">查看预约</router-link>
+                                        </li>
+                                    </ul>
+                                </el-collapse-item>
+                                <!--  </div>-->
+                                <el-collapse-item title="人事管理" name="3">
+                                    <div class="personnel">
+                                        <el-row>
+                                            <router-link to="/doct">医生管理</router-link>
+                                        </el-row>
+                                        <el-row>
+                                            <router-link to="/dept">科室管理</router-link>
+                                        </el-row>
+                                        <el-row>
+                                            <router-link to="/subment">子科室管理</router-link>
+                                        </el-row>
+                                        <el-row>
+                                            <router-link to="/arge">排班管理</router-link>
+                                        </el-row>
+                                        <el-row>
+                                            <router-link to="/pant">患者管理</router-link>
+                                        </el-row>
+                                        <el-row>
+                                            <router-link to="/reg">挂号记录</router-link>
+                                        </el-row>
+                                        <el-row>
+                                            <router-link to="/prescript">处方记录</router-link>
+                                        </el-row>
+                                    </div>
+                                </el-collapse-item>
+                                <el-collapse-item title="待建设" name="4">
+                                    <router-link to="/other" class="router-link">其他</router-link>
+                                </el-collapse-item>
+                            </el-collapse>
+                            <!-- 温馨提示 -->
+                            <div style="padding-top: 20px;">
+                                <h3>温馨提示：</h3>
+                                {{ganmao}}<br/><br/>
+                                <span>当前温度：<i>{{wendu}}℃</i></span>
+                                <!-- <img src="images/hope2.png" style="width: 200px;height: 130px;margin-left: -20px;margin-top: 5px;" alt="祝愿您早日康复"> -->
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :span="20">
+                        <div class="body-content">
+                            <router-view></router-view>
+                        </div>
+                    </el-col>
+                </el-row>
         </el-card>
+        </div>
     </div>
 </body>
 
 <script>
     new Vue({
-        el: "#dv ",
+        el: "#dv",
         router,
         data: {
             activeName: '0',
             wendu: "",
             ganmao: "",
+            dialogVisible: false,
+            token: {}
         },
         methods: {
             // 获取长沙当天的天气情况
@@ -160,11 +167,41 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
                         // 获取实时温度
                         this.wendu = res.data.data.wendu;
                     })
+            },
+            getToken: function() {
+                axios({
+                    method: 'get',
+                    url: '/user/token',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    },
+                    responseType: 'json'
+                }).then(res => {
+                    // 请求成功
+                    this.token = res.data;
+                    console.log(this.token);
+                }).catch(error => {
+                    // 请求失败，
+                    console.log(error);
+                });
+            },
+            aliveDialog: function() {
+                if (this.token == null) {
+                    this.dialogVisible = true;
+                }
             }
         },
         created() {
             this.getWea();
-        }
+            this.getToken();
+        },
+        mounted() {
+            this.aliveDialog();
+        },
     })
 </script>
 

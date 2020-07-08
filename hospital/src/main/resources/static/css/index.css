@@ -22,7 +22,7 @@
      width: 80%;
      height: 600px;
      margin: auto;
-     margin-top:15px;
+     margin-top: 15px;
  }
  /* 导航菜单背景样式 */
  
@@ -40,14 +40,14 @@
  }
  
  .head-title {
-     margin-top: -40px;
+     margin-top: -20px;
      margin-bottom: 18px;
  }
  /*  主体内容样式*/
  
  .body-content {
      width: 96%;
-     height:100%;
+     height: 100%;
      margin: 0px auto;
      /* background-color: hotpink; */
  }
@@ -132,31 +132,32 @@
      border-top: none;
  }
  /* user相关的链接样式*/
-.user-oper{
-	text-decoration: none;
-    font-weight: bold;
-    color:blue; 
-}
-.user-oper:hover{
-	text-decoration: none;
-    font-weight: bold;
-    color:green; 
-}
-/* 主页样式*/
-.hospital-info {
+ 
+ .user-oper {
+     text-decoration: none;
+     font-weight: bold;
+     color: blue;
+ }
+ 
+ .user-oper:hover {
+     text-decoration: none;
+     font-weight: bold;
+     color: green;
+ }
+ /* 主页样式*/
+ 
+ .hospital-info {
      padding-left: 15px;
      padding-top: 15px;
-}
-        
-.hospital-info>p {
+ }
+ 
+ .hospital-info>p {
      text-indent: 2em;
-}
-
-/* 滚动条样式 */
-.el-scrollbar__wrap {
-
-
-}
-body .el-scrollbar__wrap {
-    overflow-x: hidden;
-}
+ }
+ /* 滚动条样式 */
+ 
+ .el-scrollbar__wrap {}
+ 
+ body .el-scrollbar__wrap {
+     overflow-x: hidden;
+ }

@@ -2,11 +2,15 @@ package com.five.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.five.pojo.Patient;
+import com.five.pojo.Role;
 import com.five.pojo.User;
 
 @Mapper
@@ -24,14 +28,25 @@ public interface UserInfoMapper {
 		
 		// 查询用户信息
 		@Select("SELECT * FROM `user`,patient WHERE `user`.u_id=patient.`u_id` AND `user`.`u_id`=#{id}")
-//		@Results({
-//			@Result()
-//		})
+		@Results({
+			@Result(column = "u_id",property = "id",id = true),
+			@Result(column = "u_name",property = "name"),
+			@Result(column = "u_password",property = "password"),
+			@Result(column = "r_id",property = "role" ,javaType = Role.class,
+					one = @One(select = "com.five.mapper.UserMapper.selectRole")),
+			@Result(id=true,column = "p_id",property = "id"),
+			@Result(column = "p_name",property = "name"),
+			@Result(column = "p_age",property = "age"),
+			@Result(column = "p_nation",property = "nation"),
+			@Result(column = "p_sex",property = "sex"),
+			@Result(column = "p_card",property = "card"),
+			@Result(column = "u_id",property  = "user" ,javaType = User.class,
+			one = @One(select = "com.five.mapper.RegeditMapper.getUserByid"))
+		})
 		User findUser(int id);
 		
 		//修改用户登录密码
 		@Update("UPDATE `user` SET u_password=#{password} WHERE u_id=#{id}")
-		
 		int updateWord(User user);
 		
 }

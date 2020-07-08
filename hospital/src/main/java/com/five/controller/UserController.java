@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.five.exception.CreateUserPatientException;
+import com.five.filter.JwtTokenUtils;
 import com.five.pojo.Patient;
 import com.five.pojo.User;
 import com.five.service.impl.UserInfoServiceImpl;
@@ -41,6 +43,12 @@ public class UserController {
 	public User updateWord(@RequestBody User user) {
 		userInfoServiceImpl.updateWord(user);
 		return user;
+	}
+	
+	@GetMapping("/token")
+	// 拿到token对象
+	public Object getToken(@RequestHeader("Authorization") String token) {
+		return JwtTokenUtils.getTokenBody(token.substring(7));
 	}
 	
 }
