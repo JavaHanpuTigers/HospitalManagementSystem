@@ -38,7 +38,7 @@ let index = {
 let userinfo = {
         template: `
             <div>
-                 	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">         
+                 	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">
 	            	<h5>修改界面</h5><hr>
 	            	<span style="color:red;margin-left:100px;">修改账户信息后，再次登录即生效!</span>
 	            	<el-form label-width="80px" style="width:500px;">
@@ -58,11 +58,12 @@ let userinfo = {
 					  <el-col :span="12">
     						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
 					  </el-col>
-					</el-row> 
+					</el-row>
 	            	</el-form>
 	        		</div>
             </div>
-    `,data() {
+    `,
+        data() {
             return {
                 labelPosition: 'right',
                 ruleForm: {
@@ -116,9 +117,9 @@ let userset = {
     }
     // 注册账号组件
 let userregit = {
-    template: `
+        template: `
              <div>
-	               	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">         
+	               	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">
 	            	<h5>注册界面</h5><hr>
 	            	<span style="color:red;margin-left:100px;">请填写实名信息，方便医院登记!</span>
 	            	<el-form label-width="80px" style="width:500px;">
@@ -148,50 +149,75 @@ let userregit = {
 	                </el-form-item>
 	                	<el-row>
 					  <el-col :span="12">
-					  		<el-button type="primary" style="width:80%;margin-left:25px;">立即注册</el-button>
+					  		<el-button type="primary" @click="regitUser()" style="width:80%;margin-left:25px;">立即注册</el-button>
 					  </el-col>
 					  <el-col :span="12">
     						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
 					  </el-col>
-					</el-row> 
+					</el-row>
 	            	</el-form>
 	        		</div>
             </div>
-    `,data() {
-                return {
-                    labelPosition: 'right',
-                    ruleForm: {
-                        name: '',
-                        sex: '',
-                        age: '',
-                        nation: '',
-                        card: '',
-                        username: '',
-                        password: '',
-                        again: ''
-                    }
-                }
-            },
-            methods: {
-                resetForm() {
-                    this.ruleForm = {
-                        name: '',
-                        sex: '',
-                        age: '',
-                        nation: '',
-                        card: '',
-                        username: '',
-                        password: '',
-                        again: ''
-                    }
+    `,
+        data() {
+            return {
+                labelPosition: 'right',
+                ruleForm: {
+                    name: '',
+                    sex: '',
+                    age: null,
+                    nation: '',
+                    card: '',
+                    username: '',
+                    password: '',
+                    again: ''
                 }
             }
-}
-// 忘记密码模块
+        },
+        methods: {
+            resetForm() {
+                this.ruleForm = {
+                    name: '',
+                    sex: '',
+                    age: null,
+                    nation: '',
+                    card: '',
+                    username: '',
+                    password: '',
+                    again: ''
+                }
+            },
+            // 获取服务端接口
+            regitUser: function() {
+                if (this.ruleForm.password != this.ruleForm.again) {
+                    alert("您两次输入的密码不一致，请核对后提交!");
+                }
+                let data = {
+                    user: {
+                        name: this.ruleForm.username,
+                        password: this.ruleForm.password,
+                    },
+                    name: this.ruleForm.name,
+                    sex: this.ruleForm.sex,
+                    age: this.ruleForm.age,
+                    nation: this.ruleForm.nation,
+                    card: this.ruleForm.card
+                }
+                axios.post("user/add", data).then(res => {
+                    this.resetForm();
+                    alert("恭喜你注册成功!" + res);
+                }).catch(err => {
+                    console.log(err);
+                    console.error("获取异常");
+                })
+            }
+        }
+    }
+    // 忘记密码模块
 let retrieve = {
-        template: `
+    template: `
             <div>
-                 <div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">         
+                 <div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">
 	            	<h5>修改界面</h5><hr>
 	            	<span style="color:red;margin-left:100px;">只有填写正确的实名验证才可找回!</span>
 	            	<el-form label-width="80px" style="width:500px;">
@@ -208,40 +234,41 @@ let retrieve = {
 					  <el-col :span="12">
     						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
 					  </el-col>
-					</el-row> 
+					</el-row>
 	            	</el-form>
 	        		</div>
             </div>
-        `,data() {
-            return {
-                labelPosition: 'right',
-                ruleForm: {
-                    name: '',
-                    sex: '',
-                    age: '',
-                    nation: '',
-                    card: '',
-                    username: '',
-                    password: '',
-                    again: ''
-                }
+        `,
+    data() {
+        return {
+            labelPosition: 'right',
+            ruleForm: {
+                name: '',
+                sex: '',
+                age: '',
+                nation: '',
+                card: '',
+                username: '',
+                password: '',
+                again: ''
             }
-        },
-        methods: {
-            resetForm() {
-                this.ruleForm = {
-                    name: '',
-                    sex: '',
-                    age: '',
-                    nation: '',
-                    card: '',
-                    username: '',
-                    password: '',
-                    again: ''
-                }
+        }
+    },
+    methods: {
+        resetForm() {
+            this.ruleForm = {
+                name: '',
+                sex: '',
+                age: '',
+                nation: '',
+                card: '',
+                username: '',
+                password: '',
+                again: ''
             }
         }
     }
+}
 
 let other = {
         template: `
@@ -250,7 +277,7 @@ let other = {
             </div>
         `
     }
-    // 新建路由 
+    // 新建路由
 const router = new VueRouter({
     routes: [{
             path: '/',
@@ -258,7 +285,7 @@ const router = new VueRouter({
         }, {
             path: '/userinfo',
             component: userinfo
-        },{
+        }, {
             path: '/retrieve',
             component: retrieve
         }, {
@@ -349,7 +376,7 @@ const router = new VueRouter({
             path: '/prescript',
             component: prescript
 
-        },  {
+        }, {
             path: '/other',
             component: other
         }
