@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 	
 	// 静态主页 -- 已弃用
-	@GetMapping("/index")
+	@GetMapping("/home")
 	public String home() {
 		return "index.html";
 	}
