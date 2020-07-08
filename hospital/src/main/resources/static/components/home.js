@@ -3,7 +3,7 @@ let index = {
         template: `
             <div>
             	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">
-	                 <h3 style="text-align:center;margin-right:30px;">欢迎使用医院管理系统</h3>
+	                 <h3 style="text-align:center;margin-right:30px;margin-top:10px;">欢迎使用医院管理系统</h3>
 	            	<br><br>
 	            	<el-carousel :interval="4000" type="card" height="200px">
 	                <el-carousel-item v-for="item in imgs" :key="item">

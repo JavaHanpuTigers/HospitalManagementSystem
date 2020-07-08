@@ -12,7 +12,7 @@ public interface UserInfoService {
 	int createUser(User user);
 	
 	// 查询登录用户信息
-	User findByUser(int id); 
+	Patient findByUser(int id); 
 	
 	// 修改登录用户账号密码
 	int updateWord(User user);

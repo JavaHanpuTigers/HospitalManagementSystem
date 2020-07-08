@@ -2,7 +2,9 @@ package com.five.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +34,13 @@ public class UserController {
 		}
 	} 
 	
-	@GetMapping("/info")
+	@GetMapping("/info/{id}")
 	// 查询账户信息
-	public User findUser(User user) {
-		return userInfoServiceImpl.findByUser(user.getId());
+	public Patient findUser( @PathVariable int id) {
+		return userInfoServiceImpl.findByUser(id);
 	}
 	
-	@GetMapping("/pwd")
+	@PutMapping("/pwd")
 	// 修改当前密码
 	public User updateWord(@RequestBody User user) {
 		userInfoServiceImpl.updateWord(user);

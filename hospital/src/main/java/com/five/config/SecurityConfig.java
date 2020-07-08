@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		.authorizeRequests()
 			
-			.antMatchers("/","/hr","/hr/*","/login/*").permitAll()
+			.antMatchers("/","/hr","/hr/*","/login/*","/user/*").permitAll()
 			//.antMatchers("/reg","/reg/*").hasRole("患者")
 			.antMatchers("/reg","/reg/*").hasRole("患者")
 //			.antMatchers("/hr","/hr/*").hasRole("人事")

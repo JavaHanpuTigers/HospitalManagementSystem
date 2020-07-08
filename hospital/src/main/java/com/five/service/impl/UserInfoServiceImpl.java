@@ -37,13 +37,15 @@ public class UserInfoServiceImpl implements UserInfoService{
 	
 	@Override
 	// 查询当前用户信息
-	public User findByUser(int id) {
+	public Patient findByUser(int id) {
 		return userinfomapper.findUser(id);
 	}
 
 	@Override
 	// 修改当前用户密码
+	@Transactional
 	public int updateWord(User user) {
+		userinfomapper.findUser(user.getId());
 		return userinfomapper.updateWord(user);
 	}
 
