@@ -19,15 +19,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        //QueryWrapper<Employee> queryWrapper = new QueryWrapper<Employee>();
-       // queryWrapper.eq("mobile",s);
+
     	//根据用户名查询用户返回用户实体的方式
-    	System.out.println("asdfasdfasdfjasdjfalksfdjlkj:    "+s+"           ");
     	User user = userMapper.selectOne(s);
-    	System.out.println(user);
     	JwtUser ju = new JwtUser(user);
     	ju.setPatid(userMapper.selectId(user.getId()));
-    	System.out.println(ju);
+    	
         return ju;
     }
 }

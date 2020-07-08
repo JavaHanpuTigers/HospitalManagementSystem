@@ -40,11 +40,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
           return;
       }
       // 如果请求头中有token，则进行解析，并且设置认证信息
+      System.out.println("doFilterInternal---------------------------");
       SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
+     
       super.doFilterInternal(request, response, chain);
   }
   // 这里从token中获取用户信息并新建一个token
-  //解析token，检查是否能从token中取出username，如果有就算成功了\
+  //解析token，检查是否能从token中取出username，如果有就算成功了
   //再根据该username创建一个UsernamePasswordAuthenticationToken对象
   private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
       String token = tokenHeader.replace(JwtTokenUtils.TOKEN_PREFIX, "");

@@ -96,12 +96,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 	
-	// 加密密码的，安全第一嘛~
-    @Bean 
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+
     @Autowired
+    // 自定义用户验证
     MyAuthenticationProvider myAuthenticationProvider;
     // 认证
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -116,6 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    	auth.userDetailsService(userDetailsService)
 //        .passwordEncoder(new BCryptPasswordEncoder());
     	
+    	// 选用自定义的用户验证
     	auth.authenticationProvider(myAuthenticationProvider);
     	
     	

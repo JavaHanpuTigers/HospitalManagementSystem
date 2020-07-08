@@ -159,11 +159,31 @@ public class RegeditSerivceImpl implements RegeditService{
 			return map;
 		}
 		
+		System.out.println("1|2|3".contains("1"));
+		try {
+			if (reg.getDoct() == null) {
+				info = "医生信息为空";
+				throw new ParseException(info,1);
+			}
+			// 得到医生的排班信息
+			String workDate = regMapper.selectByDoctArrange(reg.getDoct().getId()).getTime();
+			if (!workDate.contains(wind.get(0))) {
+				info = "医生不在上班时间";
+				throw new ParseException(info,1);
+			}
+		} catch (Exception e) {
+			map.put("info", info);
+			return map;
+		} 
+		
+		
+		
+		
 		//sdf.format(reg.getDate());
 		//String date2 = ft.format(reg.getDate());
 		
 		System.out.println(str + " " + wind.get(0));
-		
+		// 判断人数是否已经满了
 		int count = regMapper.selectDateCount(str + " " + wind.get(0), str + " " +wind.get(1));
 		System.out.println(count);
 		if (count >= regconfig.getMaxsize()) {

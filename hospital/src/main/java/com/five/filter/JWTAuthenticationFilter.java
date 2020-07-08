@@ -4,6 +4,8 @@ package com.five.filter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,6 +20,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.five.pojo.Role;
 import com.five.pojo.User;
  
@@ -55,7 +59,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       loginUser.setName(username);
       loginUser.setPassword(password);
      
-     // new BCryptPasswordEncoder().(password);
       System.out.println("JWTAuthenticationFilter : "+loginUser);
       //LoginUser loginUser = new ObjectMapper().readValue(request.getInputStream(), LoginUser.class);
       //创建一个UsernamePasswordAuthenticationToken该token包含用户的角色信息，而不是一个空的ArrayList，查看一下源代码是有以下一个构造方法的。
@@ -76,15 +79,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	  System.out.println("这里是第一个拦截");
 	  System.out.println("--------------------------------"+authResult.getPrincipal());
       JwtUser jwtUser = (JwtUser) authResult.getPrincipal();
-//	  JwtUser jwtUser =null;
-//	  
-	 // org.springframework.security.core.userdetails.User us= ( org.springframework.security.core.userdetails.User)authResult.getPrincipal();
-//	  Role r = new Role();
-//	  r.setName((String)us.getAuthorities().toArray()[0]);
-//	  User u = 
-//			  new User( 1, us.getUsername(), us.getPassword(), r);
-//	  
-//	  jwtUser = new JwtUser(u);
+      
       String role = "";
       // 因为在JwtUser中存了权限信息，可以直接获取，由于只有一个角色就这么干了
       Collection<? extends GrantedAuthority> authorities = jwtUser.getAuthorities();
@@ -93,7 +88,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
           role = authority.getAuthority();
       }
       // 根据用户名，角色创建token
-      
       String token = JwtTokenUtils.createToken(jwtUser.getUsername(), role,jwtUser.getPatid());
       // 但是这里创建的token只是单纯的token
       // 按照jwt的规定，最后请求的格式应该是 `Bearer token`
@@ -110,8 +104,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   // 这是验证失败时候调用的方法
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+	  ObjectMapper objectMapper = new ObjectMapper();
+	  Map<String, Object> map =new HashMap<String, Object>();
 	  System.out.println("验证失败！！！！！");
-	  response.getWriter().write("authentication failed, reason: " + failed.getMessage());
+	  map.put("info", failed.getMessage());
+	  //response.getWriter().write("authentication failed, reason: " + failed.getMessage());
+	  response.setContentType("text/html;charset=UTF-8");
+	  response.getWriter().write(objectMapper.writeValueAsString(map));
+	   
   }
 }
 

@@ -44,6 +44,8 @@
                 }
             },
             mounted() {
+            	//*** 获取令牌信息 ***///
+      
                 this.text = localStorage.getItem("token");
             },
             methods: {
@@ -56,6 +58,7 @@
                         // 设置请求头信息
                         headers: {
                             //key: value
+                            // 令牌添加方式 (每个apido要添加)
                             'Authorization': 'Bearer ' + this.text,
                             //'Content-Type': 'multipart/form-data'
                         },
@@ -90,7 +93,9 @@
                         responseType: 'json'
                     }).then(response => {
                         // 请求成功
+                        // 得到信息
                         let res = response.headers.token;
+                        // 设置令牌保存到浏览器
                         window.localStorage.setItem("token", res)
                         console.log(res);
                     }).catch(error => {

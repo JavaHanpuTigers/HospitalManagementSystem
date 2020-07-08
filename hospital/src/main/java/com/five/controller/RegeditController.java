@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.five.filter.JwtTokenUtils;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
@@ -51,8 +54,14 @@ public class RegeditController {
 	
 	// 获取当前时间 返回当前时间和结束时间
 	@GetMapping("/date")
-	public Map<String, String> nowDate(){
+	public Map<String, String> nowDate(
+			@RequestHeader("Authorization") String str){
+		//String str = "eyJhbGciOiJIUzI1NiJ9.eyJST0xFXyI6IlJPTEVf5oKj6ICFIiwic3ViIjoiaHoxMTEiLCJSQVQiOjEsImV4cCI6MTU5NDEyMTg5NywiaWF0IjoxNTk0MTE4Mjk3fQ.9lfPioDAedS-S9GjByZduWyLcK4MwZU0Q__b_wQjjAI";
 		
+		//System.out.println(JwtTokenUtils.getUserId(str));
+		
+		System.out.println(str.substring(7));
+		System.out.println(JwtTokenUtils.getUserId(str.substring(7)));
 		return regSerivce.getDate();
 	}
 	
@@ -67,6 +76,7 @@ public class RegeditController {
 	// 通过id查询全部挂号记录
 	@GetMapping("/{id}")
 	public List<Regedit> regByidAll( 
+			
 			@PathVariable int id){
 		
 		return regSerivce.regAll(id);
@@ -107,56 +117,13 @@ public class RegeditController {
 	@PostMapping("/{id}")
 	public Map<String, Object> putReg(
 			@PathVariable int id,
+			Map<String, Object> map,
 			@RequestBody Regedit reg) {
 		//Map<String, Object> map = new HashMap<String, Object>();
-		
+		Regedit regedit;
 		return regSerivce.setRegedit(reg);
 	}
+
 	
-	@RequestMapping(value = "/aaa", method = RequestMethod.GET)
-	public Map<String, Object> getUser(HttpSession session){
-	   Authentication au;
-	   User user = null;
-	   org.springframework.security.core.userdetails.User u = null;
-	   Map<String, Object> map = new HashMap<String, Object>();
-	  // CloudinsUserDetail userDetail;
-	   String[] meta = new String[1];
-	   
-	   SecurityContext ctx =
-	         (SecurityContext) session.getAttribute("SPRING_SECURITY_CONTEXT");
-	   if(ctx!=null) {
-		   au = ctx.getAuthentication();
-		   u = (org.springframework.security.core.userdetails.User)au.getPrincipal();
-		   map.put("name", u.getUsername());
-		  
-		   System.out.println(u.getUsername() );
-	   }
-//		// 获取session中所有的键值
-//		Enumeration<?> enumeration = session.getAttributeNames();
-//		// 遍历enumeration中的
-//		while (enumeration.hasMoreElements()) {
-//		// 获取session键值
-//		String name = enumeration.nextElement().toString();
-//		// 根据键值取session中的值
-//		Object value = session.getAttribute(name);
-//		// 打印结果
-//		System.out.println("<B>" + name + "</B>=" + value + "<br>/n");
-//		}
-		
-//	   if(ctx!=null) {
-////	      au = ctx.getAuthentication();
-//	      userDetail = (CloudinsUserDetail) au.getPrincipal();
-//	      if (userDetail != null){
-//	         userDetail.setPassword("");
-//		//userDetail直接转成json会报错,需要从中构造一个简单对象
-//	         user = userDetail.castToCloudinsUser();
-//	         meta[0] = "UserId:" +user.getId();
-//	      }
-//	   }
-	   return map;
-	}
-	@GetMapping("/as")
-	 public String currentUserName(Principal principal) {
-	        return principal.getName();
-	 }
+	
 } 

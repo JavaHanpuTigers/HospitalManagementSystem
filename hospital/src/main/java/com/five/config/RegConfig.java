@@ -16,11 +16,11 @@ import org.springframework.context.annotation.Configuration;
 public class RegConfig {
 
 	
-	List<String> workingforen ;
+	List<String> workingforen ; // 上午工作时间
 	
-	List<String> workingarvo ;
+	List<String> workingarvo ; // 下午工作时间
 
-	int maxsize;
+	int maxsize; // 最大挂号人数
 	
 	public List<String> getWorkingforen() {
 		return workingforen;
