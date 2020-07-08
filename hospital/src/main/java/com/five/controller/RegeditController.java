@@ -28,6 +28,7 @@ import com.five.filter.JwtTokenUtils;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
+import com.five.pojo.Patient;
 import com.five.pojo.Regedit;
 import com.five.pojo.User;
 import com.five.service.RegeditService;
@@ -37,6 +38,7 @@ import com.five.service.RegeditService;
 
 public class RegeditController {
 	
+	private static final String Department = null;
 	@Autowired
 	RegeditService regSerivce;
 	// 查询科室下的全部医生
@@ -116,14 +118,49 @@ public class RegeditController {
 	// 进行挂号
 	@PostMapping("/{id}")
 	public Map<String, Object> putReg(
+			@RequestHeader("Authorization") String token,
 			@PathVariable int id,
-			Map<String, Object> map,
+			@RequestBody Map<String, Object> map,
 			@RequestBody Regedit reg) {
 		//Map<String, Object> map = new HashMap<String, Object>();
-		Regedit regedit;
+		
+		token = token.substring(7);
+//		if (JwtTokenUtils.getUsername(token) != null) {
+//			Map<String, Object> map2 = new HashMap<String, Object>();
+//			map2.put("info", "信息有误");
+//		}
+		Regedit regedit = new Regedit();
+		map.get("is"); 	// 是否为自己挂号
+		regedit.setPant(new Patient(JwtTokenUtils.getUserId(token)));
+		regedit.setDate((String) map.get("date"));
+		regedit.setFee((double) map.get("fee"));
+		regedit.setTime((String) map.get("time"));
+		regedit.setDoct(new Doctor((int) map.get("doct")));
+		regedit.setPhone((String) map.get("phone"));
+		//map.get("pant");
+		
+		if ( map.get("is") != null) {
+			System.out.println("");
+		}
+		
+		// 这个4个信息判断 为别挂号
+		map.get("name");
+		map.get("sex");
+		map.get("card");
+		map.get("nation");
 		return regSerivce.setRegedit(reg);
+		
 	}
-
+	
+	
+	@GetMapping("/qqq")
+	public void aa(
+			@RequestBody Map<String, Object> map
+			) {
+		System.out.println(map.get("dept").getClass());
+		
+		
+	}
 	
 	
 } 

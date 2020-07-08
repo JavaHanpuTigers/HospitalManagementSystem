@@ -37,8 +37,11 @@ public class MyAuthenticationProvider implements AuthenticationProvider{
 		String pass = authentication.getCredentials().toString();
 		System.out.println("authentication.getName()"+name);
 		System.out.println("authentication.getCredentials().toString()"+pass);
+		// 判断用户是否存在
 		JwtUser u = (JwtUser)userDetailsService.loadUserByUsername(name);
-
+		if (u == null) {
+			throw new AuthenticationCredentialsNotFoundException("用户名密码错误！！！");
+		}
 		// 用户密码验证
 		if (bcr.matches(pass, u.getPassword())) {
 			System.out.println("密码成功");

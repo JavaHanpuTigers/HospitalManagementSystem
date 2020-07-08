@@ -26,6 +26,22 @@ public class Doctor {
 	
 	private Arrange arrange; // 医生排班信息
 	
+	
+	
+	public Doctor(int id) {
+		super();
+		this.id = id;
+	}
+
+	
+	
+	public Doctor() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public int getId() {
 		return id;
 	}

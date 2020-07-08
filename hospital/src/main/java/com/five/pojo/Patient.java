@@ -28,6 +28,13 @@ public class Patient {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
+	public Patient(int id) {
+		super();
+		this.id = id;
+	}
+
 
 
 	public Patient(int id, String name, String card, int age, String nation, String sex, User user) {
