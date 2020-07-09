@@ -176,7 +176,7 @@ let viewDoct = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px;margin-left:250px">
+        <div style="width:100%;margin-top:20px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
@@ -544,7 +544,7 @@ let viewDept = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px;margin-left:250px">
+        <div style="width:100%;margin-top:20px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
         <!-- <div style="width:100%;margin-top:20px">
@@ -766,7 +766,7 @@ let viewSubment = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px;margin-left:250px">
+        <div style="width:100%;margin-top:20px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
@@ -999,7 +999,7 @@ let viewArge = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px;margin-left:250px">
+        <div style="width:100%;margin-top:20px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
@@ -1206,18 +1206,9 @@ let pant = {
                 <el-table-column prop="age" label="年龄" width="180"></el-table-column>
                 <el-table-column prop="sex" label="性别" width="180"></el-table-column>
                 <el-table-column prop="nation" label="民族" width="180"></el-table-column>
-                <el-table-column fixed="right" align="right" width="200">
-                    <template slot="header" slot-scope="scope">
-                        <el-input v-model="search" size="mini" placeholder="输入关键字搜索"/>
-                    </template>
-                    <template slot-scope="scope">
-                        <el-button type="text" @click="getRow(scope.row)">编辑</el-button>
-                        <el-button @click="deleteRow(scope.row)" type="danger" size="small">移除</el-button>
-                    </template>
-                </el-table-column>
             </el-table>
         </div>
-        <div style="width:100%;margin-top:40px;margin-left:250px">
+        <div style="width:100%;margin-top:40px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
@@ -1272,16 +1263,21 @@ let reg = {
                 <el-table-column prop="nation" label="民族" width="180"></el-table-column>
                 <el-table-column prop="fee" label="费用" width="180"></el-table-column>
                 <el-table-column prop="phone" label="电话" width="180"></el-table-column>
-               <!-- <el-table-column prop="{{states[state]}}" label="状态" width="180"></el-table-column>--?
-                <el-table-column prop="state"  width="180">
+                <el-table-column prop="state" label="状态" width="180"></el-table-column>
+               <!-- <el-table-column label="状态" width="180">
                     <template slot-scope="scope">
-                        <el-button type="text></el-button>
+                        <span v-if="scope.row.state === 1">正常1</span>
+                        <span v-else-if="scope.row.state === 2">正常2</span>
+                        <span v-else-if="scope.row.state === 3">正常3</span>
+                        <span v-else-if="scope.row.state === 4">正常4</span>
+                        <span v-else-if="scope.row.state === 5">正常5</span>
+                        <span v-else-if="scope.row.state === 6">正常6</span>
+                        <span v-else>停用</span>
                     </template>
-                </el-table-column>
-                
+                </el-table-column>-->
             </el-table>
         </div>
-        <div style="width:100%;margin-top:40px;margin-left:250px">
+        <div style="width:100%;margin-top:40px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
@@ -1339,7 +1335,7 @@ let prescript = {
                 <el-table-column fixed="right" prop="reg.id" label="挂号编号" width="180"></el-table-column>
             </el-table>
         </div>
-        <div style="width:100%;margin-top:20px;margin-left:250px">
+        <div style="width:100%;margin-top:20px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
