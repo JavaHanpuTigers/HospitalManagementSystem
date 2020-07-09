@@ -123,7 +123,7 @@ public interface PersonnelMapper {
 	// 获取指定医生的排班
 	@Select("select * from arrange where d_id = #{id}")
 	@ResultMap({"arge"})
-	Arrange getDoctByArge(int id);
+	List<Arrange> getDoctByArge(int id);
 	
 	// 获取排班的数量
 	@Select("SELECT count(a_id) FROM arrange")

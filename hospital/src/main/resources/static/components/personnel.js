@@ -23,7 +23,21 @@ let viewDoct = {
     methods: {
         getlist() {
             this.flag = true;
-            axios.get('hr/doct')
+            // axios.get('hr/doct')
+            axios({
+                    method: 'get',
+                    url: 'hr/doct',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.list = res.data.Allcontent;
                     console.log(res.data);
@@ -55,15 +69,29 @@ let viewDoct = {
             this.dialogVisible = false;
             id = this.doct.id;
             params = {
-                "name": this.doct.name,
-                "sex": this.doct.sex,
-                "age": this.doct.age,
-                "nation": this.doct.nation,
-                "title": this.doct.title,
-                "fee": this.doct.fee,
-                "subment": { "id": this.doct.subment }
-            }
-            axios.put(`hr/doct/${id}`, params)
+                    "name": this.doct.name,
+                    "sex": this.doct.sex,
+                    "age": this.doct.age,
+                    "nation": this.doct.nation,
+                    "title": this.doct.title,
+                    "fee": this.doct.fee,
+                    "subment": { "id": this.doct.subment }
+                }
+                // axios.put(`hr/doct/${id}`, params)
+            axios({
+                    method: 'put',
+                    url: `hr/doct/${id}`,
+                    // 传递参数
+                    data: params,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.getlist();
                     this.$message('修改成功');
@@ -74,16 +102,55 @@ let viewDoct = {
             this.flag = false;
         },
         deleteRow(row) {
-            axios.get(`hr/arge/doct/${row.id}`)
+            axios({
+                    method: 'get',
+                    url: `hr/arge/doct/${row.id}`,
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
-                    if (res.data == '') {
-                        axios.get(`hr/reg/doct/${row.id}`)
+                    if (res.data.length == 0) {
+                        axios({
+                                method: 'get',
+                                url: `hr/reg/doct/${row.id}`,
+                                // 传递参数
+                                data: undefined,
+                                // 设置请求头信息
+                                headers: {
+                                    //key: value
+                                    // 令牌添加方式 (每个apido要添加)
+                                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                    //'Content-Type': 'multipart/form-data'
+                                },
+                                responseType: 'json'
+                            })
                             .then(res => {
                                 console.log(row.id);
                                 if (res.data.length > 0) {
                                     this.$message(row.name + '还有工作，不能删除');
                                 } else {
-                                    axios.delete(`/hr/doct/${row.id}`)
+                                    axios({
+                                            method: 'delete',
+                                            url: `/hr/doct/${row.id}`,
+                                            // 传递参数
+                                            data: undefined,
+                                            // 设置请求头信息
+                                            headers: {
+                                                //key: value
+                                                // 令牌添加方式 (每个apido要添加)
+                                                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                                //'Content-Type': 'multipart/form-data'
+                                            },
+                                            responseType: 'json'
+                                        })
                                         .then(res => {
                                             this.getlist();
                                             this.$message('删除成功');
@@ -104,12 +171,57 @@ let viewDoct = {
                 .catch(err => {
                     console.error(err);
                 });
+
+            // axios.get(`hr/arge/doct/${row.id}`)
+            //     .then(res => {
+            //         if (res.data == '') {
+            //             axios.get(`hr/reg/doct/${row.id}`)
+            //                 .then(res => {
+            //                     console.log(row.id);
+            //                     if (res.data.length > 0) {
+            //                         this.$message(row.name + '还有工作，不能删除');
+            //                     } else {
+            //                         axios.delete(`/hr/doct/${row.id}`)
+            //                             .then(res => {
+            //                                 this.getlist();
+            //                                 this.$message('删除成功');
+            //                             })
+            //                             .catch(err => {
+            //                                 console.error(err);
+            //                             })
+            //                         console.log("删除成功");
+            //                     }
+            //                 })
+            //                 .catch(err => {
+            //                     console.error(err);
+            //                 });
+            //         } else {
+            //             this.$message(row.name + '还有工作，不能删除');
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.error(err);
+            //     });
         }
 
     },
     mounted() {
         this.getlist();
-        axios.get('hr/subment')
+        // axios.get('hr/subment')
+        axios({
+                method: 'get',
+                url: 'hr/subment',
+                // 传递参数
+                data: undefined,
+                // 设置请求头信息
+                headers: {
+                    //key: value
+                    // 令牌添加方式 (每个apido要添加)
+                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    //'Content-Type': 'multipart/form-data'
+                },
+                responseType: 'json'
+            })
             .then(res => {
                 this.submentList = res.data.Allcontent;
             })
@@ -310,19 +422,33 @@ let addDoct = {
             if (pd) {
                 this.flag = true;
                 params = {
-                    "name": this.doct.name,
-                    "sex": this.doct.sex,
-                    "age": this.doct.age,
-                    "nation": this.doct.nation,
-                    "title": this.doct.title,
-                    "fee": this.doct.fee,
-                    "subment": { "id": this.doct.subment },
-                    "user": {
-                        "name": this.doct.username,
-                        "password": this.doct.pass
+                        "name": this.doct.name,
+                        "sex": this.doct.sex,
+                        "age": this.doct.age,
+                        "nation": this.doct.nation,
+                        "title": this.doct.title,
+                        "fee": this.doct.fee,
+                        "subment": { "id": this.doct.subment },
+                        "user": {
+                            "name": this.doct.username,
+                            "password": this.doct.pass
+                        }
                     }
-                }
-                axios.post('hr/doct', params)
+                    // axios.post('hr/doct', params)
+                axios({
+                        method: 'post',
+                        url: 'hr/doct',
+                        // 传递参数
+                        data: params,
+                        // 设置请求头信息
+                        headers: {
+                            //key: value
+                            // 令牌添加方式 (每个apido要添加)
+                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                            //'Content-Type': 'multipart/form-data'
+                        },
+                        responseType: 'json'
+                    })
                     .then(res => {
                         this.resetForm(ruleForm);
                         this.$message('添加成功');
@@ -338,7 +464,21 @@ let addDoct = {
         },
     },
     created() {
-        axios.get('hr/subment')
+        // axios.get('hr/subment')
+        axios({
+                method: 'get',
+                url: 'hr/subment',
+                // 传递参数
+                data: undefined,
+                // 设置请求头信息
+                headers: {
+                    //key: value
+                    // 令牌添加方式 (每个apido要添加)
+                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    //'Content-Type': 'multipart/form-data'
+                },
+                responseType: 'json'
+            })
             .then(res => {
                 this.submentList = res.data.Allcontent;
             })
@@ -434,7 +574,21 @@ let viewDept = {
     methods: {
         getlist() {
             this.flag = true;
-            axios.get('hr/dept')
+            // axios.get('hr/dept')
+            axios({
+                    method: 'get',
+                    url: 'hr/dept',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.list = res.data.Allcontent;
                     // this.list = res.data.content;
@@ -477,9 +631,23 @@ let viewDept = {
             this.dialogVisible = false;
             id = this.dept.id;
             params = {
-                "name": this.dept.name
-            }
-            axios.put(`hr/dept/${id}`, params)
+                    "name": this.dept.name
+                }
+                // axios.put(`hr/dept/${id}`, params)
+            axios({
+                    method: 'put',
+                    url: `hr/dept/${id}`,
+                    // 传递参数
+                    data: params,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.getlist();
                     this.$message('修改成功');
@@ -490,12 +658,40 @@ let viewDept = {
             this.flag = false;
         },
         deleteRow(row) {
-            axios.get(`/hr/subment/dept/${row.id}`)
+            // axios.get(`/hr/subment/dept/${row.id}`)
+            axios({
+                    method: 'get',
+                    url: `hr/subment/dept/${row.id}`,
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     if (res.data.length > 0) {
                         this.$message(row.name + '下有子科室，不能删除！');
                     } else {
-                        axios.delete(`/hr/dept/${row.id}`)
+                        // axios.delete(`/hr/dept/${row.id}`)
+                        axios({
+                                method: 'delete',
+                                url: `hr/dept/${row.id}`,
+                                // 传递参数
+                                data: undefined,
+                                // 设置请求头信息
+                                headers: {
+                                    //key: value
+                                    // 令牌添加方式 (每个apido要添加)
+                                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                    //'Content-Type': 'multipart/form-data'
+                                },
+                                responseType: 'json'
+                            })
                             .then(res => {
                                 this.getlist();
                                 this.$message('删除成功');
@@ -586,9 +782,23 @@ let addDept = {
             if (pd) {
                 this.flag = true;
                 params = {
-                    "name": this.dept.name
-                }
-                axios.post('hr/dept', params)
+                        "name": this.dept.name
+                    }
+                    // axios.post('hr/dept', params)
+                axios({
+                        method: 'post',
+                        url: 'hr/dept',
+                        // 传递参数
+                        data: params,
+                        // 设置请求头信息
+                        headers: {
+                            //key: value
+                            // 令牌添加方式 (每个apido要添加)
+                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                            //'Content-Type': 'multipart/form-data'
+                        },
+                        responseType: 'json'
+                    })
                     .then(res => {
                         this.resetForm(ruleForm)
                         this.$message('添加成功');
@@ -659,7 +869,21 @@ let viewSubment = {
     methods: {
         getlist() {
             this.flag = true;
-            axios.get('hr/subment')
+            // axios.get('hr/subment')
+            axios({
+                    method: 'get',
+                    url: 'hr/subment',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.list = res.data.Allcontent;
                     this.flag = false;
@@ -685,10 +909,24 @@ let viewSubment = {
             this.dialogVisible = false;
             id = this.subment.id;
             params = {
-                "name": this.subment.name,
-                "dept": { "id": this.subment.dept }
-            }
-            axios.put(`hr/subment/${id}`, params)
+                    "name": this.subment.name,
+                    "dept": { "id": this.subment.dept }
+                }
+                // axios.put(`hr/subment/${id}`, params)
+            axios({
+                    method: 'put',
+                    url: `hr/subment/${id}`,
+                    // 传递参数
+                    data: params,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.getlist();
                     this.$message('修改成功');
@@ -699,12 +937,40 @@ let viewSubment = {
             this.flag = false;
         },
         deleteRow(row) {
-            axios.get(`hr/doct/subment/${row.id}`)
+            // axios.get(`hr/doct/subment/${row.id}`)
+            axios({
+                    method: 'get',
+                    url: `hr/doct/subment/${row.id}`,
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     if (res.data.length > 0) {
                         this.$message(row.name + '下还有医生工作，不能工作！');
                     } else {
-                        axios.delete(`/hr/subment/${row.id}`)
+                        // axios.delete(`/hr/subment/${row.id}`)
+                        axios({
+                                method: 'delete',
+                                url: `hr/subment/${row.id}`,
+                                // 传递参数
+                                data: undefined,
+                                // 设置请求头信息
+                                headers: {
+                                    //key: value
+                                    // 令牌添加方式 (每个apido要添加)
+                                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                    //'Content-Type': 'multipart/form-data'
+                                },
+                                responseType: 'json'
+                            })
                             .then(res => {
                                 this.getlist();
                                 this.$message('删除成功');
@@ -812,12 +1078,26 @@ let addSubment = {
             if (pd) {
                 this.flag = true;
                 params = {
-                    "name": this.subment.name,
-                    "dept": {
-                        "id": this.subment.dept
+                        "name": this.subment.name,
+                        "dept": {
+                            "id": this.subment.dept
+                        }
                     }
-                }
-                axios.post('hr/subment', params)
+                    // axios.post('hr/subment', params)
+                axios({
+                        method: 'post',
+                        url: 'hr/subment',
+                        // 传递参数
+                        data: params,
+                        // 设置请求头信息
+                        headers: {
+                            //key: value
+                            // 令牌添加方式 (每个apido要添加)
+                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                            //'Content-Type': 'multipart/form-data'
+                        },
+                        responseType: 'json'
+                    })
                     .then(res => {
                         this.resetForm(ruleForm);
                         this.$message('添加成功');
@@ -900,7 +1180,21 @@ let viewArge = {
     methods: {
         getlist() {
             this.flag = true;
-            axios.get('hr/arge')
+            // axios.get('hr/arge')
+            axios({
+                    method: 'get',
+                    url: 'hr/arge',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.list = res.data.Allcontent;
                     this.flag = false;
@@ -926,10 +1220,24 @@ let viewArge = {
             this.dialogVisible = false;
             id = this.arge.id;
             params = {
-                "time": this.arge.time,
-                "doct": { "id": this.arge.doct }
-            }
-            axios.put(`hr/arge/${id}`, params)
+                    "time": this.arge.time,
+                    "doct": { "id": this.arge.doct }
+                }
+                // axios.put(`hr/arge/${id}`, params)
+            axios({
+                    method: 'get',
+                    url: `hr/arge/${id}`,
+                    // 传递参数
+                    data: params,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.getlist();
                     this.$message('修改成功');
@@ -941,7 +1249,21 @@ let viewArge = {
         },
         deleteRow(row) {
             this.flag = true;
-            axios.delete(`/hr/arge/${row.id}`)
+            // axios.delete(`/hr/arge/${row.id}`)
+            axios({
+                    method: 'delete',
+                    url: `hr/arge/${row.id}`,
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.getlist();
                     this.$message('删除成功');
@@ -955,7 +1277,21 @@ let viewArge = {
     },
     mounted() {
         this.getlist();
-        axios.get('hr/doct')
+        // axios.get('hr/doct')
+        axios({
+                method: 'get',
+                url: 'hr/doct',
+                // 传递参数
+                data: undefined,
+                // 设置请求头信息
+                headers: {
+                    //key: value
+                    // 令牌添加方式 (每个apido要添加)
+                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    //'Content-Type': 'multipart/form-data'
+                },
+                responseType: 'json'
+            })
             .then(res => {
                 this.submentList = res.data.Allcontent;
             })
@@ -1044,10 +1380,24 @@ let addArge = {
             if (pd) {
                 this.flag = true;
                 params = {
-                    "time": this.arge.time,
-                    "doct": { "id": this.arge.doct }
-                }
-                axios.post('hr/arge', params)
+                        "time": this.arge.time,
+                        "doct": { "id": this.arge.doct }
+                    }
+                    // axios.post('hr/arge', params)
+                axios({
+                        method: 'post',
+                        url: 'hr/arge',
+                        // 传递参数
+                        data: params,
+                        // 设置请求头信息
+                        headers: {
+                            //key: value
+                            // 令牌添加方式 (每个apido要添加)
+                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                            //'Content-Type': 'multipart/form-data'
+                        },
+                        responseType: 'json'
+                    })
                     .then(res => {
                         this.resetForm(ruleForm)
                         this.$message('添加成功');
@@ -1063,7 +1413,21 @@ let addArge = {
         }
     },
     created() {
-        axios.get('hr/doct')
+        // axios.get('hr/doct')
+        axios({
+                method: 'get',
+                url: 'hr/doct',
+                // 传递参数
+                data: undefined,
+                // 设置请求头信息
+                headers: {
+                    //key: value
+                    // 令牌添加方式 (每个apido要添加)
+                    'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    //'Content-Type': 'multipart/form-data'
+                },
+                responseType: 'json'
+            })
             .then(res => {
                 this.submentList = res.data.Allcontent;
             })
@@ -1133,7 +1497,21 @@ let pant = {
     methods: {
         getlist() {
             this.flag = true;
-            axios.get('hr/pant')
+            // axios.get('hr/pant')
+            axios({
+                    method: 'get',
+                    url: 'hr/pant',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.list = res.data.Allcontent;
                     this.flag = false;
@@ -1148,48 +1526,48 @@ let pant = {
         handleSizeChange(psize) {
             this.pagesize = psize;
         },
-        getRow(row) {
-            this.dialogVisible = true;
-            this.pant.id = row.id;
-            this.pant.name = row.name;
-            this.pant.card = row.card;
-            this.pant.age = row.age;
-            this.pant.sex = row.sex;
-            this.pant.nation = row.nation;
-        },
-        alterDoct() {
-            this.flag = true;
-            this.dialogVisible = false;
-            id = this.pant.id;
-            params = {
-                "name": this.pant.name,
-                "sex": this.pant.sex,
-                "age": this.pant.age,
-                "nation": this.pant.nation,
-                "card": this.pant.card
-            }
-            axios.put(`hr/pant/${id}`, params)
-                .then(res => {
-                    this.getlist();
-                    this.$message('修改成功');
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-            this.flag = false;
-        },
-        deleteRow(row) {
-            this.flag = true;
-            axios.delete(`/hr/pant/${row.id}`)
-                .then(res => {
-                    this.getlist();
-                    this.$message('删除成功');
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-            this.flag = false;
-        }
+        // getRow(row) {
+        //     this.dialogVisible = true;
+        //     this.pant.id = row.id;
+        //     this.pant.name = row.name;
+        //     this.pant.card = row.card;
+        //     this.pant.age = row.age;
+        //     this.pant.sex = row.sex;
+        //     this.pant.nation = row.nation;
+        // },
+        // alterDoct() {
+        //     this.flag = true;
+        //     this.dialogVisible = false;
+        //     id = this.pant.id;
+        //     params = {
+        //         "name": this.pant.name,
+        //         "sex": this.pant.sex,
+        //         "age": this.pant.age,
+        //         "nation": this.pant.nation,
+        //         "card": this.pant.card
+        //     }
+        //     axios.put(`hr/pant/${id}`, params)
+        //         .then(res => {
+        //             this.getlist();
+        //             this.$message('修改成功');
+        //         })
+        //         .catch(err => {
+        //             console.error(err);
+        //         })
+        //     this.flag = false;
+        // },
+        // deleteRow(row) {
+        //     this.flag = true;
+        //     axios.delete(`/hr/pant/${row.id}`)
+        //         .then(res => {
+        //             this.getlist();
+        //             this.$message('删除成功');
+        //         })
+        //         .catch(err => {
+        //             console.error(err);
+        //         })
+        //     this.flag = false;
+        // }
 
     },
     mounted() {
@@ -1229,7 +1607,21 @@ let reg = {
     methods: {
         getlist() {
             this.flag = true;
-            axios.get('hr/reg')
+            // axios.get('hr/reg')
+            axios({
+                    method: 'get',
+                    url: 'hr/reg',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.list = res.data.Allcontent;
                     this.flag = false;
@@ -1297,7 +1689,21 @@ let prescript = {
     methods: {
         getlist() {
             this.flag = true;
-            axios.get('hr/prescript')
+            // axios.get('hr/prescript')
+            axios({
+                    method: 'get',
+                    url: 'hr/prescript',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                        //'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                })
                 .then(res => {
                     this.list = res.data.Allcontent;
                     this.flag = false;
@@ -1319,7 +1725,7 @@ let prescript = {
     },
     template: `
     <div>
-        <div v-loading="flag">
+        <div v-loading="flag" style="margin-top:50px">
             <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
                 <el-table-column fixed prop="id" label="编号" width="180"></el-table-column>
                 <el-table-column prop="sym" label="症状信息" width="180"></el-table-column>
@@ -1328,7 +1734,7 @@ let prescript = {
                 <el-table-column fixed="right" prop="reg.id" label="挂号编号" width="180"></el-table-column>
             </el-table>
         </div>
-        <div style="width:100%;margin-top:20px;margin-left:100px">
+        <div style="width:100%;margin-top:40px;margin-left:100px">
             <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>

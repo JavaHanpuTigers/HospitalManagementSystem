@@ -227,7 +227,7 @@ public class PersonnelController {
 	
 	// 获取指定医生的排班信息
 	@GetMapping("/arge/doct/{id}")
-	public Arrange getDoctByArge(@PathVariable int id) {
+	public List<Arrange> getDoctByArge(@PathVariable int id) {
 		return pm.getDoctByArge(id);
 	}
 	
