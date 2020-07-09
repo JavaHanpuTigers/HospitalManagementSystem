@@ -314,6 +314,9 @@ const router = new VueRouter({
             path: '/prescribe',
             component: prescribe
         }, {
+            path: '/patch',
+            component: patch
+        }, {
             path: '/prescriptionRecords',
             component: prescriptionRecords
         }, {
