@@ -439,21 +439,60 @@ let lookAppointment = {
     </el-container>
     </div>`
 }
-
-
-//路由配置
-//new VueRouter({
-//    routes: [{
-//        path: '/call',
-//        component: call
-//    },{
-//        path: '/prescribe',
-//        component: prescribe
-//    }, {
-//        path: '/prescriptionRecords',
-//        component: prescriptionRecords
-//    }, {
-//        path: '/lookAppointment',
-//        component: lookAppointment
-//    }]
-//})
+//补号
+let patch={
+    data() {
+        return {
+            list:{
+                card: "未叫号",
+                doct: {
+                    subment:{
+                        name:"未叫号"
+                    }
+                },
+                id: null,
+                name: "未叫号",
+                nation: "未叫号",
+                phone: "未叫号",
+                sex: "未叫号",
+                time: "未叫号"
+            },
+            sym:'',
+            content:''
+        }
+    },
+    template:`
+    <div>
+	<el-container>
+        <el-main>
+            <span>补号</span>
+            <el-divider></el-divider>
+        <div>
+            <p>
+            姓名:  {{list.name}}  ,性别:  {{list.sex}}  ,民族:  {{list.nation}}  <br/>
+            身份证号码:  {{list.card}} <br/>
+            患者电话:  {{list.phone}}  <br/>
+            科室:  {{list.doct.subment.name}}  ,预约编号:  {{list.id}}  <br/>
+            <h5>临床诊断:</h5>
+            <el-input
+                placeholder="请输入内容"
+                v-model="sym"
+                clearable>
+            </el-input>
+            </p>
+            <p>
+            <h4>RP:</h4>
+            <el-input
+            type="textarea"
+            :rows="8"
+            placeholder="请输入内容"
+            v-model="content"
+            >
+            </el-input>
+            </p>
+        </div>
+        </el-main>
+    </el-container>
+	</div>
+    `
+}

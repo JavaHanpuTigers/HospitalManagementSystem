@@ -56,8 +56,8 @@ public class DoctorController {
 	//补号 
 	@PostMapping("/reg")
 	public Regedit createReg(@RequestHeader("Authorization") String token,@RequestBody Regedit reg) {
-		//请求参数 #{doct.id},#{name},#{sex},#{card},#{nation},#{fee},#{phone}
-		reg.setState("4");
+		//请求参数 #{name},#{sex},#{card},#{nation},#{fee},#{phone}
+		reg.getDoct().setId(JwtTokenUtils.getUserId(token.substring(7)));
 		ds.createReg(reg);
 		return reg;
 	}

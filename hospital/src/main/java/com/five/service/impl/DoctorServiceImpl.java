@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.five.exception.createPretException;
+import com.five.filter.JwtTokenUtils;
 import com.five.mapper.DoctorMapper;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
@@ -62,6 +63,7 @@ public class DoctorServiceImpl implements DoctorService{
 		//设置挂号和预约时间
 		reg.setTime(time);
 		reg.setDate(time);
+		reg.setState("3");
 		dm.createReg(reg);
 	}
 	//查询处方记录信息
