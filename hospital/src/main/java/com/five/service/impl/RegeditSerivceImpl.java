@@ -20,6 +20,7 @@ import com.five.mapper.RegeditMapper;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
+import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.service.RegeditService;
 
@@ -130,6 +131,8 @@ public class RegeditSerivceImpl implements RegeditService{
 		Date date = null;
 		String str = null;
 		try {
+			info = "信息有误";
+			System.out.println(reg.getDate());
 			// 通过时间格式函数得到时间
 			date = ft.parse(reg.getDate());
 			System.out.println(date);
@@ -155,20 +158,33 @@ public class RegeditSerivceImpl implements RegeditService{
 			}
 		} catch (ParseException e) {
 			System.out.println("有错误！！！！----------------------------------");
+			
+			System.out.println(reg);
 			map.put("info", info);
 			return map;
 		}
+		// 日期转换类
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		// 得到星期
+		int week_index = cal.get(Calendar.DAY_OF_WEEK) ;
 		
-		System.out.println("1|2|3".contains("1"));
+		// 转换星期格式默认为星期天为1
+		week_index  = week_index == 1?7:week_index-1;
+	
 		try {
 			if (reg.getDoct() == null) {
 				info = "医生信息为空";
 				throw new ParseException(info,1);
 			}
+			if (date.getTime() <= (new Date().getTime() + (1000 * 60 * 60 * 2))) {
+				info = "当前不能挂号，要提前两个小时挂号";
+				throw new ParseException(info,1);
+			}
 			// 得到医生的排班信息
 			String workDate = regMapper.selectByDoctArrange(reg.getDoct().getId()).getTime();
-			if (!workDate.contains(wind.get(0))) {
-				info = "医生不在上班时间";
+			if (!workDate.contains(String.valueOf(week_index))) {
+				info = "医生不在上班时间" + wind.get(0);
 				throw new ParseException(info,1);
 			}
 		} catch (Exception e) {
@@ -191,10 +207,17 @@ public class RegeditSerivceImpl implements RegeditService{
 			map.put("info", info);
 			return map;
 		}
-		regMapper.insertReg(reg);
-		info = "挂号成功！！";
+		try {
+			regMapper.insertReg(reg);
+			info = "挂号成功！！";
+			map.put("content", reg);
+		} catch (Exception e) {
+			info = "挂号失败，信息有误";
+		}
+		
 		map.put("info", info);
-		map.put("content", reg);
+		map.put("operation","ok");
+		
 		
 		return map;
 	}
@@ -227,4 +250,95 @@ public class RegeditSerivceImpl implements RegeditService{
         }
     }
 
+	@Override
+	public int updateRegState(int id, int type) {
+		
+		return regMapper.updateReg(id, type);
+	}
+
+	@Override
+	public Map<String, Object> proceedSign(int id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String info = "签到失败";
+		Regedit reg =  null;
+		// 时间格式化工具带时间格式的
+		SimpleDateFormat ft = null;
+		// 时间格式化工具设置时间显示格式
+		SimpleDateFormat sdf = null;
+		Date regdate  = null;
+		Date nowdate = null;
+		String str = null;
+		try {
+			reg =  regMapper.selectbyidReg(id);
+			if (reg == null) {
+				info = "签到失败，签到信息不存在!";
+				throw new NullPointerException(info);
+			}
+			ft = new SimpleDateFormat ("yyyy-MM-dd hh:mm:ss");
+			sdf = new SimpleDateFormat("yyyy-MM-dd");
+			regdate = ft.parse(reg.getDate());
+			// 得到当前时间
+			nowdate = new Date();
+			
+			if (!sdf.format(nowdate).equals(sdf.format(regdate))) {
+				info = "只能当天进行签到！！！";
+				throw new Exception(info);
+			}
+			str = sdf.format(nowdate);
+		}catch (ParseException e) {
+			info = "挂号信息异常,亲联系管理员";
+			map.put("info", info);
+			return map;
+		}catch (Exception e) {
+			
+			map.put("info", info);
+			return map;
+		}
+		
+		
+		try {
+			// 判断时间是否在下午
+			boolean trarvo = isEffectiveDate(nowdate,
+					ft.parse(str +" "+regconfig.getWorkingarvo().get(0)),
+					ft.parse(str +" "+regconfig.getWorkingarvo().get(1)));
+			// 判断时间是否在上午
+			boolean trforen = isEffectiveDate(ft.parse(ft.format(nowdate)),
+					ft.parse(str +" "+regconfig.getWorkingforen().get(0)),
+					ft.parse(str +" "+regconfig.getWorkingforen().get(1)));
+			if (!(trarvo || trforen)) {
+				info = "当前不在时间段";
+				throw new Exception(info);
+			}
+		} catch (ParseException e) {
+			info = "挂号信息异常,亲联系管理员";
+			map.put("info", info);
+			return map;
+		}catch (Exception e) {
+			
+			map.put("info", info);
+			return map;
+		}
+		
+		// 进行修改
+		try {
+			regMapper.updateReg(id, 2);
+			info = "签到成功！";
+			map.put("operation","ok");
+			map.put("info", info);
+		} catch (Exception e) {
+			info = "挂号信息异常,请联系管理员";
+			map.put("info", info);
+		}
+		
+		return map;
+	}
+
+	@Override
+	public Prescript getPrescript(int id) {
+		Prescript p = regMapper.selectbyidPres(id);
+		System.out.println(p);
+		return p;
+	}
+	
+	
 }

@@ -306,6 +306,9 @@ const router = new VueRouter({
         }, {
             path: '/user',
             component: registration
+        },{
+            path: '/userregall',
+            component: userreg
         },
         {
             path: '/call',

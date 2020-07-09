@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,20 +26,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.five.filter.JwtTokenUtils;
+import com.five.mapper.PersonnelMapper;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
 import com.five.pojo.Patient;
+import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.pojo.User;
 import com.five.service.RegeditService;
 
 @RestController
 @RequestMapping("/reg")
-
 public class RegeditController {
 	
-	private static final String Department = null;
+	@Autowired
+	PersonnelMapper presMapper;
+	
 	@Autowired
 	RegeditService regSerivce;
 	// 查询科室下的全部医生
@@ -56,14 +60,8 @@ public class RegeditController {
 	
 	// 获取当前时间 返回当前时间和结束时间
 	@GetMapping("/date")
-	public Map<String, String> nowDate(
-			@RequestHeader("Authorization") String str){
-		//String str = "eyJhbGciOiJIUzI1NiJ9.eyJST0xFXyI6IlJPTEVf5oKj6ICFIiwic3ViIjoiaHoxMTEiLCJSQVQiOjEsImV4cCI6MTU5NDEyMTg5NywiaWF0IjoxNTk0MTE4Mjk3fQ.9lfPioDAedS-S9GjByZduWyLcK4MwZU0Q__b_wQjjAI";
-		
-		//System.out.println(JwtTokenUtils.getUserId(str));
-		
-		System.out.println(str.substring(7));
-		System.out.println(JwtTokenUtils.getUserId(str.substring(7)));
+	public Map<String, String> nowDate(){
+
 		return regSerivce.getDate();
 	}
 	
@@ -76,10 +74,12 @@ public class RegeditController {
 	}
 	
 	// 通过id查询全部挂号记录
-	@GetMapping("/{id}")
+	@GetMapping("/all")
 	public List<Regedit> regByidAll( 
-			
-			@PathVariable int id){
+			@RequestHeader(name = "Authorization",required = false) String token
+			){
+		token = token.substring(7);
+		int id = JwtTokenUtils.getUserId(token);
 		
 		return regSerivce.regAll(id);
 	}
@@ -115,13 +115,13 @@ public class RegeditController {
 		
 	}
 	
-	// 进行挂号
-	@PostMapping("/{id}")
+	// 进行挂号@PostMapping("/aaa")
+	@PostMapping()
 	public Map<String, Object> putReg(
 			@RequestHeader("Authorization") String token,
-			@PathVariable int id,
-			@RequestBody Map<String, Object> map,
-			@RequestBody Regedit reg) {
+			//@PathVariable int id,@RequestBody Regedit reg
+			@RequestBody Map<String, Object> map
+			) {
 		//Map<String, Object> map = new HashMap<String, Object>();
 		
 		token = token.substring(7);
@@ -129,38 +129,77 @@ public class RegeditController {
 //			Map<String, Object> map2 = new HashMap<String, Object>();
 //			map2.put("info", "信息有误");
 //		}
+		System.out.println(map);
 		Regedit regedit = new Regedit();
 		map.get("is"); 	// 是否为自己挂号
 		regedit.setPant(new Patient(JwtTokenUtils.getUserId(token)));
 		regedit.setDate((String) map.get("date"));
-		regedit.setFee((double) map.get("fee"));
+		String fee =String.valueOf(map.get("fee"));
+		regedit.setFee(Double.valueOf(fee));
 		regedit.setTime((String) map.get("time"));
 		regedit.setDoct(new Doctor((int) map.get("doct")));
 		regedit.setPhone((String) map.get("phone"));
 		//map.get("pant");
 		
 		if ( map.get("is") != null) {
-			System.out.println("");
+			System.out.println("lkasdhfasjkdfklasjdfjasdf");
+			Patient p =  presMapper.getPatientByid(regedit.getPant().getId());
+			System.out.println("p.getName()：：：："+p.getName());
+			regedit.setName(p.getName());
+			regedit.setSex(p.getSex());
+			regedit.setCard(p.getCard());
+			regedit.setNation(p.getNation());
+			
+		}else {
+			// 这个4个信息判断 为别挂号
+			regedit.setName((String) map.get("name")); // 名称
+			regedit.setSex((String)map.get("sex")); // 性别
+			regedit.setCard((String) map.get("card")); // 身份证
+			regedit.setNation((String) map.get("nation")); // 民族
+			
 		}
 		
-		// 这个4个信息判断 为别挂号
-		map.get("name");
-		map.get("sex");
-		map.get("card");
-		map.get("nation");
-		return regSerivce.setRegedit(reg);
+		
+		return regSerivce.setRegedit(regedit);
 		
 	}
 	
-	
-	@GetMapping("/qqq")
-	public void aa(
-			@RequestBody Map<String, Object> map
-			) {
-		System.out.println(map.get("dept").getClass());
+	@PutMapping("/state/{id}")
+	public Map<String, Object> update(
+			@PathVariable int id,
+			@RequestParam(name = "t",required = false) String  type2
+			){
+		String[] xx = new String[] {"操作失败","操作成功"};
+		Map<String, Object> map = new HashMap<String, Object>();
+		String info = "";
 		
+		int type = 0;
+		try {
+			type = Integer.valueOf(type2);
+		} catch (Exception e) {
+			info = "参数有误";
+			return map;
+		}
+		int i = regSerivce.updateRegState(id, type);
 		
+		info = xx[i];
+		map.put("operation","ok");
+		map.put("info", info);
+		return map;
 	}
 	
+	@PutMapping("/sign/{id}")
+	public Map<String, Object> proceedSign(
+			@PathVariable int id ){
+		// 进行签到
+		return regSerivce.proceedSign(id);
+	}
 	
+	@GetMapping("/pres/{id}")
+	public Prescript getPres(
+			@PathVariable int id) {
+		
+		return regSerivce.getPrescript(id);
+		
+	}
 } 

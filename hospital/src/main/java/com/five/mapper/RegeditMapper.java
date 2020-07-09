@@ -13,10 +13,12 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
+import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.pojo.Role;
 import com.five.pojo.Subment;
@@ -40,7 +42,7 @@ public interface RegeditMapper {
 		@Result(column = "d_nation",property  = "nation"),
 		@Result(column = "d_title",property  = "title"),
 		@Result(column = "d_fee",property  = "fee"),
-			@Result(column = "s_id",property  = "subment" ,javaType = Subment.class,
+		@Result(column = "s_id",property  = "subment" ,javaType = Subment.class,
 				one = @One(select = "com.five.mapper.RegeditMapper.getSubmentByid")
 					),
 	
@@ -91,7 +93,7 @@ public interface RegeditMapper {
 	
 	//查询全部挂号信息
 	@Select("SELECT * FROM register where p_id = #{id}")
-	@Results({
+	@Results(id = "regMap",value = {
 		@Result(column = "rt_id",property = "id"),
 		@Result(column = "rt_time",property = "time"),
 		@Result(column = "rt_date",property = "date"),
@@ -102,6 +104,9 @@ public interface RegeditMapper {
 		@Result(column = "rt_fee",property = "fee"),
 		@Result(column = "rt_phone",property = "phone"),
 		@Result(column = "rt_state",property = "state"),
+		@Result(column = "d_id",property  = "doct" ,javaType = Doctor.class,
+		one = @One(select = "com.five.mapper.RegeditMapper.getDoctorByid")
+			)
 	})
 	public List<Regedit> selectRegAll(int id);
 	
@@ -131,6 +136,24 @@ public interface RegeditMapper {
 			+ "rt_date BETWEEN #{begin} AND #{finish};")
 	int selectDateCount(String begin ,String finish);
 	
+	// 修改挂号状态
+	@Update("update register set rt_state = #{type} where rt_id = #{id}")
+	int updateReg(int id,int type);
 	
+	// 查询挂号状态
+	@Select("select * from register where rt_id = #{id}")
+	@ResultMap({"regMap"})
+	Regedit selectbyidReg(int id);
 	
+	// 根据挂号id查询 处方信息
+	@Select("select *from prescript where rt_id = #{id}")
+	@Results(value={
+			@Result(id=true,column = "pt_id",property = "id"),
+			@Result(column = "pt_sym",property = "sym"),
+			@Result(column = "pt_content",property = "content"),
+			@Result(column = "pt_time",property = "time"),
+			@Result(column = "rt_id",property  = "reg" ,javaType = Regedit.class,
+			one = @One(select = "com.five.mapper.PersonnelMapper.getRegByid"))
+		})
+	public Prescript selectbyidPres(int id);
 }

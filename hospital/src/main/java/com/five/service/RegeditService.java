@@ -7,6 +7,7 @@ import java.util.Map;
 import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
+import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 
 /**
@@ -71,5 +72,26 @@ public interface RegeditService {
 	 */
 	List<Regedit> regAll(int  id);
 	
+	/**
+	 * 修改挂号状态
+	 * @param id
+	 * @param type
+	 * @return
+	 */
+	int updateRegState(int id,int type);
 	
+
+	/**
+	 * 进行挂号签到
+	 * @param id 挂号id
+	 * @return
+	 */
+	Map<String, Object> proceedSign(int id);
+	
+	/**
+	 * 根据挂号id查询 处方信息
+	 * @param id
+	 * @return
+	 */
+	Prescript getPrescript(int id);
 }

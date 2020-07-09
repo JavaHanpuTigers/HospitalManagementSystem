@@ -97,7 +97,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       //response.addHeader("token", token);
       //response.sendRedirect("/");
       //request.getRequestDispatcher("/").forward(request, response);
-     
+      
       System.out.println("成功返回token");
      // response.sendRedirect("/");
   }

@@ -14,6 +14,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 //验证用户权限的拦截器
 //只要告诉spring-security该用户是否已登录，是什么角色，拥有什么权限就可以了
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
@@ -36,13 +38,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
       System.out.println("授权1:"+tokenHeader);
       // 如果请求头中没有Authorization信息则直接放行了
       if (tokenHeader == null || !tokenHeader.startsWith(JwtTokenUtils.TOKEN_PREFIX)) {
+    	  System.out.println("如果请求头中没有Authorization信息则直接放行了"+request.getRequestURL());
           chain.doFilter(request, response);
           return;
       }
       // 如果请求头中有token，则进行解析，并且设置认证信息
-      System.out.println("doFilterInternal---------------------------");
+      System.out.println(request.getRequestURL());
       SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
-     
       super.doFilterInternal(request, response, chain);
   }
   // 这里从token中获取用户信息并新建一个token
@@ -50,9 +52,19 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
   //再根据该username创建一个UsernamePasswordAuthenticationToken对象
   private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
       String token = tokenHeader.replace(JwtTokenUtils.TOKEN_PREFIX, "");
-      String username = JwtTokenUtils.getUsername(token);
-      String role = JwtTokenUtils.getUserRole(token);
-      int id = JwtTokenUtils.getUserId(token);
+      String username = null;
+      String role = null;
+      int id = 0;
+      try {
+    	  username = JwtTokenUtils.getUsername(token);
+          role = JwtTokenUtils.getUserRole(token);
+          id = JwtTokenUtils.getUserId(token);
+		} catch (ExpiredJwtException  e) {
+			System.out.println("token过期了");
+			return null;
+		}
+    
+      
       System.out.println("ssd"+role);
       System.out.println("username:"+username);
       System.out.println("id:"+id);

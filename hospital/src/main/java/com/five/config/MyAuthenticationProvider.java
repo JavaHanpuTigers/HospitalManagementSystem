@@ -42,6 +42,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider{
 		if (u == null) {
 			throw new AuthenticationCredentialsNotFoundException("用户名密码错误！！！");
 		}
+		
 		// 用户密码验证
 		if (bcr.matches(pass, u.getPassword())) {
 			System.out.println("密码成功");

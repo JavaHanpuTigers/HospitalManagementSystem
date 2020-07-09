@@ -21,6 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserMapper userMapper;
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    	System.out.println("User user = userMapper.selectOne(s)");
     	//根据用户名查询用户返回用户实体的方式   	
     	User user = userMapper.selectOne(s);
     	Map<String, Object> map=new HashMap<String, Object>();

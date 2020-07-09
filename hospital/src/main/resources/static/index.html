@@ -19,6 +19,7 @@
     <script src="components/personnel.js"></script>
     <script src="components/outpatient.js"></script>
     <script src="components/registration.js"></script>
+    <script src="components/userreg.js"></script>
     <script src="components/home.js"></script>
 </head>
 
@@ -82,7 +83,12 @@
                                     <router-link to="/" class="router-link">欢迎使用医院管理系统</router-link>
                                 </el-collapse-item>
                                 <el-collapse-item title="挂号收费" name="1" v-if="role=='ROLE_患者'">
-                                    <router-link to="/user" class="router-link">病人挂号</router-link>
+                                   <li>
+										<router-link to="/user" class="router-link">病人挂号</router-link>
+									</li>
+									<li>
+										<router-link to="/userregall" class="router-link">挂号记录</router-link>
+									</li>
                                 </el-collapse-item>
                                 <el-collapse-item title="门诊管理" name="2" v-if="role=='ROLE_医生'">
                                     <ul style="list-style: none;padding: 0px;margin: 0px;">

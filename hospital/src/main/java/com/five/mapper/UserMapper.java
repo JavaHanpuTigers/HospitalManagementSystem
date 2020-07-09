@@ -21,7 +21,7 @@ public interface UserMapper {
 		@Result(column = "u_name",property = "name"),
 		@Result(column = "u_password",property = "password"),
 		@Result(column = "r_id",property = "role" ,javaType = Role.class,
-				one = @One(select = "com.five.mapper.UserMapper.selectRole")),
+		one = @One(select = "com.five.mapper.UserMapper.selectRole")),
 	})
 	User selectOne(String name);
 	
