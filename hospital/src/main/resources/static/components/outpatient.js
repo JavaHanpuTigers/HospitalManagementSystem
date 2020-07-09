@@ -5,82 +5,93 @@ let call = {
         },
         data() {
             return {
-                tableData: [
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                    { id: 1, name: "谢心", sex: "女", age: 12, phone: '243543543', idcard: '3333333' },
-                ]
+                search:'',
+                tableData: []
             }
         },
+        computed:{
+        	filterTableData() {
+        		//定义一个数组
+        		let list = [];
+        		//判断输入框不为空，为空则显示全部内容
+        		if (this.search != '') {
+        			//遍历数组
+        			for (let v of this.tableData) {
+        				//判断条件是否符合
+        				if (v.date.includes(this.search) || v.name.includes(this.search) || v.sex.includes(this.search) || v.nation.includes(this.search) || v.phone.includes(this.search) || v.card.includes(this.search)|| v.doct.subment.name.includes(this.search)) {
+        					//将符合内添加到局部的数组中
+        					list.push(v);
+        				}
+        			}
+        		} else {
+        			list = this.tableData;
+        		}
+        		return list;
+        	}     	
+        },
         methods: {
-
         },
-        mounted() {
-
-        },
+         mounted() {
+             axios.get("doct/reg/2",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
+                 this.tableData=resp.data;
+             })
+         },
         template: `<div>
 	<el-container>
         <el-main>
             <span>排队信息</span>
             <el-divider></el-divider>
         <div>
-            <el-row :gutter="5">
-                <el-col :span="20"><div>
-                    <el-table
-                    :data="tableData"
-                    height="350"
-                    border
-                    style="width: 551px">
-                    <el-table-column
-                    prop="id"
+        <el-input
+        v-model="search"
+        size="mini"
+        placeholder="搜索关键字"/><br/>  
+            <el-table
+                :data="filterTableData"
+                height="350"
+                border
+                style="width: 100%">
+                <el-table-column
                     label="排名"
+                    type="index"
                     width="50">
-                    </el-table-column>
-                    <el-table-column
-                    prop="name"
-                    label="姓名"
-                    width="80">
-                    </el-table-column>
-                    <el-table-column
-                    prop="sex"
-                    label="性别"
-                    width="50">
-                    </el-table-column>
-                    <el-table-column
-                    prop="age"
-                    label="年龄"
-                    width="50">
-                    </el-table-column>
-                    <el-table-column
-                    prop="phone"
-                    label="电话"
-                    width="120">
-                    </el-table-column>
-                    <el-table-column
-                    prop="idcard"
-                    label="身份证号"
-                    width="200">
-                    </el-table-column>
-                    </el-table>
-                </div></el-col>
-                <el-col :span="4"><div>
-                    <span>值班进度:</span><br>
-                    <el-progress type="circle" :percentage="25"></el-progress>
-                </div></el-col>
-                </el-row>
+                </el-table-column>
+                <el-table-column
+                label="时间"
+                prop="date"
+                width="150">
+                </el-table-column>
+                <el-table-column
+                label="姓名"
+                prop="name"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                label="性别"
+                prop="sex"
+                width="50">
+                </el-table-column>
+                <el-table-column
+                label="民族"
+                prop="nation"
+                width="50">
+                </el-table-column>
+                <el-table-column
+                label="电话"
+                prop="phone"
+                width="120">
+                </el-table-column>
+                <el-table-column
+                label="身份证号"
+                prop="card"
+                width="180">
+                </el-table-column>
+                <el-table-column
+                label="科室"
+                prop="doct.subment.name"
+                width="120">
+                </el-table-column>
+            </el-table>
         </div>
         </el-main>
     </el-container>
@@ -90,7 +101,22 @@ let call = {
 let prescribe = {
         data() {
             return {
-                textarea: ''
+                list:{
+                    card: "未叫号",
+                    doct: {
+                        subment:{
+                            name:"未叫号"
+                        }
+                    },
+                    id: null,
+                    name: "未叫号",
+                    nation: "未叫号",
+                    phone: "未叫号",
+                    sex: "未叫号",
+                    time: "未叫号"
+                },
+                sym:'',
+                content:''
             }
         },
         methods: {
@@ -100,10 +126,20 @@ let prescribe = {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '已叫号 第2位!'
-                    });
+                    axios.get("doct/reg/2/byOne",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
+                        if(resp.data!=''){
+                            this.list=resp.data;
+                            this.$message({
+                                type: 'success',
+                                message: '已叫号,等待患者!'
+                            });
+                        }else{
+                            this.$message({
+                                type: 'info',
+                                message: '无患者！'
+                            });
+                        }
+                    })
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -112,43 +148,81 @@ let prescribe = {
                 });
             },
             create() {
-                this.$confirm('是否开处方单', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '已开单!'
+                if(this.list.id==null){
+                    alert("请先叫号！");
+                }else{
+                    this.$confirm('是否开处方单', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.post("doct/pret",{
+                            reg:{
+                                id:this.list.id
+                            },
+                            sym:this.sym,
+                            content:this.content
+                        },{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
+                            this.list={
+                                card: "未叫号",
+                                doct: {
+                                    subment:{
+                                        name:"未叫号"
+                                    }
+                                },
+                                id: null,
+                                name: "未叫号",
+                                nation: "未叫号",
+                                phone: "未叫号",
+                                sex: "未叫号",
+                                time: "未叫号"
+                            };
+                            this.sym="";
+                            this.content="";
+                            this.$message({
+                                type: 'success',
+                                message: `已开单!处方编号为${resp.data.id}`
+                            });
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
                     });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消'
-                    });
-                });
+                }
             }
         },
         template: `<div>
 	<el-container>
         <el-main>
             <span>面诊</span>
-            <el-button @click="next" style="float: right; padding: 3px 0" type="text">下一位</el-button><el-button @click="create" style="float: right; padding: 3px 0;" type="text">开处方</el-button>
+            <span><el-button @click="create" style="float: right;" type="primary" plain>开处方</el-button></span>
+            <span><el-button @click="next" style="float: right;" type="primary" plain>叫号</el-button></span>
             <el-divider></el-divider>
         <div>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>
-            姓名: 谢心&nbsp;&nbsp;&nbsp;&nbsp;性别：女&nbsp;&nbsp;&nbsp;&nbsp;年龄: 11&nbsp;&nbsp;&nbsp;&nbsp;时间: 2020-06-27<br>
-            地址: 江西九江。。。。。&nbsp;&nbsp;&nbsp;&nbsp;电话: 1324354354<br>
-            科别：妇产科&nbsp;&nbsp;&nbsp;&nbsp;诊断医生: 呵呵呵
-            </u></p>
-            <br>
+            <p>
+            姓名:  {{list.name}}  ,性别:  {{list.sex}}  ,民族:  {{list.nation}}  <br/>
+            身份证号码:  {{list.card}} <br/>
+            患者电话:  {{list.phone}}  <br/>
+            科室:  {{list.doct.subment.name}}  ,预约编号:  {{list.id}}  <br/>
+            <h5>临床诊断:</h5>
+            <el-input
+                placeholder="请输入内容"
+                v-model="sym"
+                clearable>
+            </el-input>
+            </p>
+            <p>
+            <h4>RP:</h4>
             <el-input
             type="textarea"
-            :rows="10"
+            :rows="8"
             placeholder="请输入内容"
-            v-model="textarea"
+            v-model="content"
             >
             </el-input>
+            </p>
         </div>
         </el-main>
     </el-container>
@@ -158,112 +232,50 @@ let prescribe = {
 let prescriptionRecords = {
         data() {
             return {
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    sex: '男',
-                    age: 21,
-                    phone: '1242342354',
-                    idcard: '43654654657575765',
-                    address: '湖南长沙',
-                    division: '妇产科',
-                    doctor: '呵呵呵',
-                    content: '无解晚期安乐死'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    sex: '男',
-                    age: 21,
-                    phone: '1242342354',
-                    idcard: '43654654657575765',
-                    address: '湖南长沙',
-                    division: '妇产科',
-                    doctor: '呵呵呵',
-                    content: '无解晚期安乐死'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    sex: '男',
-                    age: 21,
-                    phone: '1242342354',
-                    idcard: '43654654657575765',
-                    address: '湖南长沙',
-                    division: '妇产科',
-                    doctor: '呵呵呵',
-                    content: '无解晚期安乐死'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    sex: '男',
-                    age: 21,
-                    phone: '1242342354',
-                    idcard: '43654654657575765',
-                    address: '湖南长沙',
-                    division: '妇产科',
-                    doctor: '呵呵呵',
-                    content: '无解晚期安乐死'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    sex: '男',
-                    age: 21,
-                    phone: '1242342354',
-                    idcard: '43654654657575765',
-                    address: '湖南长沙',
-                    division: '妇产科',
-                    doctor: '呵呵呵',
-                    content: '无解晚期安乐死'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    sex: '男',
-                    age: 21,
-                    phone: '1242342354',
-                    idcard: '43654654657575765',
-                    address: '湖南长沙',
-                    division: '妇产科',
-                    doctor: '呵呵呵',
-                    content: '无解晚期安乐死'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    sex: '男',
-                    age: 21,
-                    phone: '1242342354',
-                    idcard: '43654654657575765',
-                    address: '湖南长沙',
-                    division: '妇产科',
-                    doctor: '呵呵呵',
-                    content: '无解晚期安乐死'
-                }],
+                tableData: [],
                 search: ''
             }
         },
-        computed: {
-            //过滤后的数组
-            filterTableData() {
-                //定义一个数组
-                let list = [];
-                //判断输入框不为空，为空则显示全部内容
-                if (this.search != '') {
-                    //遍历数组
-                    for (let v of this.tableData) {
-                        //判断条件是否符合
-                        if (v.date.includes(this.search) || v.name.includes(this.search) || v.sex.includes(this.search) || v.age.toString().includes(this.search) || v.phone.includes(this.search) || v.idcard.includes(this.search)) {
-                            //将符合内添加到局部的数组中
-                            list.push(v);
-                        }
-                    }
-                } else {
-                    list = this.tableData;
-                }
-                return list;
-            }
+        computed:{
+        	filterTableData() {
+        		//定义一个数组
+        		let list = [];
+        		//判断输入框不为空，为空则显示全部内容
+        		if (this.search != '') {
+        			//遍历数组
+        			for (let v of this.tableData) {
+        				//判断条件是否符合
+        				if (v.time.includes(this.search) || v.reg.name.includes(this.search) || v.reg.sex.includes(this.search) || v.reg.nation.includes(this.search) || v.reg.phone.includes(this.search) || v.reg.card.includes(this.search)|| v.sym.includes(this.search)) {
+        					//将符合内添加到局部的数组中
+        					list.push(v);
+        				}
+        			}
+        		} else {
+        			list = this.tableData;
+        		}
+        		return list;
+        	}     	
         },
         methods: {
-            look(index, row) {
-                console.log(index, row);
+            download(row){
+                axios.get(`doct/pret/download/${row.id}`,{headers:{'Authorization':'Bearer '+localStorage.getItem("token")},responseType: 'blob'}).then(resp=>{
+                    console.log(resp.data);
+                    // this.download(response)
+                    let url = window.URL.createObjectURL(resp.data)
+                    let link = document.createElement('a')
+                    link.style.display = 'none'
+                    link.href = url
+                    link.setAttribute('download', `${row.reg.name}的处方表.doc`)
+                    document.body.appendChild(link)
+                    link.click();
+                    document.body.removeChild(link);
+                })
             }
+        },
+        mounted() {
+            axios.get("doct/pret",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
+                this.tableData=resp.data;                
+            })
         },
         template: `<div>
     <el-container>
@@ -271,58 +283,62 @@ let prescriptionRecords = {
             <span>处方记录</span>
             <el-divider></el-divider>
         <div>
-            <template>
-                <el-table
-                    :data="filterTableData"
-                    height="350"
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                    label="时间"
-                    prop="date"
-                    width="100">
-                    </el-table-column>
-                    <el-table-column
-                    label="姓名"
-                    prop="name"
-                    width="80">
-                    </el-table-column>
-                    <el-table-column
-                    label="性别"
-                    prop="sex"
-                    width="50">
-                    </el-table-column>
-                    <el-table-column
-                    label="年龄"
-                    prop="age"
-                    width="50">
-                    </el-table-column>
-                    <el-table-column
-                    label="电话"
-                    prop="phone"
-                    width="120">
-                    </el-table-column>
-                    <el-table-column
-                    label="身份证号"
-                    prop="idcard"
-                    width="180">
-                    </el-table-column>
-                    <el-table-column
-                    align="center">
-                    <template slot="header" slot-scope="scope">
-                        <el-input
-                        v-model="search"
-                        size="mini"
-                        placeholder="搜索关键字"/>
-                    </template>
-                    <template slot-scope="scope">
-                        <el-button
-                        size="mini"
-                        @click="look(scope.$index, scope.row)">详情</el-button>
-                    </template>
-                    </el-table-column>
-                </el-table>
-            </template>
+        <el-input
+        v-model="search"
+        size="mini"
+        placeholder="搜索关键字"/><br/>  
+            <el-table
+                :data="filterTableData"
+                height="350"
+                border
+                style="width: 100%">
+                <el-table-column
+                label="时间"
+                prop="time"
+                width="150">
+                </el-table-column>
+                <el-table-column
+                label="姓名"
+                prop="reg.name"
+                width="60">
+                </el-table-column>
+                <el-table-column
+                label="性别"
+                prop="reg.sex"
+                width="50">
+                </el-table-column>
+                <el-table-column
+                label="民族"
+                prop="reg.nation"
+                width="50">
+                </el-table-column>
+                <el-table-column
+                label="电话"
+                prop="reg.phone"
+                width="110">
+                </el-table-column>
+                <el-table-column
+                label="身份证号"
+                prop="reg.card"
+                width="160">
+                </el-table-column>
+                <el-table-column
+                label="诊断"
+                prop="sym"
+                width="140">
+                </el-table-column>
+                <el-table-column
+                align="center"
+                label="下载">
+                <template slot-scope="scope">
+                    <el-button
+                    size="mini"
+                    type="primary"
+                    @click="download(scope.row)" icon="el-icon-download"></el-button>
+                </template>
+                </el-table-column>
+            </el-table>
+            <a id="a"></a>
         </div>
         </el-main>
     </el-container>
@@ -332,85 +348,8 @@ let prescriptionRecords = {
 let lookAppointment = {
     data() {
         return {
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                sex: '男',
-                age: 21,
-                phone: '1242342354',
-                idcard: '43654654657575765',
-                address: '湖南长沙',
-                division: '妇产科',
-                doctor: '呵呵呵',
-                content: '无解晚期安乐死'
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                sex: '男',
-                age: 21,
-                phone: '1242342354',
-                idcard: '43654654657575765',
-                address: '湖南长沙',
-                division: '妇产科',
-                doctor: '呵呵呵',
-                content: '无解晚期安乐死'
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                sex: '男',
-                age: 21,
-                phone: '1242342354',
-                idcard: '43654654657575765',
-                address: '湖南长沙',
-                division: '妇产科',
-                doctor: '呵呵呵',
-                content: '无解晚期安乐死'
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                sex: '男',
-                age: 21,
-                phone: '1242342354',
-                idcard: '43654654657575765',
-                address: '湖南长沙',
-                division: '妇产科',
-                doctor: '呵呵呵',
-                content: '无解晚期安乐死'
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                sex: '男',
-                age: 21,
-                phone: '1242342354',
-                idcard: '43654654657575765',
-                address: '湖南长沙',
-                division: '妇产科',
-                doctor: '呵呵呵',
-                content: '无解晚期安乐死'
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                sex: '男',
-                age: 21,
-                phone: '1242342354',
-                idcard: '43654654657575765',
-                address: '湖南长沙',
-                division: '妇产科',
-                doctor: '呵呵呵',
-                content: '无解晚期安乐死'
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                sex: '男',
-                age: 21,
-                phone: '1242342354',
-                idcard: '43654654657575765',
-                address: '湖南长沙',
-                division: '妇产科',
-                doctor: '呵呵呵',
-                content: '无解晚期安乐死'
-            }],
-            search: ''
+            tableData: [],
+            search: '',
         }
     },
     computed: {
@@ -423,7 +362,7 @@ let lookAppointment = {
                 //遍历数组
                 for (let v of this.tableData) {
                     //判断条件是否符合
-                    if (v.date.includes(this.search) || v.name.includes(this.search) || v.sex.includes(this.search) || v.age.toString().includes(this.search) || v.phone.includes(this.search) || v.idcard.includes(this.search)) {
+                    if (v.time.includes(this.search) || v.name.includes(this.search) || v.sex.includes(this.search) || v.nation.includes(this.search) || v.phone.includes(this.search) || v.card.includes(this.search)|| v.doct.subment.name.includes(this.search)) {
                         //将符合内添加到局部的数组中
                         list.push(v);
                     }
@@ -435,9 +374,14 @@ let lookAppointment = {
         }
     },
     methods: {
-        look(index, row) {
-            console.log(index, row);
-        }
+       
+    },
+    mounted() {
+        axios.get("doct/reg/1",{headers:{
+            'Authorization':'Bearer '+localStorage.getItem("token"),
+        }}).then(resp=>{
+            this.tableData=resp.data;
+        })
     },
     template: `<div>
     <el-container>
@@ -445,58 +389,51 @@ let lookAppointment = {
             <span>查看预约</span>
             <el-divider></el-divider>
         <div>
-            <template>
-                <el-table
-                    :data="filterTableData"
-                    height="350"
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                    label="时间"
-                    prop="date"
-                    width="100">
-                    </el-table-column>
-                    <el-table-column
-                    label="姓名"
-                    prop="name"
-                    width="80">
-                    </el-table-column>
-                    <el-table-column
-                    label="性别"
-                    prop="sex"
-                    width="50">
-                    </el-table-column>
-                    <el-table-column
-                    label="年龄"
-                    prop="age"
-                    width="50">
-                    </el-table-column>
-                    <el-table-column
-                    label="电话"
-                    prop="phone"
-                    width="120">
-                    </el-table-column>
-                    <el-table-column
-                    label="身份证号"
-                    prop="idcard"
-                    width="180">
-                    </el-table-column>
-                    <el-table-column
-                    align="center">
-                    <template slot="header" slot-scope="scope">
-                        <el-input
-                        v-model="search"
-                        size="mini"
-                        placeholder="搜索关键字"/>
-                    </template>
-                    <template slot-scope="scope">
-                        <el-button
-                        size="mini"
-                        @click="look(scope.$index, scope.row)">详情</el-button>
-                    </template>
-                    </el-table-column>
-                </el-table>
-            </template>
+        <el-input
+        v-model="search"
+        size="mini"
+        placeholder="搜索关键字"/><br/>  
+            <el-table
+                :data="filterTableData"
+                height="350"
+                border
+                style="width: 100%">
+                <el-table-column
+                label="时间"
+                prop="time"
+                width="150">
+                </el-table-column>
+                <el-table-column
+                label="姓名"
+                prop="name"
+                width="80">
+                </el-table-column>
+                <el-table-column
+                label="性别"
+                prop="sex"
+                width="50">
+                </el-table-column>
+                <el-table-column
+                label="民族"
+                prop="nation"
+                width="50">
+                </el-table-column>
+                <el-table-column
+                label="电话"
+                prop="phone"
+                width="120">
+                </el-table-column>
+                <el-table-column
+                label="身份证号"
+                prop="card"
+                width="180">
+                </el-table-column>
+                <el-table-column
+                label="科室"
+                prop="doct.subment.name"
+                width="150">
+                </el-table-column>
+            </el-table>
         </div>
         </el-main>
     </el-container>

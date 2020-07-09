@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.five.exception.createPretException;
+import com.five.filter.JwtTokenUtils;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.service.DoctorService;
@@ -32,36 +34,37 @@ public class DoctorController {
 	@Autowired
 	DoctorService ds;
 	//查询预约信息
-	@GetMapping("/reg/0/{id}")
-	public List<Regedit> findRegState0All(@PathVariable int id){
-		return ds.findRegState0All(id);
+	@GetMapping("/reg/1")
+	public List<Regedit> findRegState0All(@RequestHeader("Authorization") String token){
+		return ds.findRegState0All(JwtTokenUtils.getUserId(token.substring(7)));
 	}
 	//叫号
-	@GetMapping("/reg/1/byOne/{id}")
-	public Regedit findRegState1ByOne(@PathVariable int id) {
-		return ds.findRegState1ByOne(id);
+	@GetMapping("/reg/2/byOne")
+	public Regedit findRegState1ByOne(@RequestHeader("Authorization") String token) {
+		return ds.findRegState1ByOne(JwtTokenUtils.getUserId(token.substring(7)));
 	}
 	//查询挂号排队信息
-	@GetMapping("/reg/1/{id}")
-	public List<Regedit> findRegState1All(@PathVariable int id){
-		return ds.findRegState1All(id);
+	@GetMapping("/reg/2")
+	public List<Regedit> findRegState1All(@RequestHeader("Authorization") String token){
+		return ds.findRegState1All(JwtTokenUtils.getUserId(token.substring(7)));
 	}
 	//更新挂号状态
 	@PutMapping("/reg/{regId}/{state}")
-	public boolean updateRegState(@PathVariable int regId,@PathVariable String state) {
+	public boolean updateRegState(@RequestHeader("Authorization") String token,@PathVariable int regId,@PathVariable String state) {
 		return ds.updateRegState(regId,state);
 	}
 	//补号
 	@PostMapping("/reg")
-	public Regedit createReg(@RequestBody Regedit reg) {
-		//请求参数 #{doct.id},#{name},#{sex},#{card},#{nation},#{fee},#{state},#{phone}
+	public Regedit createReg(@RequestHeader("Authorization") String token,@RequestBody Regedit reg) {
+		//请求参数 #{doct.id},#{name},#{sex},#{card},#{nation},#{fee},#{phone}
+		reg.setState("3");
 		ds.createReg(reg);
 		return reg;
 	}
 	//查询处方记录信息
-	@GetMapping("/pret/{id}")
-	public List<Prescript> FindPretALL(@PathVariable int id){
-		return ds.FindPretALL(id);
+	@GetMapping("/pret")
+	public List<Prescript> FindPretALL(@RequestHeader("Authorization") String token){
+		return ds.FindPretALL(JwtTokenUtils.getUserId(token.substring(7)));
 	}
 	//开处方
 	@PostMapping("/pret")

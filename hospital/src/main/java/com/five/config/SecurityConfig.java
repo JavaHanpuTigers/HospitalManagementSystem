@@ -64,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/","/hr","/hr/*","/login/*","/user/*").permitAll()
 			//.antMatchers("/reg","/reg/*").hasRole("患者")
 			.antMatchers("/reg","/reg/*").hasRole("患者")
+			.antMatchers("/doct","/doct/*").hasRole("医生")
 //			.antMatchers("/hr","/hr/*").hasRole("人事")
 			//github.com/JavaHanpuTigers/HospitalManagementSystem.git
 			//.antMatchers("/admin","/admin/*").hasRole("ADMIN")

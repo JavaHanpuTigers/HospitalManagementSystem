@@ -30,7 +30,7 @@ public interface DoctorMapper {
 	@ResultMap("register")
 	Regedit findRegeditById(int id);
 	//查询预约信息
-	@Select("SELECT * FROM register WHERE d_id=#{id} AND rt_state=0  ORDER BY rt_time")
+	@Select("SELECT * FROM register WHERE d_id=#{id} AND rt_state=1  ORDER BY rt_time")
 	@Results(id = "register",value = {
 			@Result(id = true,column = "rt_id",property = "id"),
 			@Result(column = "p_id",property = "pant",javaType = Patient.class,
@@ -49,11 +49,11 @@ public interface DoctorMapper {
 	})
 	List<Regedit> findRegState0All(int id);
 	//叫号
-	@Select("SELECT * FROM register WHERE d_id=#{id} AND rt_state=1 ORDER BY rt_date LIMIT 1")
+	@Select("SELECT * FROM register WHERE d_id=#{id} AND rt_state=2 ORDER BY rt_date LIMIT 1")
 	@ResultMap("register")
 	Regedit findRegState1ByOne(int id);
 	//查询挂号排队信息
-	@Select("SELECT * FROM register WHERE d_id=#{id} AND rt_state=1 ORDER BY rt_date")
+	@Select("SELECT * FROM register WHERE d_id=#{id} AND rt_state=2 ORDER BY rt_date")
 	@ResultMap("register")
 	List<Regedit> findRegState1All(int id);
 	//更新挂号状态
