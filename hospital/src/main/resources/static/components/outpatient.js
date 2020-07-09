@@ -133,14 +133,14 @@ let prescribe = {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.get("doct/reg/2/byOne",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
+                    axios.get("doct/reg/2/byOne",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{                     
                         if(resp.data!=''){
                             this.list=resp.data;
-                            this.loading=false;
                             this.$message({
                                 type: 'success',
                                 message: '已叫号,等待患者!'
                             });
+                            this.loading=false;
                         }else{
                             this.$message({
                                 type: 'info',
@@ -185,13 +185,27 @@ let prescribe = {
                                 sex: "未叫号"
                             };
                             regs=null;
-                            this.loading=false;
                             this.sym="";
                             this.content="";
                             this.$message({
                                 type: 'success',
                                 message: `已开单!处方编号为${resp.data.id}`
                             });
+                            
+                            //下载
+                            axios.get(`doct/pret/download/${resp.data.id}`,{headers:{'Authorization':'Bearer '+localStorage.getItem("token")},responseType: 'blob'}).then(resp=>{
+                                console.log(resp.data);
+                                // this.download(response)
+                                let url = window.URL.createObjectURL(resp.data)
+                                let link = document.createElement('a')
+                                link.style.display = 'none'
+                                link.href = url
+                                link.setAttribute('download', '处方表.doc')
+                                document.body.appendChild(link)
+                                link.click();
+                                document.body.removeChild(link);
+                            })
+                            this.loading=true;
                         })
                     }).catch(() => {
                         this.$message({
