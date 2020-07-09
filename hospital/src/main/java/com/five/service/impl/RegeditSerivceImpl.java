@@ -135,7 +135,6 @@ public class RegeditSerivceImpl implements RegeditService{
 			System.out.println(reg.getDate());
 			// 通过时间格式函数得到时间
 			date = ft.parse(reg.getDate());
-			System.out.println(date);
 			// 得到特定格式的时间字符串
 			str = sdf.format(date);
 			// 判断时间是否在下午
@@ -143,9 +142,10 @@ public class RegeditSerivceImpl implements RegeditService{
 					ft.parse(str +" "+regconfig.getWorkingarvo().get(0)),
 					ft.parse(str +" "+regconfig.getWorkingarvo().get(1)));
 			// 判断时间是否在上午
-			boolean trforen = isEffectiveDate(ft.parse(ft.format(date)),
+			boolean trforen = isEffectiveDate(date,
 					ft.parse(str +" "+regconfig.getWorkingforen().get(0)),
 					ft.parse(str +" "+regconfig.getWorkingforen().get(1)));
+			System.out.println(str +" "+regconfig.getWorkingforen().get(1));
 			System.out.println(trarvo +  " 时间段 " + trforen);
 			if (trarvo) { // 时间段在下午
 				wind = regconfig.getWorkingarvo();
@@ -225,9 +225,9 @@ public class RegeditSerivceImpl implements RegeditService{
 	
 	
 	public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
-        System.out.println(nowTime);
-        System.out.println(startTime);
-        System.out.println(endTime);
+        System.out.println("挂号时间   "+nowTime);
+        System.out.println("起始时间   "+startTime);
+        System.out.println("结束时间   "+endTime);
 		if (nowTime.getTime() == startTime.getTime()
                 || nowTime.getTime() == endTime.getTime()) {
             return true;

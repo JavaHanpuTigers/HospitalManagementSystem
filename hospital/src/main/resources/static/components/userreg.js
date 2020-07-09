@@ -24,7 +24,7 @@ var userreg = {
                                 <span>{{ props.row.card }}</span>
                             </el-form-item>
                             <el-form-item label="挂号状态:" style="width:40%">
-                                <span>{{ props.row.state }}</span>
+                                <span>{{ into[props.row.state-1] }}</span>
                             </el-form-item>
                             <el-form-item label="挂号人民族:" style="width:40%">
                                 <span>{{ props.row.nation }}</span>
@@ -197,6 +197,11 @@ var userreg = {
 
             }).then(res => {
                 console.log(res)
+                if(res.data.id == null){
+                	this.iszj = false;
+                	this.$message("暂时没有处方");
+                	return;
+                }
                 this.pres = res.data;
                 this.dialogVisibledept = true;
                 this.iszj = false;
