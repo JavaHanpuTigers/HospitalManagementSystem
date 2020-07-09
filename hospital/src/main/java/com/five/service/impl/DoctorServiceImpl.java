@@ -45,9 +45,9 @@ public class DoctorServiceImpl implements DoctorService{
 	}
 	//更新状态
 	@Override
-	public boolean updateRegState(int id,String state) {
+	public boolean updateRegState(int id) {
 		// TODO Auto-generated method stub
-		if(dm.updateRegState(state, id)>0) {
+		if(dm.updateRegState("4", id)>0) {
 			return true;
 		}
 		return false;
@@ -63,6 +63,7 @@ public class DoctorServiceImpl implements DoctorService{
 		//设置挂号和预约时间
 		reg.setTime(time);
 		reg.setDate(time);
+		reg.setFee(11);
 		reg.setState("3");
 		dm.createReg(reg);
 	}
@@ -90,6 +91,13 @@ public class DoctorServiceImpl implements DoctorService{
 	public Prescript findPretById(int id) {
 		// TODO Auto-generated method stub
 		return dm.findPretById(id);
+	}
+	@Override
+	public boolean updateRegState1(int id) {
+		if(dm.updateRegState("1", id)>0) {
+			return true;
+		}
+		return false;
 	}
 
 }

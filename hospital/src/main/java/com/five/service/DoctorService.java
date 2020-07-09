@@ -19,7 +19,7 @@ public interface DoctorService {
 	//查询挂号排队信息
 	public List<Regedit> findRegState1All(int id);
 	//更新挂号状态
-	public boolean updateRegState(int id,String state);
+	public boolean updateRegState(int id);
 	//补号
 	public void createReg(Regedit reg);
 	//查询处方记录信息
@@ -28,4 +28,6 @@ public interface DoctorService {
 	public void createPret(Prescript pret) throws createPretException;
 	//根据处方id查询处方记录
 	public Prescript findPretById(int id);
+	//更新挂号状态未未签到
+	public boolean updateRegState1(int id);
 }

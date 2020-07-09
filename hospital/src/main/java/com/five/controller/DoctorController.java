@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.five.exception.createPretException;
 import com.five.filter.JwtTokenUtils;
+import com.five.pojo.Doctor;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.service.DoctorService;
@@ -48,16 +49,16 @@ public class DoctorController {
 	public List<Regedit> findRegState1All(@RequestHeader("Authorization") String token){
 		return ds.findRegState1All(JwtTokenUtils.getUserId(token.substring(7)));
 	}
-	//更新挂号状态
-	@PutMapping("/reg/{regId}/{state}")
-	public boolean updateRegState(@RequestHeader("Authorization") String token,@PathVariable int regId,@PathVariable String state) {
-		return ds.updateRegState(regId,state);
+	//更新挂号状态为检查中
+	@PutMapping("/reg/{regId}")
+	public boolean updateRegState(@PathVariable int regId) {
+		return ds.updateRegState(regId);
 	}
 	//补号 
 	@PostMapping("/reg")
 	public Regedit createReg(@RequestHeader("Authorization") String token,@RequestBody Regedit reg) {
 		//请求参数 #{name},#{sex},#{card},#{nation},#{fee},#{phone}
-		reg.getDoct().setId(JwtTokenUtils.getUserId(token.substring(7)));
+		reg.setDoct(new Doctor(JwtTokenUtils.getUserId(token.substring(7))));
 		ds.createReg(reg);
 		return reg;
 	}
@@ -93,5 +94,10 @@ public class DoctorController {
 	    map.put("sym", pret.getSym());
 	    map.put("content", pret.getContent());
 	    AddWord.createWord(map, "prescript.xml", "/static/word/", "处方单", response);
+	}
+	//未到updateRegState1
+	@PutMapping("/reg1/{regId}")
+	public boolean updateRegState1(@PathVariable int regId) {
+		return ds.updateRegState1(regId);
 	}
 }
