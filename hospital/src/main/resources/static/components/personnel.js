@@ -1223,7 +1223,7 @@ let reg = {
             currpage: 1,
             search: '',
             flag: false,
-            states: ["未签到", "签到完成", "就诊中", "检测中", "未支付状态", "取消支付", ]
+            states: ["", "未签到", "签到完成", "就诊中", "检测中", "未支付状态", "取消支付", ]
         }
     },
     methods: {
@@ -1263,18 +1263,11 @@ let reg = {
                 <el-table-column prop="nation" label="民族" width="180"></el-table-column>
                 <el-table-column prop="fee" label="费用" width="180"></el-table-column>
                 <el-table-column prop="phone" label="电话" width="180"></el-table-column>
-                <el-table-column prop="state" label="状态" width="180"></el-table-column>
-               <!-- <el-table-column label="状态" width="180">
+                <el-table-column label="状态" width="180">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.state === 1">正常1</span>
-                        <span v-else-if="scope.row.state === 2">正常2</span>
-                        <span v-else-if="scope.row.state === 3">正常3</span>
-                        <span v-else-if="scope.row.state === 4">正常4</span>
-                        <span v-else-if="scope.row.state === 5">正常5</span>
-                        <span v-else-if="scope.row.state === 6">正常6</span>
-                        <span v-else>停用</span>
+                        {{states[scope.row.state]}}
                     </template>
-                </el-table-column>-->
+                </el-table-column>
             </el-table>
         </div>
         <div style="width:100%;margin-top:40px;margin-left:100px">
