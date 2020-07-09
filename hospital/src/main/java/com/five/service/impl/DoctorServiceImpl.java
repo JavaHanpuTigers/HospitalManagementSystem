@@ -31,10 +31,9 @@ public class DoctorServiceImpl implements DoctorService{
 		// TODO Auto-generated method stub
 		return dm.findRegState0All(id);
 	}
-	//叫号
+	//叫号 
 	@Override
 	public Regedit findRegState1ByOne(int id) {
-		// TODO Auto-generated method stub
 		Regedit reg=dm.findRegState1ByOne(id);
 		dm.updateRegState("3", reg.getId());
 		return reg;
