@@ -42,10 +42,12 @@
                 <iframe class="clearfix-frame" allowtransparency="true" frameborder="0" width="385" height="96" scrolling="no" src="http://tianqi.2345.com/plugin/widget/index.htm?s=1&z=1&t=0&v=0&d=3&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=385&h=90&align=center"></iframe>
 
                 <div style="margin-left:65%;margin-top:10px;">
-                    <router-link to="/retrieve" class="user-oper">【忘记密码?】</router-link>
-                    <router-link to="/userregit" class="user-oper">【点击注册】</router-link>&nbsp;
-                    <!-- <span><a href="/login" class="user-oper">登录</a></span> -->
-                    <el-button style="margin-top:-7px;" type="text">
+                    <div v-if="role==''">
+                        <router-link to="/retrieve" class="user-oper">【忘记密码?】</router-link>
+                        <router-link to="/userregit" class="user-oper">【点击注册】</router-link>
+                        <span><button @click="toLogin()" class="user-oper" style="background-color: rgba(0, 0, 0, 0);border: none;">【登录】</button></span>
+                    </div>
+                    <el-button style="margin-top:-7px;margin-left: 260px;" type="text" v-if="role!=''">
                         {{token.sub}}
                         <el-dropdown trigger="click">
                             <span class="el-dropdown-link">
@@ -231,7 +233,13 @@
             logout: function() {
                 this.token = {};
                 localStorage.removeItem("token");
-                // this.dialogVisible = true;
+                // 刷新界面重新获取权限定位
+                window.location.reload();
+                this.dialogVisible = true;
+            },
+            // 吊起登录框
+            toLogin: function() {
+                this.dialogVisible = true;
             }
         },
         created() {
