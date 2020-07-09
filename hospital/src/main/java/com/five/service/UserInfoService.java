@@ -17,4 +17,6 @@ public interface UserInfoService {
 	// 修改登录用户账号密码
 	int updateWord(User user);
 	
+	// 忘记密码 找回密码
+	int findWord(User user);
 }

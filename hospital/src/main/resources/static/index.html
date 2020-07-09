@@ -27,43 +27,44 @@
         <el-card class="box-card">
             <!--登录弹框-->
             <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
-                <span>显示提示信息</span>
-                <el-input placeholder="请输入用户名..."></el-input>
-                <el-input placeholder="请输入密码..."></el-input>
+                <span style="color:red">登录过期，请重新登录</span><br><br>
+                <el-input name="username" v-model="form.username" placeholder="请输入用户名..."></el-input>
+                <br><br>
+                <el-input name="password" show-password v-model="form.password" placeholder="请输入密码..."></el-input>
                 <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary"  @click="login()">登录</el-button>
             </span>
             </el-dialog>
             <!--登录弹框-->
             <div slot="header" class="clearfix">
                 <!-- 长沙的温度情况 -->
                 <iframe class="clearfix-frame" allowtransparency="true" frameborder="0" width="385" height="96" scrolling="no" src="http://tianqi.2345.com/plugin/widget/index.htm?s=1&z=1&t=0&v=0&d=3&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=385&h=90&align=center"></iframe>
-                
+
                 <div style="margin-left:65%;margin-top:10px;">
                     <router-link to="/retrieve" class="user-oper">【忘记密码?】</router-link>
                     <router-link to="/userregit" class="user-oper">【点击注册】</router-link>&nbsp;
-                    <span><a href="/login" class="user-oper" >登录</a></span>
+                    <!-- <span><a href="/login" class="user-oper">登录</a></span> -->
                     <el-button style="margin-top:-7px;" type="text">
-                   {{token.sub}}
-                    <el-dropdown trigger="click">
-                        <span class="el-dropdown-link">
+                        {{token.sub}}
+                        <el-dropdown trigger="click">
+                            <span class="el-dropdown-link">
                         	<i class="el-icon-user-solid"></i>
                             <i class="el-icon-arrow-down el-icon--right" style="margin-left:-5px;"></i>
                             </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item class="dditem">
-                                <router-link to="/userinfo" class="router-link">修改密码</router-link>
-                            </el-dropdown-item>
-                            <el-dropdown-item class="dditem">
-                                <router-link to="/userset" class="router-link">用户手册</router-link>
-                            </el-dropdown-item>
-                            <el-dropdown-item class="dditem">
-                                <a href="/logout" class="router-link">注销账号</a>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item class="dditem">
+                                    <router-link to="/userinfo" class="router-link">修改密码</router-link>
+                                </el-dropdown-item>
+                                <el-dropdown-item class="dditem">
+                                    <router-link to="/userset" class="router-link">用户手册</router-link>
+                                </el-dropdown-item>
+                                <el-dropdown-item class="dditem">
+                                    <button type="button" @click="logout()" class="router-link" style="background-color: rgba(0, 0, 0, 0);border: none;margin-left: -5px;">注销账号</button>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </el-button>
                 </div>
                 <!-- 核心界面 -->
                 <el-row>
@@ -78,27 +79,30 @@
                                 <el-collapse-item title="首页" name="0">
                                     <router-link to="/" class="router-link">欢迎使用医院管理系统</router-link>
                                 </el-collapse-item>
-                                <el-collapse-item title="挂号收费" name="1">
+                                <el-collapse-item title="挂号收费" name="1" v-if="role=='ROLE_患者'">
                                     <router-link to="/user" class="router-link">病人挂号</router-link>
                                 </el-collapse-item>
-                                <el-collapse-item title="门诊管理" name="2">
+                                <el-collapse-item title="门诊管理" name="2" v-if="role=='ROLE_医生'">
                                     <ul style="list-style: none;padding: 0px;margin: 0px;">
                                         <li>
                                             <router-link to="/prescribe" class="router-link">面诊</router-link>
                                         </li>
                                         <li>
-                                            <router-link to="/call" class="router-link">叫号信息</router-link>
+                                            <router-link to="/call" class="router-link">排队信息</router-link>
+                                        </li>
+                                        <li>
+                                            <router-link to="/lookAppointment" class="router-link">查看预约</router-link>
                                         </li>
                                         <li>
                                             <router-link to="/prescriptionRecords" class="router-link">处方记录</router-link>
                                         </li>
                                         <li>
-                                            <router-link to="/lookAppointment" class="router-link">查看预约</router-link>
+                                            <router-link to="/prescriptionRecords" class="router-link">补号</router-link>
                                         </li>
                                     </ul>
                                 </el-collapse-item>
                                 <!--  </div>-->
-                                <el-collapse-item title="人事管理" name="3">
+                                <el-collapse-item title="人事管理" name="3" v-if="role=='ROLE_人事'">
                                     <div class="personnel">
                                         <el-row>
                                             <router-link to="/doct">医生管理</router-link>
@@ -123,7 +127,7 @@
                                         </el-row>
                                     </div>
                                 </el-collapse-item>
-                                <el-collapse-item title="待建设" name="4">
+                                <el-collapse-item title="待建设" name="4" v-if="role=='ROLE_人事'">
                                     <router-link to="/other" class="router-link">其他</router-link>
                                 </el-collapse-item>
                             </el-collapse>
@@ -156,7 +160,9 @@
             wendu: "",
             ganmao: "",
             dialogVisible: false,
-            token: {}
+            token: {},
+            form: {},
+            role: ""
         },
         methods: {
             // 获取长沙当天的天气情况
@@ -180,29 +186,58 @@
                         // 令牌添加方式 (每个apido要添加)
                         'Authorization': 'Bearer ' + localStorage.getItem("token"),
                     },
-                    responseType: 'json'
+                    responseType: 'json',
                 }).then(res => {
+                    console.log(res.data);
                     // 请求成功
                     this.token = res.data;
-                    console.log(this.token);
+                    this.role = this.token.ROLE_
+                }).catch(error => {
+                    this.dialogVisible = true;
+                    localStorage.removeItem("token");
+                });
+            },
+            login: function() {
+                var data2 = new FormData()
+                data2.append('username', this.form.username);
+                data2.append('password', this.form.password);
+                console.log(this.form);
+                axios({
+                    method: 'post',
+                    url: 'login',
+                    // 传递参数
+                    data: data2,
+                    // 设置请求头信息
+                    headers: {
+                        //key: value
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    responseType: 'json'
+                }).then(response => {
+                    // 得到信息
+                    let res = response.headers.token;
+                    // 设置令牌保存到浏览器
+                    window.localStorage.setItem("token", res)
+                    this.dialogVisible = false;
+                    // 登录获取后刷新当前界面
+                    window.location.reload();
+                    console.log(res);
                 }).catch(error => {
                     // 请求失败，
                     console.log(error);
                 });
             },
-            aliveDialog: function() {
-                if (this.token == null) {
-                    this.dialogVisible = true;
-                }
+            // 注销当前账号
+            logout: function() {
+                this.token = {};
+                localStorage.removeItem("token");
+                // this.dialogVisible = true;
             }
         },
         created() {
             this.getWea();
             this.getToken();
-        },
-        mounted() {
-            this.aliveDialog();
-        },
+        }
     })
 </script>
 

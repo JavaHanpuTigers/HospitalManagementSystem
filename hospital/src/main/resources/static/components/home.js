@@ -39,7 +39,7 @@ let userinfo = {
         template: `
             <div>
                  	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">
-	            	<h5>修改界面</h5><hr>
+	            	<h5 style="margin-top:10px;">修改界面</h5><hr>
 	            	<span style="color:red;margin-left:100px;">修改账户信息后，再次登录即生效!</span>
 	            	<el-form label-width="80px" style="width:500px;">
 	                <el-form-item label="用户名">
@@ -53,7 +53,7 @@ let userinfo = {
 	                </el-form-item>
 	                	<el-row>
 					  <el-col :span="12">
-					  		<el-button type="primary" style="width:80%;margin-left:25px;">立即修改</el-button>
+					  		<el-button type="primary" @click="updateWord()" style="width:80%;margin-left:25px;">立即修改</el-button>
 					  </el-col>
 					  <el-col :span="12">
     						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
@@ -67,11 +67,6 @@ let userinfo = {
             return {
                 labelPosition: 'right',
                 ruleForm: {
-                    name: '',
-                    sex: '',
-                    age: '',
-                    nation: '',
-                    card: '',
                     username: '',
                     password: '',
                     again: ''
@@ -81,15 +76,30 @@ let userinfo = {
         methods: {
             resetForm() {
                 this.ruleForm = {
-                    name: '',
-                    sex: '',
-                    age: '',
-                    nation: '',
-                    card: '',
                     username: '',
                     password: '',
                     again: ''
                 }
+            },
+            updateWord: function() {
+                if (this.ruleForm.password != this.ruleForm.again) {
+                    alert("两次密码输入不一致");
+                    return;
+                }
+                // 获取服务端接口
+                axios.put("/user/pwd", {
+                    headers: {
+                        // 令牌添加方式 (每个apido要添加)
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                    },
+                    id: window.headers.token.RAT,
+                    password: this.ruleForm.password
+                }).then(res => {
+                    alert("修改成功");
+                    this.resetForm();
+                }).catch(err => {
+                    console.error(err);
+                })
             }
         }
     }
@@ -97,7 +107,7 @@ let userinfo = {
 let userset = {
         template: `
             <div>
-                 <h5>用户使用手册</h5><hr>
+                 <h5 style="margin-top:10px;">用户使用手册</h5><hr>
                  【用户注册】:<br>
                    <div style="color:purple;">&nbsp;&nbsp;&nbsp;<span>用户可以注册属于自己的快捷账号，方便下次直接进入系统</span></div>
 	        	 【忘记密码】:<br>
@@ -120,7 +130,7 @@ let userregit = {
         template: `
              <div>
 	               	<div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">
-	            	<h5>注册界面</h5><hr>
+	            	<h5 style="margin-top:10px;">注册界面</h5><hr>
 	            	<span style="color:red;margin-left:100px;">请填写实名信息，方便医院登记!</span>
 	            	<el-form label-width="80px" style="width:500px;">
 	                <el-form-item label="姓名">
@@ -191,8 +201,9 @@ let userregit = {
             regitUser: function() {
                 if (this.ruleForm.password != this.ruleForm.again) {
                     alert("您两次输入的密码不一致，请核对后提交!");
+                    return;
                 }
-                let data = {
+                axios.post("user/add", {
                     user: {
                         name: this.ruleForm.username,
                         password: this.ruleForm.password,
@@ -202,13 +213,11 @@ let userregit = {
                     age: this.ruleForm.age,
                     nation: this.ruleForm.nation,
                     card: this.ruleForm.card
-                }
-                axios.post("user/add", data).then(res => {
+                }).then(res => {
                     this.resetForm();
                     alert("恭喜你注册成功!" + res);
                 }).catch(err => {
                     console.log(err);
-                    console.error("获取异常");
                 })
             }
         }
@@ -218,7 +227,7 @@ let retrieve = {
     template: `
             <div>
                  <div class="infinite-list-wrapper" style="overflow:auto;height: 500px;width: 100%;">
-	            	<h5>修改界面</h5><hr>
+	            	<h5 style="margin-top:10px;">忘记密码? 没关系☺ 在此处可以找回你的密码</h5><hr>
 	            	<span style="color:red;margin-left:100px;">只有填写正确的实名验证才可找回!</span>
 	            	<el-form label-width="80px" style="width:500px;">
 	                <el-form-item label="用户名">

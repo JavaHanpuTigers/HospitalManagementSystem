@@ -1,6 +1,7 @@
 package com.five.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class UserInfoServiceImpl implements UserInfoService{
 	// 创建一个患者用户
 	@Transactional(rollbackFor = CreateUserPatientException.class,isolation = Isolation.DEFAULT)
 	public int createUserPatient(Patient patient) throws CreateUserPatientException {
+		patient.getUser().setPassword(UserInfoServiceImpl.getPassword(patient.getUser().getPassword()));
 		userinfomapper.addUser(patient.getUser());
 		if(patient.getUser().getId() == 0) {
 			throw new CreateUserPatientException();
@@ -46,7 +48,19 @@ public class UserInfoServiceImpl implements UserInfoService{
 	@Transactional
 	public int updateWord(User user) {
 		userinfomapper.findUser(user.getId());
+		user.setPassword(UserInfoServiceImpl.getPassword(user.getPassword()));
 		return userinfomapper.updateWord(user);
+	}
+	
+	@Override
+	// 找回密码
+	public int findWord(User user) {
+		return 0;
+	}
+	
+	// 密码加密的方法
+	public static String getPassword(String password) {
+		return new BCryptPasswordEncoder().encode(password);
 	}
 
 }

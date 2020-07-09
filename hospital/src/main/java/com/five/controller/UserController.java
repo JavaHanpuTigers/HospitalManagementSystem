@@ -53,4 +53,8 @@ public class UserController {
 		return JwtTokenUtils.getTokenBody(token.substring(7));
 	}
 	
+	@GetMapping("/id")
+	public int getUserId(@RequestHeader("Authorization") String token) {
+		return JwtTokenUtils.getUserId(token.substring(7));
+	}
 }
