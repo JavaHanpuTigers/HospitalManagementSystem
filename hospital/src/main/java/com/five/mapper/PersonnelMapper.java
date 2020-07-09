@@ -88,6 +88,11 @@ public interface PersonnelMapper {
 	})
 	public List<Doctor> doctAll(@Param("page")int page,@Param("off")int off);
 	
+	// 获取指定子科室的所有医生
+	@Select("select * from doctor where s_id = #{id}")
+	@ResultMap({"doctMap"})
+	List<Doctor> getDoctorBySubment(int id);
+	
 	// 获取医生的数量
 	@Select("SELECT count(d_id) FROM doctor")
 	int countDoct();
@@ -114,6 +119,11 @@ public interface PersonnelMapper {
 		one = @One(select = "com.five.mapper.RegeditMapper.getDoctorByid"))
 	})
 	List<Arrange> argeAll(@Param("page")int page,@Param("off")int off);
+	
+	// 获取指定医生的排班
+	@Select("select * from arrange where d_id = #{id}")
+	@ResultMap({"arge"})
+	Arrange getDoctByArge(int id);
 	
 	// 获取排班的数量
 	@Select("SELECT count(a_id) FROM arrange")
@@ -174,6 +184,11 @@ public interface PersonnelMapper {
 		})
 	List<Subment> submentAll(@Param("page")int page,@Param("off")int off);
 	
+	// 获取指定科室的所有子科室
+	@Select("select * from subment where dp_id = #{id}")
+	@ResultMap({"submentMap"})
+	List<Subment> getSubmentByDept(int id);
+	
 	// 获取子科室的数量
 	@Select("SELECT count(s_id) FROM subment")
 	int countSubment();
@@ -211,6 +226,11 @@ public interface PersonnelMapper {
 	})
 	List<Regedit> regAll(@Param("page")int page,@Param("off")int off);
 	
+	// 获取指定医生的挂号记录
+	@Select("select * from register where d_id = #{id}")
+	@ResultMap({"regMap"})
+	List<Regedit> getDoctByReg(int id);
+	
 	// 获取挂号的数量
 	@Select("SELECT count(rt_id) FROM register")
 	int countReg();
@@ -222,7 +242,7 @@ public interface PersonnelMapper {
 	
 	//获取所有处方信息
 	@Select("SELECT * FROM prescript limit #{off} offset ${page * off}")
-	@Results({
+	@Results(id="prescriptMap" ,value={
 		@Result(id=true,column = "pt_id",property = "id"),
 		@Result(column = "pt_sym",property = "sym"),
 		@Result(column = "pt_content",property = "content"),

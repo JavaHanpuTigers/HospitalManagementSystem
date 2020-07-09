@@ -66,6 +66,7 @@ let viewDoct = {
             axios.put(`hr/doct/${id}`, params)
                 .then(res => {
                     this.getlist();
+                    this.$message('修改成功');
                 })
                 .catch(err => {
                     console.error(err);
@@ -73,15 +74,36 @@ let viewDoct = {
             this.flag = false;
         },
         deleteRow(row) {
-            this.flag = true;
-            axios.delete(`/hr/doct/${row.id}`)
+            axios.get(`hr/arge/doct/${row.id}`)
                 .then(res => {
-                    this.getlist();
+                    if (res.data == '') {
+                        axios.get(`hr/reg/doct/${row.id}`)
+                            .then(res => {
+                                console.log(row.id);
+                                if (res.data.length > 0) {
+                                    this.$message(row.name + '还有工作，不能删除');
+                                } else {
+                                    axios.delete(`/hr/doct/${row.id}`)
+                                        .then(res => {
+                                            this.getlist();
+                                            this.$message('删除成功');
+                                        })
+                                        .catch(err => {
+                                            console.error(err);
+                                        })
+                                    console.log("删除成功");
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            });
+                    } else {
+                        this.$message(row.name + '还有工作，不能删除');
+                    }
                 })
                 .catch(err => {
                     console.error(err);
-                })
-            this.flag = false;
+                });
         }
 
     },
@@ -302,20 +324,8 @@ let addDoct = {
                 }
                 axios.post('hr/doct', params)
                     .then(res => {
-                        // this.dept = {
-                        //     name: '',
-                        //     subment: '',
-                        //     age: '',
-                        //     sex: '',
-                        //     nation: '',
-                        //     itle: '',
-                        //     fee: '',
-                        //     username: '',
-                        //     pass: '',
-                        //     checkPass: ''
-                        // };
                         this.resetForm(ruleForm);
-                        alert("添加成功");
+                        this.$message('添加成功');
                     })
                     .catch(err => {
                         console.error(err);
@@ -472,6 +482,7 @@ let viewDept = {
             axios.put(`hr/dept/${id}`, params)
                 .then(res => {
                     this.getlist();
+                    this.$message('修改成功');
                 })
                 .catch(err => {
                     console.error(err);
@@ -479,15 +490,24 @@ let viewDept = {
             this.flag = false;
         },
         deleteRow(row) {
-            this.flag = true;
-            axios.delete(`/hr/dept/${row.id}`)
+            axios.get(`/hr/subment/dept/${row.id}`)
                 .then(res => {
-                    this.getlist();
+                    if (res.data.length > 0) {
+                        this.$message(row.name + '下有子科室，不能删除！');
+                    } else {
+                        axios.delete(`/hr/dept/${row.id}`)
+                            .then(res => {
+                                this.getlist();
+                                this.$message('删除成功');
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            })
+                    }
                 })
                 .catch(err => {
                     console.error(err);
                 })
-            this.flag = false;
         }
 
     },
@@ -538,28 +558,49 @@ let addDept = {
     data() {
         return {
             dept: {
-                name: undefined
+                name: ''
             },
-            flag: true
+            flag: true,
+            rules: {
+                name: [{
+                    required: true,
+                    message: '请输入科室名称',
+                    trigger: 'blur'
+                }]
+            }
         }
     },
     methods: {
-        addDoct() {
-            this.flag = true;
-            params = {
-                "name": this.dept.name
+        addDoct(ruleForm) {
+            let pd = true;
+            this.$refs[ruleForm].validate((valid) => {
+                if (valid) {
+                    console.log('submit!');
+                    pd = true;
+                } else {
+                    pd = false;
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+            if (pd) {
+                this.flag = true;
+                params = {
+                    "name": this.dept.name
+                }
+                axios.post('hr/dept', params)
+                    .then(res => {
+                        this.resetForm(ruleForm)
+                        this.$message('添加成功');
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                this.flag = false;
             }
-            axios.post('hr/dept', params)
-                .then(res => {
-                    this.dept = {
-                        name: ''
-                    };
-                    alert("添加成功");
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-            this.flag = false;
+        },
+        resetForm(ruleForm) {
+            this.$refs[ruleForm].resetFields();
         }
     },
     created() {
@@ -569,12 +610,13 @@ let addDept = {
         <div>
             <div  v-loading="flag">
             <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
-                <el-form ref="form" :model="dept" label-width="80px">
-                    <el-form-item label="用户名">
+                <el-form :rules="rules" ref="ruleForm" :model="dept" label-width="80px" class="demo-ruleForm">
+                    <el-form-item label="科室名称" prop="name">
                         <el-input v-model="dept.name"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="addDoct">立即创建</el-button>
+                        <el-button type="primary" @click="addDoct('ruleForm')">立即创建</el-button>
+                        <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
                 </el-form>
             </el-scrollbar>
@@ -649,6 +691,7 @@ let viewSubment = {
             axios.put(`hr/subment/${id}`, params)
                 .then(res => {
                     this.getlist();
+                    this.$message('修改成功');
                 })
                 .catch(err => {
                     console.error(err);
@@ -656,15 +699,24 @@ let viewSubment = {
             this.flag = false;
         },
         deleteRow(row) {
-            this.flag = true;
-            axios.delete(`/hr/subment/${row.id}`)
+            axios.get(`hr/doct/subment/${row.id}`)
                 .then(res => {
-                    this.getlist();
+                    if (res.data.length > 0) {
+                        this.$message(row.name + '下还有医生工作，不能工作！');
+                    } else {
+                        axios.delete(`/hr/subment/${row.id}`)
+                            .then(res => {
+                                this.getlist();
+                                this.$message('删除成功');
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            })
+                    }
                 })
                 .catch(err => {
                     console.error(err);
                 })
-            this.flag = false;
         }
 
     },
@@ -729,30 +781,55 @@ let addSubment = {
                 dept: undefined
             },
             submentList: undefined,
-            flag: true
+            flag: true,
+            rules: {
+                name: [{
+                    required: true,
+                    message: '请输入科室名称',
+                    trigger: 'blur'
+                }],
+                dept: [{
+                    required: true,
+                    message: '请选择归属科',
+                    trigger: 'blur'
+                }],
+
+            }
         }
     },
     methods: {
-        addDoct() {
-            this.flag = true;
-            params = {
-                "name": this.subment.name,
-                "dept": {
-                    "id": this.subment.dept
+        addDoct(ruleForm) {
+            let pd = true;
+            this.$refs[ruleForm].validate((valid) => {
+                if (valid) {
+                    console.log('submit!');
+                } else {
+                    console.log('error submit!!');
+                    pd = false;
+                    return false;
                 }
+            });
+            if (pd) {
+                this.flag = true;
+                params = {
+                    "name": this.subment.name,
+                    "dept": {
+                        "id": this.subment.dept
+                    }
+                }
+                axios.post('hr/subment', params)
+                    .then(res => {
+                        this.resetForm(ruleForm);
+                        this.$message('添加成功');
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                this.flag = false;
             }
-            axios.post('hr/subment', params)
-                .then(res => {
-                    this.subment = {
-                        name: '',
-                        dept: ''
-                    };
-                    alert("添加成功");
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-            this.flag = false;
+        },
+        resetForm(ruleForm) {
+            this.$refs[ruleForm].resetFields();
         }
     },
     created() {
@@ -769,17 +846,18 @@ let addSubment = {
         <div>
             <div  v-loading="flag">
             <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
-                <el-form ref="form" :model="subment" label-width="80px">
-                    <el-form-item label="用户名">
+                <el-form :rules="rules" ref="ruleForm" :model="subment" label-width="80px" class="demo-ruleForm">
+                    <el-form-item label="科室名称" prop="name">
                         <el-input v-model="subment.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室">
-                        <el-select v-model="subment.dept" placeholder="科室">
+                    <el-form-item label="归属科" prop="dept">
+                        <el-select v-model="subment.dept" placeholder="归属科">
                             <el-option v-for="(item, index) in submentList" :key="index" :label="item.name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="addDoct">立即创建</el-button>
+                        <el-button type="primary" @click="addDoct('ruleForm')">立即创建</el-button>
+                        <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
                 </el-form>
             </el-scrollbar>
@@ -854,6 +932,7 @@ let viewArge = {
             axios.put(`hr/arge/${id}`, params)
                 .then(res => {
                     this.getlist();
+                    this.$message('修改成功');
                 })
                 .catch(err => {
                     console.error(err);
@@ -865,6 +944,7 @@ let viewArge = {
             axios.delete(`/hr/arge/${row.id}`)
                 .then(res => {
                     this.getlist();
+                    this.$message('删除成功');
                 })
                 .catch(err => {
                     console.error(err);
@@ -934,28 +1014,52 @@ let addArge = {
                 doct: undefined
             },
             submentList: undefined,
-            flag: true
+            flag: true,
+            rules: {
+                time: [{
+                    required: true,
+                    message: '请输入排班时间',
+                    trigger: 'blur'
+                }],
+                doct: [{
+                    required: true,
+                    message: '请选择医生',
+                    trigger: 'blur'
+                }]
+            }
         }
     },
     methods: {
-        addDoct() {
-            this.flag = true;
-            params = {
-                "time": this.arge.time,
-                "doct": { "id": this.arge.doct }
+        addDoct(ruleForm) {
+            let pd = true;
+            this.$refs[ruleForm].validate((valid) => {
+                if (valid) {
+                    console.log('submit!');
+                } else {
+                    console.log('error submit!!');
+                    pd = false;
+                    return false;
+                }
+            });
+            if (pd) {
+                this.flag = true;
+                params = {
+                    "time": this.arge.time,
+                    "doct": { "id": this.arge.doct }
+                }
+                axios.post('hr/arge', params)
+                    .then(res => {
+                        this.resetForm(ruleForm)
+                        this.$message('添加成功');
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                this.flag = false;
             }
-            axios.post('hr/arge', params)
-                .then(res => {
-                    this.arge = {
-                        time: '',
-                        doct: ''
-                    };
-                    alert("添加成功");
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-            this.flag = false;
+        },
+        resetForm(ruleForm) {
+            this.$refs[ruleForm].resetFields();
         }
     },
     created() {
@@ -972,17 +1076,18 @@ let addArge = {
         <div>
             <div  v-loading="flag">
             <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
-                <el-form ref="form" :model="arge" label-width="80px">
-                    <el-form-item label="姓名">
+                <el-form :rules="rules" ref="ruleForm" :model="arge" label-width="80px" class="demo-ruleForm">
+                    <el-form-item label="排班时间" prop="time">
                         <el-input v-model="arge.time"></el-input>
                     </el-form-item>
-                    <el-form-item label="排班">
-                        <el-select v-model="arge.doct" placeholder="排班">
+                    <el-form-item label="排班医生" prop="doct">
+                        <el-select v-model="arge.doct" placeholder="排班医生">
                             <el-option v-for="(item, index) in submentList" :key="index" :label="item.name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="addDoct">立即创建</el-button>
+                        <el-button type="primary" @click="addDoct('ruleForm')">立即创建</el-button>
+                        <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
                 </el-form>
             </el-scrollbar>
@@ -1066,6 +1171,7 @@ let pant = {
             axios.put(`hr/pant/${id}`, params)
                 .then(res => {
                     this.getlist();
+                    this.$message('修改成功');
                 })
                 .catch(err => {
                     console.error(err);
@@ -1077,6 +1183,7 @@ let pant = {
             axios.delete(`/hr/pant/${row.id}`)
                 .then(res => {
                     this.getlist();
+                    this.$message('删除成功');
                 })
                 .catch(err => {
                     console.error(err);
@@ -1124,7 +1231,8 @@ let reg = {
             pagesize: 5,
             currpage: 1,
             search: '',
-            flag: false
+            flag: false,
+            states: ["未签到", "签到完成", "就诊中", "检测中", "未支付状态", "取消支付", ]
         }
     },
     methods: {
@@ -1164,7 +1272,13 @@ let reg = {
                 <el-table-column prop="nation" label="民族" width="180"></el-table-column>
                 <el-table-column prop="fee" label="费用" width="180"></el-table-column>
                 <el-table-column prop="phone" label="电话" width="180"></el-table-column>
-                <el-table-column prop="state" label="状态" width="180"></el-table-column>
+               <!-- <el-table-column prop="{{states[state]}}" label="状态" width="180"></el-table-column>--?
+                <el-table-column prop="state"  width="180">
+                    <template slot-scope="scope">
+                        <el-button type="text></el-button>
+                    </template>
+                </el-table-column>
+                
             </el-table>
         </div>
         <div style="width:100%;margin-top:40px;margin-left:250px">

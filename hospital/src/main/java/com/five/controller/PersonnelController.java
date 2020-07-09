@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,9 @@ public class PersonnelController {
 	// 自动注入人事接口的实现类
 	@Autowired
 	PersonnelService ps;
+	
+	@Autowired
+	PersonnelMapper pm;
 	
 	//	获取分页后得到的患者
 	@GetMapping("/pant")
@@ -94,6 +99,12 @@ public class PersonnelController {
 		// 返回集合
 		return map;
 	}
+	
+	// 获取指定子科室的所有医生
+	@GetMapping("doct/subment/{id}")
+	List<Doctor> getDoctorBySubment(@PathVariable int id){
+		return pm.getDoctorBySubment(id);
+	};
 	
 	// 添加医生
 	@PostMapping("/doct")
@@ -172,6 +183,12 @@ public class PersonnelController {
 		return map;
 	}
 	
+	// 获取指定科室的所有子科室
+	@GetMapping("/subment/dept/{id}")
+	public List<Subment> getSubmentByDept(@PathVariable int id){
+		return pm.getSubmentByDept(id);
+	};
+	
 	// 添加子科室
 	@PostMapping("/subment")
 	public Subment addSubment(@RequestBody Subment subment) {
@@ -208,6 +225,12 @@ public class PersonnelController {
 		return map;
 	}
 	
+	// 获取指定医生的排班信息
+	@GetMapping("/arge/doct/{id}")
+	public Arrange getDoctByArge(@PathVariable int id) {
+		return pm.getDoctByArge(id);
+	}
+	
 	// 添加排班
 	@PostMapping("/arge")
 	public Arrange addArge(@RequestBody Arrange arge) {
@@ -242,6 +265,12 @@ public class PersonnelController {
 		map.put("count", ps.countReg());
 		// 返回集合
 		return map;
+	}
+	
+	// 获取指定医生的挂号信息
+	@GetMapping("/reg/doct/{id}")
+	public List<Regedit> getDoctByReg(@PathVariable int id) {
+		return pm.getDoctByReg(id);
 	}
 	
 	// 获取分页后得到的处方记录
