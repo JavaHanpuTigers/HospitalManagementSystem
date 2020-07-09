@@ -3,6 +3,7 @@ package com.five.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,7 +89,9 @@ public class PersonnelServiceImpl implements PersonnelService {
 	@Transactional(rollbackFor = createPretException.class,isolation = Isolation.SERIALIZABLE)
 	@Override
 	public Doctor addDoct(Doctor doctor)throws createPretException {
-		pm.addUser(doctor.getUser());
+		User user = doctor.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+		pm.addUser(user);
 		if(doctor.getUser().getId()==0) {
 			throw new createPretException();
 		}

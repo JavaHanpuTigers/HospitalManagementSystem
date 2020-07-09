@@ -2,9 +2,8 @@ let viewDoct = {
     data() {
         return {
             list: [],
-            pagesize: 0,
+            pagesize: 5,
             currpage: 1,
-            totalPages: 0,
             search: '',
             dialogVisible: false,
             doct: {
@@ -26,9 +25,7 @@ let viewDoct = {
             this.flag = true;
             axios.get('hr/doct')
                 .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
+                    this.list = res.data.Allcontent;
                     console.log(res.data);
                     this.flag = false;
                 })
@@ -37,18 +34,10 @@ let viewDoct = {
                 })
         },
         handleCurrentChange(cpage) {
-            this.flag = true;
-            axios.get('hr/doct', {
-                    params: {
-                        p: cpage - 1
-                    }
-                })
-                .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    this.flag = false;
-                })
+            this.currpage = cpage;
+        },
+        handleSizeChange(psize) {
+            this.pagesize = psize;
         },
         getRow(row) {
             this.dialogVisible = true;
@@ -77,22 +66,22 @@ let viewDoct = {
             axios.put(`hr/doct/${id}`, params)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         },
         deleteRow(row) {
             this.flag = true;
             axios.delete(`/hr/doct/${row.id}`)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         }
 
     },
@@ -109,7 +98,7 @@ let viewDoct = {
     template: `
     <div>
         <div v-loading="flag">
-            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border height="330" style="width: 100%">
+            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
                 <el-table-column fixed prop="id" label="编号" width="180"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="180"></el-table-column>
                 <el-table-column prop="subment.name" label="科室" width="180"></el-table-column>
@@ -165,8 +154,8 @@ let viewDoct = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px">
-            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        <div style="width:100%;margin-top:20px;margin-left:250px">
+            <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
     `
@@ -175,62 +164,168 @@ let viewDoct = {
 
 let addDoct = {
     data() {
+        var checkAge = (rule, value, callback) => {
+            if (!value) {
+                return callback(new Error('年龄不能为空'));
+            }
+            setTimeout(() => {
+                if (!Number.isInteger(value)) {
+                    callback(new Error('请输入数字值'));
+                } else {
+                    if (value < 18) {
+                        callback(new Error('必须年满18岁'));
+                    } else {
+                        callback();
+                    }
+                }
+            }, 1000);
+        };
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+                if (this.doct.checkPass !== '') {
+                    this.$refs.ruleForm.validateField('checkPass');
+                }
+                callback();
+            }
+        };
+        var validatePass2 = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.doct.pass) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
         return {
             doct: {
-                name: undefined,
-                subment: undefined,
-                age: undefined,
-                sex: undefined,
-                nation: undefined,
-                itle: undefined,
-                fee: undefined,
-                user: {
-                    name: undefined,
-                    password: undefined
-                }
+                name: '',
+                subment: '',
+                age: '',
+                sex: '',
+                nation: '',
+                title: '',
+                fee: '',
+                username: '',
+                pass: '',
+                checkpass: '',
             },
             submentList: undefined,
-            flag: true
+            flag: false,
+            rules: {
+                username: [{
+                    required: true,
+                    message: '请输入用户名',
+                    trigger: 'blur'
+                }, {
+                    min: 3,
+                    max: 10,
+                    message: '长度在 3 到 10 个字符',
+                    trigger: 'blur'
+                }],
+                pass: [{
+                    required: true,
+                    validator: validatePass,
+                    trigger: 'blur'
+                }],
+                checkPass: [{
+                    required: true,
+                    validator: validatePass2,
+                    trigger: 'blur'
+                }],
+                name: [{
+                    required: true,
+                    message: '请输入姓名',
+                    trigger: 'blur'
+                }],
+                age: [{
+                    required: true,
+                    validator: checkAge,
+                    trigger: 'blur'
+                }],
+                subment: [{
+                    required: true,
+                    message: '请输入科室',
+                    trigger: 'blur'
+                }],
+                sex: [{
+                    required: true,
+                    message: '请输入性别',
+                    trigger: 'blur'
+                }],
+                nation: [{
+                    required: true,
+                    message: '请输入民族',
+                    trigger: 'blur'
+                }],
+                title: [{
+                    required: true,
+                    message: '请输入职称',
+                    trigger: 'blur'
+                }],
+                fee: [{
+                    required: true,
+                    message: '请输入费用',
+                    trigger: 'blur'
+                }],
+            }
         }
     },
     methods: {
-        addDoct() {
-            this.flag = true;
-            params = {
-                "name": this.doct.name,
-                "sex": this.doct.sex,
-                "age": this.doct.age,
-                "nation": this.doct.nation,
-                "title": this.doct.title,
-                "fee": this.doct.fee,
-                "subment": { "id": this.doct.subment },
-                "user": {
-                    "name": this.doct.user.name,
-                    "password": this.doct.user.password
+        addDoct(ruleForm) {
+            let pd = true;
+            this.$refs[ruleForm].validate((valid) => {
+                if (valid) {
+                    console.log('submit!');
+                } else {
+                    pd = false;
+                    console.log('error submit!!');
+                    return false;
                 }
+            });
+            if (pd) {
+                this.flag = true;
+                params = {
+                    "name": this.doct.name,
+                    "sex": this.doct.sex,
+                    "age": this.doct.age,
+                    "nation": this.doct.nation,
+                    "title": this.doct.title,
+                    "fee": this.doct.fee,
+                    "subment": { "id": this.doct.subment },
+                    "user": {
+                        "name": this.doct.username,
+                        "password": this.doct.pass
+                    }
+                }
+                axios.post('hr/doct', params)
+                    .then(res => {
+                        // this.dept = {
+                        //     name: '',
+                        //     subment: '',
+                        //     age: '',
+                        //     sex: '',
+                        //     nation: '',
+                        //     itle: '',
+                        //     fee: '',
+                        //     username: '',
+                        //     pass: '',
+                        //     checkPass: ''
+                        // };
+                        this.resetForm(ruleForm);
+                        alert("添加成功");
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+                this.flag = false;
             }
-            axios.post('hr/doct', params)
-                .then(res => {
-                    this.dept = {
-                        name: '',
-                        subment: '',
-                        age: '',
-                        sex: '',
-                        nation: '',
-                        itle: '',
-                        fee: '',
-                        user: {
-                            name: '',
-                            password: ''
-                        }
-                    };
-                    alert("添加成功");
-                })
-                .catch(err => {
-                    console.error(err);
-                })
-            this.flag = false;
-        }
+        },
+        resetForm(ruleForm) {
+            this.$refs[ruleForm].resetFields();
+        },
     },
     created() {
         axios.get('hr/subment')
@@ -240,47 +335,50 @@ let addDoct = {
             .catch(err => {
                 console.error(err);
             })
-        this.flag = false;
     },
     template: `
         <div>
-            <div  v-loading="flag">
+        <div v-loading="flag">
             <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
-                <el-form ref="form" :model="doct" label-width="80px">
-                    <el-form-item label="用户名">
-                        <el-input v-model="doct.user.name"></el-input>
+                <el-form ref="ruleForm" :model="doct" :rules="rules" label-width="80px"  class="demo-ruleForm">
+                    <el-form-item label="用户名"  prop="username">
+                        <el-input v-model="doct.username"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码">
-                        <el-input v-model="doct.user.password"></el-input>
+                     <el-form-item label="密码" prop="pass">
+                        <el-input type="password" v-model="doct.pass" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="姓名">
+                    <el-form-item label="确认密码" prop="checkPass">
+                        <el-input type="password" v-model="doct.checkPass" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="姓名" prop="name">
                         <el-input v-model="doct.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室">
+                    <el-form-item label="科室"  prop="subment">
                         <el-select v-model="doct.subment" placeholder="科室">
                             <el-option v-for="(item, index) in submentList" :key="index" :label="item.name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="年龄">
-                        <el-input v-model="doct.age"></el-input>
+                    <el-form-item label="年龄" prop="age">
+                        <el-input v-model.number="doct.age"></el-input>
                     </el-form-item>
-                    <el-form-item label="性别">
+                    <el-form-item label="性别" prop="sex">
                         <el-radio-group v-model="doct.sex">
                             <el-radio label="男"></el-radio>
                             <el-radio label="女"></el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="民族">
+                    <el-form-item label="民族" prop="nation">
                         <el-input v-model="doct.nation"></el-input>
                     </el-form-item>
-                    <el-form-item label="职称">
+                    <el-form-item label="职称" prop="title">
                         <el-input v-model="doct.title"></el-input>
                     </el-form-item>
-                    <el-form-item label="费用">
+                    <el-form-item label="费用" prop="fee">
                         <el-input v-model="doct.fee"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="addDoct">立即创建</el-button>
+                        <el-button type="primary" @click="addDoct('ruleForm')">立即创建</el-button>
+                        <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
                 </el-form>
             </el-scrollbar>
@@ -306,10 +404,14 @@ let doct = {
 let viewDept = {
     data() {
         return {
+            // list: [],
+            // pagesize: 0,
+            // currpage: 1,
+            // totalPages: 0,
+            // search: '',
             list: [],
-            pagesize: 0,
+            pagesize: 5,
             currpage: 1,
-            totalPages: 0,
             search: '',
             dialogVisible: false,
             dept: {
@@ -324,29 +426,36 @@ let viewDept = {
             this.flag = true;
             axios.get('hr/dept')
                 .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    console.log(res.data);
+                    this.list = res.data.Allcontent;
+                    // this.list = res.data.content;
+                    // this.totalPages = res.data.count;
+                    // this.pagesize = res.data.size;
+                    // console.log(res.data);
                     this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
         },
+        // handleCurrentChange(cpage) {
+        //     this.flag = true;
+        //     axios.get('hr/dept', {
+        //             params: {
+        //                 p: cpage - 1
+        //             }
+        //         })
+        //         .then(res => {
+        //             this.list = res.data.content;
+        //             this.totalPages = res.data.count;
+        //             this.pagesize = res.data.size;
+        //             this.flag = false;
+        //         })
+        // },
         handleCurrentChange(cpage) {
-            this.flag = true;
-            axios.get('hr/dept', {
-                    params: {
-                        p: cpage - 1
-                    }
-                })
-                .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    this.flag = false;
-                })
+            this.currpage = cpage;
+        },
+        handleSizeChange(psize) {
+            this.pagesize = psize;
         },
         getRow(row) {
             this.dialogVisible = true;
@@ -363,22 +472,22 @@ let viewDept = {
             axios.put(`hr/dept/${id}`, params)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         },
         deleteRow(row) {
             this.flag = true;
-            axios.delete(`/hr/doct/${row.id}`)
+            axios.delete(`/hr/dept/${row.id}`)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         }
 
     },
@@ -388,7 +497,7 @@ let viewDept = {
     template: `
     <div>
         <div v-loading="flag">
-            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border height="330" style="width: 100%">
+            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
                 <el-table-column fixed prop="id" label="编号" width="250"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="300"></el-table-column>
                 <el-table-column fixed="right" align="right" width="200">
@@ -415,9 +524,12 @@ let viewDept = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px">
-            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        <div style="width:100%;margin-top:20px;margin-left:250px">
+            <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
+        <!-- <div style="width:100%;margin-top:20px">
+            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        </div> -->
     </div>
     `
 }
@@ -489,9 +601,8 @@ let viewSubment = {
     data() {
         return {
             list: [],
-            pagesize: 0,
+            pagesize: 5,
             currpage: 1,
-            totalPages: 0,
             search: '',
             dialogVisible: false,
             subment: {
@@ -505,32 +616,21 @@ let viewSubment = {
     },
     methods: {
         getlist() {
-            this.flag = false;
+            this.flag = true;
             axios.get('hr/subment')
                 .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    console.log(res.data);
-                    this.flag = true;
+                    this.list = res.data.Allcontent;
+                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
         },
         handleCurrentChange(cpage) {
-            this.flag = true;
-            axios.get('hr/subment', {
-                    params: {
-                        p: cpage - 1
-                    }
-                })
-                .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    this.flag = false;
-                })
+            this.currpage = cpage;
+        },
+        handleSizeChange(psize) {
+            this.pagesize = psize;
         },
         getRow(row) {
             this.dialogVisible = true;
@@ -549,22 +649,22 @@ let viewSubment = {
             axios.put(`hr/subment/${id}`, params)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         },
         deleteRow(row) {
             this.flag = true;
             axios.delete(`/hr/subment/${row.id}`)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         }
 
     },
@@ -581,7 +681,7 @@ let viewSubment = {
     template: `
     <div>
         <div v-loading="flag">
-            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border height="330" style="width: 100%">
+            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
                 <el-table-column fixed prop="id" label="编号" width="180"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="280"></el-table-column>
                 <el-table-column prop="dept.name" label="科室" width="180"></el-table-column>
@@ -614,8 +714,8 @@ let viewSubment = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px">
-            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        <div style="width:100%;margin-top:20px;margin-left:250px">
+            <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
     `
@@ -706,9 +806,8 @@ let viewArge = {
     data() {
         return {
             list: [],
-            pagesize: 0,
+            pagesize: 5,
             currpage: 1,
-            totalPages: 0,
             search: '',
             dialogVisible: false,
             arge: {
@@ -722,32 +821,21 @@ let viewArge = {
     },
     methods: {
         getlist() {
-            this.flag = false;
+            this.flag = true;
             axios.get('hr/arge')
                 .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    console.log(res.data);
-                    this.flag = true;
+                    this.list = res.data.Allcontent;
+                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
         },
         handleCurrentChange(cpage) {
-            this.flag = true;
-            axios.get('hr/arge', {
-                    params: {
-                        p: cpage - 1
-                    }
-                })
-                .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    this.flag = false;
-                })
+            this.currpage = cpage;
+        },
+        handleSizeChange(psize) {
+            this.pagesize = psize;
         },
         getRow(row) {
             this.dialogVisible = true;
@@ -766,11 +854,11 @@ let viewArge = {
             axios.put(`hr/arge/${id}`, params)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         },
         deleteRow(row) {
             this.flag = true;
@@ -798,10 +886,10 @@ let viewArge = {
     template: `
     <div>
         <div v-loading="flag">
-            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border height="330" style="width: 100%">
-                <el-table-column fixed prop="id" label="编号" width="180"></el-table-column>
-                <el-table-column prop="time" label="时间" width="180"></el-table-column>
-                <el-table-column prop="doct.name" label="医生" width="180"></el-table-column>
+            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
+                <el-table-column fixed prop="id" label="编号" width="200"></el-table-column>
+                <el-table-column prop="time" label="时间" width="250"></el-table-column>
+                <el-table-column prop="doct.name" label="医生" width="250"></el-table-column>
                 <el-table-column fixed="right" align="right" width="200">
                     <template slot="header" slot-scope="scope">
                         <el-input v-model="search" size="mini" placeholder="输入关键字搜索"/>
@@ -815,10 +903,10 @@ let viewArge = {
             <el-dialog title="表单弹框" :visible.sync="dialogVisible" width="40%">
                 <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
                     <el-form ref="form" :model="arge">
-                        <el-form-item label="姓名">
+                        <el-form-item label="时间">
                             <el-input v-model="arge.time"></el-input>
                         </el-form-item>
-                        <el-form-item label="科室">
+                        <el-form-item label="医生">
                             <el-select v-model="arge.doct" placeholder="医生">
                                 <el-option v-for="(item, index) in submentList" :key="index" :label="item.name" :value="item.id"></el-option>
                             </el-select>
@@ -831,8 +919,8 @@ let viewArge = {
                 </span>
             </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px">
-            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        <div style="width:100%;margin-top:20px;margin-left:250px">
+            <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
     `
@@ -905,7 +993,7 @@ let addArge = {
 
 let arge = {
     template: `
-         <div>
+        <div>
              <div class="list-group list-group-horizontal text-center">
                  <router-link tag="p" to="/arge/viewArge" class="list-group-item list-group-item-action">查看排班</router-link>
                  <router-link tag="p" to="/arge/addArge" class="list-group-item list-group-item-action" >添加排班</router-link>
@@ -921,9 +1009,8 @@ let pant = {
     data() {
         return {
             list: [],
-            pagesize: 0,
+            pagesize: 5,
             currpage: 1,
-            totalPages: 0,
             search: '',
             dialogVisible: false,
             pant: {
@@ -940,32 +1027,21 @@ let pant = {
     },
     methods: {
         getlist() {
-            this.flag = false;
+            this.flag = true;
             axios.get('hr/pant')
                 .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    console.log(res.data);
-                    this.flag = true;
+                    this.list = res.data.Allcontent;
+                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
         },
         handleCurrentChange(cpage) {
-            this.flag = true;
-            axios.get('hr/pant', {
-                    params: {
-                        p: cpage - 1
-                    }
-                })
-                .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    this.flag = false;
-                })
+            this.currpage = cpage;
+        },
+        handleSizeChange(psize) {
+            this.pagesize = psize;
         },
         getRow(row) {
             this.dialogVisible = true;
@@ -990,22 +1066,22 @@ let pant = {
             axios.put(`hr/pant/${id}`, params)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         },
         deleteRow(row) {
             this.flag = true;
             axios.delete(`/hr/pant/${row.id}`)
                 .then(res => {
                     this.getlist();
-                    this.flag = false;
                 })
                 .catch(err => {
                     console.error(err);
                 })
+            this.flag = false;
         }
 
     },
@@ -1014,8 +1090,8 @@ let pant = {
     },
     template: `
     <div>
-        <div v-loading="flag">
-            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border height="330" style="width: 100%">
+        <div v-loading="flag" style="margin-top:50px">
+        <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
                 <el-table-column fixed prop="id" label="编号" width="180"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="180"></el-table-column>
                 <el-table-column prop="user.name" label="用户名" width="180"></el-table-column>
@@ -1033,37 +1109,9 @@ let pant = {
                     </template>
                 </el-table-column>
             </el-table>
-            <el-dialog title="表单弹框" :visible.sync="dialogVisible" width="40%">
-                <el-scrollbar style="height:348px;width:100%;overflow-x: none;">
-                    <el-form ref="form" :model="pant">
-                        <el-form-item label="姓名">
-                            <el-input v-model="pant.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="年龄">
-                            <el-input v-model="pant.age"></el-input>
-                        </el-form-item>
-                        <el-form-item label="性别">
-                            <el-radio-group v-model="pant.sex">
-                                <el-radio label="男"></el-radio>
-                                <el-radio label="女"></el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                        <el-form-item label="民族">
-                            <el-input v-model="pant.card"></el-input>
-                        </el-form-item>
-                        <el-form-item label="民族">
-                            <el-input v-model="pant.nation"></el-input>
-                        </el-form-item>
-                    </el-form>
-                </el-scrollbar>
-                <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="alterDoct">确 定</el-button>
-                </span>
-            </el-dialog>
         </div>
-        <div style="width:100%;margin-top:20px">
-            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        <div style="width:100%;margin-top:40px;margin-left:250px">
+            <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
     `
@@ -1073,24 +1121,9 @@ let reg = {
     data() {
         return {
             list: [],
-            pagesize: 0,
+            pagesize: 5,
             currpage: 1,
-            totalPages: 0,
             search: '',
-            reg: {
-                id: undefined,
-                pant: undefined,
-                doct: undefined,
-                time: undefined,
-                date: undefined,
-                name: undefined,
-                sex: undefined,
-                card: undefined,
-                nation: undefined,
-                fee: undefined,
-                phone: undefined,
-                state: undefined
-            },
             flag: false
         }
     },
@@ -1099,10 +1132,7 @@ let reg = {
             this.flag = true;
             axios.get('hr/reg')
                 .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    console.log(res.data);
+                    this.list = res.data.Allcontent;
                     this.flag = false;
                 })
                 .catch(err => {
@@ -1110,27 +1140,19 @@ let reg = {
                 })
         },
         handleCurrentChange(cpage) {
-            this.flag = true;
-            axios.get('hr/reg', {
-                    params: {
-                        p: cpage - 1
-                    }
-                })
-                .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    this.flag = false;
-                })
-        }
+            this.currpage = cpage;
+        },
+        handleSizeChange(psize) {
+            this.pagesize = psize;
+        },
     },
     mounted() {
         this.getlist();
     },
     template: `
     <div>
-        <div v-loading="flag">
-            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border height="330" style="width: 100%">
+        <div v-loading="flag" style="margin-top:50px">
+            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
                 <el-table-column fixed prop="id" label="编号" width="180"></el-table-column>
                 <el-table-column prop="pant.name" label="用户" width="180"></el-table-column>
                 <el-table-column prop="doct.name" label="医生" width="180"></el-table-column>
@@ -1145,8 +1167,8 @@ let reg = {
                 <el-table-column prop="state" label="状态" width="180"></el-table-column>
             </el-table>
         </div>
-        <div style="width:100%;margin-top:20px">
-            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        <div style="width:100%;margin-top:40px;margin-left:250px">
+            <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
     `
@@ -1156,9 +1178,8 @@ let prescript = {
     data() {
         return {
             list: [],
-            pagesize: 0,
+            pagesize: 5,
             currpage: 1,
-            totalPages: 0,
             search: '',
             prescript: {
                 id: undefined,
@@ -1175,30 +1196,19 @@ let prescript = {
             this.flag = true;
             axios.get('hr/prescript')
                 .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
+                    this.list = res.data.Allcontent;
                     this.flag = false;
-                    console.log(res.data);
                 })
                 .catch(err => {
                     console.error(err);
                 })
         },
         handleCurrentChange(cpage) {
-            this.flag = true;
-            axios.get('hr/prescript', {
-                    params: {
-                        p: cpage - 1
-                    }
-                })
-                .then(res => {
-                    this.list = res.data.content;
-                    this.totalPages = res.data.count;
-                    this.pagesize = res.data.size;
-                    this.flag = false;
-                })
-        }
+            this.currpage = cpage;
+        },
+        handleSizeChange(psize) {
+            this.pagesize = psize;
+        },
 
     },
     mounted() {
@@ -1207,16 +1217,16 @@ let prescript = {
     template: `
     <div>
         <div v-loading="flag">
-            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border height="330" style="width: 100%">
+            <el-table :data="list.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)" border height="330" style="width: 100%">
                 <el-table-column fixed prop="id" label="编号" width="180"></el-table-column>
                 <el-table-column prop="sym" label="症状信息" width="180"></el-table-column>
                 <el-table-column prop="content" label="处方内容" width="180"></el-table-column>
                 <el-table-column prop="time" label="开处方时间" width="180"></el-table-column>
-                <el-table-column prop="reg.id" label="挂号编号" width="180"></el-table-column>
+                <el-table-column fixed="right" prop="reg.id" label="挂号编号" width="180"></el-table-column>
             </el-table>
         </div>
-        <div style="width:100%;margin-top:20px">
-            <el-pagination background layout="prev, pager, next, jumper" :page-size="pagesize" :total="totalPages" @current-change="handleCurrentChange"></el-pagination>
+        <div style="width:100%;margin-top:20px;margin-left:250px">
+            <el-pagination background layout="prev, pager, next, sizes, total, jumper" :page-sizes="[5, 10, 15, 20]" :page-size="pagesize" :total="list.length" @current-change="handleCurrentChange" @size-change="handleSizeChange"></el-pagination>
         </div>
     </div>
     `

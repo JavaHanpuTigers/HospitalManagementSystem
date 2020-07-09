@@ -50,6 +50,7 @@ public class PersonnelController {
 		int off = 2;
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getPant(page, off));
+		map.put("Allcontent", ps.getPant(0, ps.countPant()));
 		// 将当前页添加到集合中
 		map.put("size", off);
 		// 将总数据数添加到集合中
@@ -234,6 +235,7 @@ public class PersonnelController {
 		int off = 2;
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getReg(page, off));
+		map.put("Allcontent", ps.getReg(0, ps.countReg()));
 		// 将当前页添加到集合中
 		map.put("size", off);
 		// 将总数据数添加到集合中
@@ -250,6 +252,7 @@ public class PersonnelController {
 		int off = 2;
 		// 将分页获取的数据添加到集合中
 		map.put("content", ps.getPrescript(page, off));
+		map.put("Allcontent", ps.getPrescript(0, ps.countPrescript()));
 		// 将当前页添加到集合中
 		map.put("size", off);
 		// 将总数据数添加到集合中
