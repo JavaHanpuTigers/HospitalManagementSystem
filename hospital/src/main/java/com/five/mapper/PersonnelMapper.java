@@ -2,8 +2,6 @@ package com.five.mapper;
 
 import java.util.List;
 
-import javax.security.auth.Subject;
-
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
@@ -23,7 +21,6 @@ import com.five.pojo.Doctor;
 import com.five.pojo.Patient;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
-import com.five.pojo.Role;
 import com.five.pojo.Subment;
 import com.five.pojo.User;
 /**

@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.five.filter.JwtUser;
-import com.five.mapper.RegeditMapper;
 import com.five.mapper.UserMapper;
 import com.five.pojo.User;
 

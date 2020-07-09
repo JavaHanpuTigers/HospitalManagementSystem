@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.five.exception.createPretException;
-import com.five.filter.JwtTokenUtils;
 import com.five.mapper.DoctorMapper;
 import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;

@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.ResultMap;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +21,9 @@ import com.five.pojo.Arrange;
 import com.five.pojo.Department;
 import com.five.pojo.Doctor;
 import com.five.pojo.Patient;
-import com.five.pojo.Prescript;
 import com.five.pojo.Regedit;
 import com.five.pojo.Subment;
-import com.five.pojo.User;
 import com.five.service.PersonnelService;
-import com.five.service.impl.PersonnelServiceImpl;
 
 
 /**

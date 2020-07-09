@@ -70,7 +70,10 @@ let userinfo = {
                     username: '',
                     password: '',
                     again: ''
-                }
+                },
+                token: {},
+                uid: null,
+                user: {}
             }
         },
         methods: {
@@ -86,20 +89,32 @@ let userinfo = {
                     alert("两次密码输入不一致");
                     return;
                 }
-                // 获取服务端接口
-                axios.put("/user/pwd", {
+                axios({
+                    method: 'get',
+                    url: '/user/token',
+                    // 传递参数
+                    data: undefined,
+                    // 设置请求头信息
                     headers: {
                         // 令牌添加方式 (每个apido要添加)
                         'Authorization': 'Bearer ' + localStorage.getItem("token"),
                     },
-                    id: window.headers.token.RAT,
-                    password: this.ruleForm.password
+                    responseType: 'json',
                 }).then(res => {
-                    alert("修改成功");
-                    this.resetForm();
-                }).catch(err => {
-                    console.error(err);
-                })
+                    console.log(res.data);
+                    // 请求成功
+                    this.token = res.data;
+                    // 根据获取的token拿到userid
+                    axios.get(`user/${this.token.RAT}`).then(res => {
+                        this.uid = res.data;
+                        axios.put("user/pwd", { user: { id: this.uid, password: this.ruleForm.password } }).then(res => {
+                            this.resetForm();
+                            // 修改密码成功后刷新界面
+                            window.location.reload();
+                            alert("修改成功");
+                        }).catch(err => {});
+                    }).catch(err => {});
+                });
             }
         }
     }
@@ -137,10 +152,11 @@ let userregit = {
 	                    <el-input maxlength="30" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.name"></el-input>
 	                </el-form-item>
 	                <el-form-item label="年龄">
-	                    <el-input maxlength="2" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.sex"></el-input>
+	                    <el-input maxlength="2" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.age"></el-input>
 	                </el-form-item>
 	                <el-form-item label="性别">
-	                    <el-input maxlength="2" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.age"></el-input>
+	                	<el-radio label="男" v-model="ruleForm.sex"></el-radio>
+        				<el-radio label="女" v-model="ruleForm.sex"></el-radio>
 	                </el-form-item>
 	                <el-form-item label="民族">
 	                    <el-input maxlength="10" placeholder="提交后不可修改，请谨慎填写" v-model="ruleForm.nation"></el-input>
@@ -204,18 +220,18 @@ let userregit = {
                     return;
                 }
                 axios.post("user/add", {
-                    user: {
-                        name: this.ruleForm.username,
-                        password: this.ruleForm.password,
+                    "user": {
+                        "name": this.ruleForm.username,
+                        "password": this.ruleForm.password,
                     },
-                    name: this.ruleForm.name,
-                    sex: this.ruleForm.sex,
-                    age: this.ruleForm.age,
-                    nation: this.ruleForm.nation,
-                    card: this.ruleForm.card
+                    "name": this.ruleForm.name,
+                    "sex": this.ruleForm.sex,
+                    "age": this.ruleForm.age,
+                    "nation": this.ruleForm.nation,
+                    "card": this.ruleForm.card
                 }).then(res => {
+                    this.$message('恭喜你注册成功' + this.ruleForm.username);
                     this.resetForm();
-                    alert("恭喜你注册成功!" + res);
                 }).catch(err => {
                     console.log(err);
                 })
@@ -231,14 +247,14 @@ let retrieve = {
 	            	<span style="color:red;margin-left:100px;">只有填写正确的实名验证才可找回!</span>
 	            	<el-form label-width="80px" style="width:500px;">
 	                <el-form-item label="用户名">
-	                    <el-input maxlength="20" v-model="ruleForm.username" placeholder="请输入你上一次使用的用户名"></el-input>
+	                    <el-input maxlength="20" v-model="ruleForm.name" placeholder="请输入你上一次使用的用户名"></el-input>
 	                </el-form-item>
 	                <el-form-item label="身份证号">
 	                    <el-input v-model="ruleForm.card" maxlength="18" show-password placeholder="我们将根据实名信息找回"></el-input>
 	                </el-form-item>
 	                	<el-row>
 					  <el-col :span="12">
-					  		<el-button type="primary" style="width:80%;margin-left:25px;">立即找回</el-button>
+					  		<el-button type="primary" @click="resetWord()" style="width:80%;margin-left:25px;">立即找回</el-button>
 					  </el-col>
 					  <el-col :span="12">
     						<el-button @click="resetForm()" style="width:80%;margin-left:25px;">重置</el-button>
@@ -253,28 +269,28 @@ let retrieve = {
             labelPosition: 'right',
             ruleForm: {
                 name: '',
-                sex: '',
-                age: '',
-                nation: '',
-                card: '',
-                username: '',
-                password: '',
-                again: ''
-            }
+                card: ''
+            },
+            patient: {}
         }
     },
     methods: {
         resetForm() {
             this.ruleForm = {
                 name: '',
-                sex: '',
-                age: '',
-                nation: '',
-                card: '',
-                username: '',
-                password: '',
-                again: ''
+                card: ''
             }
+        },
+        // 找回密码
+        resetWord: function() {
+            // 根据用户id重置密码
+            axios.put("user/repwd", { name: this.ruleForm.name, card: this.ruleForm.card }).then(res => {
+                console.log("===================================" + res.data);
+                this.resetForm();
+                // 修改密码成功后刷新界面
+                window.location.reload();
+                alert("恭喜你找回成功! 温馨提示：为了方便您的记忆，我们重置了您的密码，密码为123456，请您登录系统第一时间修改密码，以保证自己的隐私信息");
+            }).catch(err => {});
         }
     }
 }
@@ -306,7 +322,7 @@ const router = new VueRouter({
         }, {
             path: '/user',
             component: registration
-        },{
+        }, {
             path: '/userregall',
             component: userreg
         },

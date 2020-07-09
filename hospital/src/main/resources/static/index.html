@@ -19,7 +19,7 @@
     <script src="components/personnel.js"></script>
     <script src="components/outpatient.js"></script>
     <script src="components/registration.js"></script>
-    <script src="components/userreg.js"></script>
+	<script src="components/userreg.js"></script>
     <script src="components/home.js"></script>
 </head>
 
@@ -28,7 +28,7 @@
         <el-card class="box-card">
             <!--登录弹框-->
             <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
-                <span style="color:red">登录过期，请重新登录</span><br><br>
+                <span style="color:red">{{message}}</span><br><br>
                 <el-input name="username" v-model="form.username" placeholder="请输入用户名..."></el-input>
                 <br><br>
                 <el-input name="password" show-password v-model="form.password" placeholder="请输入密码..."></el-input>
@@ -113,25 +113,25 @@
                                 <el-collapse-item title="人事管理" name="3" v-if="role=='ROLE_人事'">
                                     <div class="personnel">
                                         <el-row>
-                                            <router-link to="/doct">医生管理</router-link>
+                                            <router-link to="/doct" class="router-link">医生管理</router-link>
                                         </el-row>
                                         <el-row>
-                                            <router-link to="/dept">科室管理</router-link>
+                                            <router-link to="/dept" class="router-link">科室管理</router-link>
                                         </el-row>
                                         <el-row>
-                                            <router-link to="/subment">子科室管理</router-link>
+                                            <router-link to="/subment" class="router-link">子科室管理</router-link>
                                         </el-row>
                                         <el-row>
-                                            <router-link to="/arge">排班管理</router-link>
+                                            <router-link to="/arge" class="router-link">排班管理</router-link>
                                         </el-row>
                                         <el-row>
-                                            <router-link to="/pant">患者管理</router-link>
+                                            <router-link to="/pant" class="router-link">患者管理</router-link>
                                         </el-row>
                                         <el-row>
-                                            <router-link to="/reg">挂号记录</router-link>
+                                            <router-link to="/reg" class="router-link">挂号记录</router-link>
                                         </el-row>
                                         <el-row>
-                                            <router-link to="/prescript">处方记录</router-link>
+                                            <router-link to="/prescript" class="router-link">处方记录</router-link>
                                         </el-row>
                                     </div>
                                 </el-collapse-item>
@@ -170,7 +170,8 @@
             dialogVisible: false,
             token: {},
             form: {},
-            role: ""
+            role: "",
+            message: '您还未登录，请登录'
         },
         methods: {
             // 获取长沙当天的天气情况
@@ -241,7 +242,6 @@
                 localStorage.removeItem("token");
                 // 刷新界面重新获取权限定位
                 window.location.reload();
-                this.dialogVisible = true;
             },
             // 吊起登录框
             toLogin: function() {
