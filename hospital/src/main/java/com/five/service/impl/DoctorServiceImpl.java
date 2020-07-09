@@ -35,7 +35,9 @@ public class DoctorServiceImpl implements DoctorService{
 	@Override
 	public Regedit findRegState1ByOne(int id) {
 		// TODO Auto-generated method stub
-		return dm.findRegState1ByOne(id);
+		Regedit reg=dm.findRegState1ByOne(id);
+		dm.updateRegState("3", reg.getId());
+		return reg;
 	}
 	//患者排队信息
 	@Override
