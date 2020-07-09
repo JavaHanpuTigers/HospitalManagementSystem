@@ -409,55 +409,51 @@ let addDoct = {
     },
     methods: {
         addDoct(ruleForm) {
-            let pd = true;
             this.$refs[ruleForm].validate((valid) => {
                 if (valid) {
-                    console.log('submit!');
+                    this.flag = true;
+                    params = {
+                            "name": this.doct.name,
+                            "sex": this.doct.sex,
+                            "age": this.doct.age,
+                            "nation": this.doct.nation,
+                            "title": this.doct.title,
+                            "fee": this.doct.fee,
+                            "subment": { "id": this.doct.subment },
+                            "user": {
+                                "name": this.doct.username,
+                                "password": this.doct.pass
+                            }
+                        }
+                        // axios.post('hr/doct', params)
+                    axios({
+                            method: 'post',
+                            url: 'hr/doct',
+                            // 传递参数
+                            data: params,
+                            // 设置请求头信息
+                            headers: {
+                                //key: value
+                                // 令牌添加方式 (每个apido要添加)
+                                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                //'Content-Type': 'multipart/form-data'
+                            },
+                            responseType: 'json'
+                        })
+                        .then(res => {
+                            this.resetForm(ruleForm);
+                            this.$message('添加成功');
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                    this.flag = false;
                 } else {
-                    pd = false;
+                    this.$message('不符合要求');
                     console.log('error submit!!');
                     return false;
                 }
             });
-            if (pd) {
-                this.flag = true;
-                params = {
-                        "name": this.doct.name,
-                        "sex": this.doct.sex,
-                        "age": this.doct.age,
-                        "nation": this.doct.nation,
-                        "title": this.doct.title,
-                        "fee": this.doct.fee,
-                        "subment": { "id": this.doct.subment },
-                        "user": {
-                            "name": this.doct.username,
-                            "password": this.doct.pass
-                        }
-                    }
-                    // axios.post('hr/doct', params)
-                axios({
-                        method: 'post',
-                        url: 'hr/doct',
-                        // 传递参数
-                        data: params,
-                        // 设置请求头信息
-                        headers: {
-                            //key: value
-                            // 令牌添加方式 (每个apido要添加)
-                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
-                            //'Content-Type': 'multipart/form-data'
-                        },
-                        responseType: 'json'
-                    })
-                    .then(res => {
-                        this.resetForm(ruleForm);
-                        this.$message('添加成功');
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    })
-                this.flag = false;
-            }
         },
         resetForm(ruleForm) {
             this.$refs[ruleForm].resetFields();
@@ -768,46 +764,40 @@ let addDept = {
     },
     methods: {
         addDoct(ruleForm) {
-            let pd = true;
             this.$refs[ruleForm].validate((valid) => {
                 if (valid) {
-                    console.log('submit!');
-                    pd = true;
+                    this.flag = true;
+                    params = {
+                            "name": this.dept.name
+                        }
+                        // axios.post('hr/dept', params)
+                    axios({
+                            method: 'post',
+                            url: 'hr/dept',
+                            // 传递参数
+                            data: params,
+                            // 设置请求头信息
+                            headers: {
+                                //key: value
+                                // 令牌添加方式 (每个apido要添加)
+                                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                //'Content-Type': 'multipart/form-data'
+                            },
+                            responseType: 'json'
+                        })
+                        .then(res => {
+                            this.resetForm(ruleForm)
+                            this.$message('添加成功');
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                    this.flag = false;
                 } else {
-                    pd = false;
                     console.log('error submit!!');
                     return false;
                 }
             });
-            if (pd) {
-                this.flag = true;
-                params = {
-                        "name": this.dept.name
-                    }
-                    // axios.post('hr/dept', params)
-                axios({
-                        method: 'post',
-                        url: 'hr/dept',
-                        // 传递参数
-                        data: params,
-                        // 设置请求头信息
-                        headers: {
-                            //key: value
-                            // 令牌添加方式 (每个apido要添加)
-                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
-                            //'Content-Type': 'multipart/form-data'
-                        },
-                        responseType: 'json'
-                    })
-                    .then(res => {
-                        this.resetForm(ruleForm)
-                        this.$message('添加成功');
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    })
-                this.flag = false;
-            }
         },
         resetForm(ruleForm) {
             this.$refs[ruleForm].resetFields();
@@ -1068,45 +1058,41 @@ let addSubment = {
             let pd = true;
             this.$refs[ruleForm].validate((valid) => {
                 if (valid) {
-                    console.log('submit!');
+                    this.flag = true;
+                    params = {
+                            "name": this.subment.name,
+                            "dept": {
+                                "id": this.subment.dept
+                            }
+                        }
+                        // axios.post('hr/subment', params)
+                    axios({
+                            method: 'post',
+                            url: 'hr/subment',
+                            // 传递参数
+                            data: params,
+                            // 设置请求头信息
+                            headers: {
+                                //key: value
+                                // 令牌添加方式 (每个apido要添加)
+                                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                //'Content-Type': 'multipart/form-data'
+                            },
+                            responseType: 'json'
+                        })
+                        .then(res => {
+                            this.resetForm(ruleForm);
+                            this.$message('添加成功');
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                    this.flag = false;
                 } else {
                     console.log('error submit!!');
-                    pd = false;
                     return false;
                 }
             });
-            if (pd) {
-                this.flag = true;
-                params = {
-                        "name": this.subment.name,
-                        "dept": {
-                            "id": this.subment.dept
-                        }
-                    }
-                    // axios.post('hr/subment', params)
-                axios({
-                        method: 'post',
-                        url: 'hr/subment',
-                        // 传递参数
-                        data: params,
-                        // 设置请求头信息
-                        headers: {
-                            //key: value
-                            // 令牌添加方式 (每个apido要添加)
-                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
-                            //'Content-Type': 'multipart/form-data'
-                        },
-                        responseType: 'json'
-                    })
-                    .then(res => {
-                        this.resetForm(ruleForm);
-                        this.$message('添加成功');
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    })
-                this.flag = false;
-            }
         },
         resetForm(ruleForm) {
             this.$refs[ruleForm].resetFields();
@@ -1367,46 +1353,41 @@ let addArge = {
     },
     methods: {
         addDoct(ruleForm) {
-            let pd = true;
             this.$refs[ruleForm].validate((valid) => {
                 if (valid) {
-                    console.log('submit!');
+                    this.flag = true;
+                    params = {
+                            "time": this.arge.time,
+                            "doct": { "id": this.arge.doct }
+                        }
+                        // axios.post('hr/arge', params)
+                    axios({
+                            method: 'post',
+                            url: 'hr/arge',
+                            // 传递参数
+                            data: params,
+                            // 设置请求头信息
+                            headers: {
+                                //key: value
+                                // 令牌添加方式 (每个apido要添加)
+                                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+                                //'Content-Type': 'multipart/form-data'
+                            },
+                            responseType: 'json'
+                        })
+                        .then(res => {
+                            this.resetForm(ruleForm)
+                            this.$message('添加成功');
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        })
+                    this.flag = false;
                 } else {
                     console.log('error submit!!');
-                    pd = false;
                     return false;
                 }
             });
-            if (pd) {
-                this.flag = true;
-                params = {
-                        "time": this.arge.time,
-                        "doct": { "id": this.arge.doct }
-                    }
-                    // axios.post('hr/arge', params)
-                axios({
-                        method: 'post',
-                        url: 'hr/arge',
-                        // 传递参数
-                        data: params,
-                        // 设置请求头信息
-                        headers: {
-                            //key: value
-                            // 令牌添加方式 (每个apido要添加)
-                            'Authorization': 'Bearer ' + localStorage.getItem("token"),
-                            //'Content-Type': 'multipart/form-data'
-                        },
-                        responseType: 'json'
-                    })
-                    .then(res => {
-                        this.resetForm(ruleForm)
-                        this.$message('添加成功');
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    })
-                this.flag = false;
-            }
         },
         resetForm(ruleForm) {
             this.$refs[ruleForm].resetFields();
