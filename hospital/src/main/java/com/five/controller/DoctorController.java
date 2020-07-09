@@ -53,11 +53,11 @@ public class DoctorController {
 	public boolean updateRegState(@RequestHeader("Authorization") String token,@PathVariable int regId,@PathVariable String state) {
 		return ds.updateRegState(regId,state);
 	}
-	//补号
+	//补号 
 	@PostMapping("/reg")
 	public Regedit createReg(@RequestHeader("Authorization") String token,@RequestBody Regedit reg) {
 		//请求参数 #{doct.id},#{name},#{sex},#{card},#{nation},#{fee},#{phone}
-		reg.setState("3");
+		reg.setState("4");
 		ds.createReg(reg);
 		return reg;
 	}

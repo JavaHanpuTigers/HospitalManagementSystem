@@ -9,7 +9,7 @@ let call = {
                 tableData: []
             }
         },
-        computed:{
+        computed:{ 
         	filterTableData() {
         		//定义一个数组
         		let list = [];

@@ -24,7 +24,7 @@ import com.five.service.DoctorService;
 public class DoctorServiceImpl implements DoctorService{
 	@Autowired
 	DoctorMapper dm;
-	//查看预约信息
+	//查看预约信息 
 	@Override
 	public List<Regedit> findRegState0All(int id) {
 		// TODO Auto-generated method stub

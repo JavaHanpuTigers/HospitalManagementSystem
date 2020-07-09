@@ -25,7 +25,7 @@ import com.five.pojo.Regedit;
 */
 @Mapper
 public interface DoctorMapper {
-	//根据id查询挂号信息
+	//根据id查询挂号信息 
 	@Select("select * from register where rt_id=#{id}")
 	@ResultMap("register")
 	Regedit findRegeditById(int id);
