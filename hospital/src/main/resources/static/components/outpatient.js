@@ -7,7 +7,8 @@ let call = {
         data() {
             return {
                 search:'',
-                tableData: []
+                tableData: [],
+                loading:true
             }
         },
         computed:{ 
@@ -35,6 +36,7 @@ let call = {
          mounted() {
              axios.get("doct/reg/2",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
                  this.tableData=resp.data;
+                 this.loading=false;
              })
          },
         template: `<div>
@@ -48,6 +50,10 @@ let call = {
         size="mini"
         placeholder="搜索关键字"/><br/>  
             <el-table
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
                 :data="filterTableData"
                 height="350"
                 border
@@ -116,7 +122,8 @@ let prescribe = {
                     sex: "未叫号"
                 },
                 sym:'',
-                content:''
+                content:'',
+                loading:true
             }
         },
         methods: {
@@ -129,6 +136,7 @@ let prescribe = {
                     axios.get("doct/reg/2/byOne",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
                         if(resp.data!=''){
                             this.list=resp.data;
+                            this.loading=false;
                             this.$message({
                                 type: 'success',
                                 message: '已叫号,等待患者!'
@@ -177,6 +185,7 @@ let prescribe = {
                                 sex: "未叫号"
                             };
                             regs=null;
+                            this.loading=false;
                             this.sym="";
                             this.content="";
                             this.$message({
@@ -254,6 +263,7 @@ let prescribe = {
             if(regs!=null){
                 alert("补号面诊");
                 this.list=regs;
+                this.loading=false;
             }
         },
         template: `<div>
@@ -265,7 +275,7 @@ let prescribe = {
             <span><el-button @click="state" style="float: right;" type="primary" plain>检查</el-button></span>
             <span><el-button @click="nogo" style="float: right;" type="primary" plain>未到</el-button></span>
             <el-divider></el-divider>
-        <div>
+        <div v-loading="loading">
             <p>
             姓名:  {{list.name}}  ,性别:  {{list.sex}}  ,民族:  {{list.nation}}  <br/>
             身份证号码:  {{list.card}} <br/>
@@ -298,7 +308,8 @@ let prescriptionRecords = {
         data() {
             return {
                 tableData: [],
-                search: ''
+                search: '',
+                loading:true
             }
         },
         computed:{
@@ -339,7 +350,8 @@ let prescriptionRecords = {
         },
         mounted() {
             axios.get("doct/pret",{headers:{'Authorization':'Bearer '+localStorage.getItem("token")}}).then(resp=>{
-                this.tableData=resp.data;                
+                this.tableData=resp.data;
+                this.loading=false;             
             })
         },
         template: `<div>
@@ -353,6 +365,10 @@ let prescriptionRecords = {
         size="mini"
         placeholder="搜索关键字"/><br/>  
             <el-table
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
                 :data="filterTableData"
                 height="350"
                 border
@@ -415,6 +431,7 @@ let lookAppointment = {
         return {
             tableData: [],
             search: '',
+            loading:true
         }
     },
     computed: {
@@ -446,6 +463,7 @@ let lookAppointment = {
             'Authorization':'Bearer '+localStorage.getItem("token"),
         }}).then(resp=>{
             this.tableData=resp.data;
+            this.loading=false;
         })
     },
     template: `<div>
@@ -459,6 +477,10 @@ let lookAppointment = {
         size="mini"
         placeholder="搜索关键字"/><br/>  
             <el-table
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
                 :data="filterTableData"
                 height="350"
                 border
