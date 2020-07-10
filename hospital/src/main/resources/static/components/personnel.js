@@ -794,6 +794,7 @@ let addDept = {
                         })
                     this.flag = false;
                 } else {
+                    this.$message('不符合要求');
                     console.log('error submit!!');
                     return false;
                 }
@@ -1089,6 +1090,7 @@ let addSubment = {
                         })
                     this.flag = false;
                 } else {
+                    this.$message('不符合要求');
                     console.log('error submit!!');
                     return false;
                 }
@@ -1384,6 +1386,7 @@ let addArge = {
                         })
                     this.flag = false;
                 } else {
+                    this.$message('不符合要求');
                     console.log('error submit!!');
                     return false;
                 }
