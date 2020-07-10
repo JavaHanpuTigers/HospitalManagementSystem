@@ -110,7 +110,7 @@ let userinfo = {
                         axios.put("user/pwd", { user: { id: this.uid, password: this.ruleForm.password } }).then(res => {
                             this.resetForm();
                             // 修改密码成功后刷新界面
-                            window.location.reload();
+                            window.location.href = "http://127.0.0.1:8080";
                             alert("修改成功");
                         }).catch(err => {});
                     }).catch(err => {});
@@ -232,6 +232,7 @@ let userregit = {
                 }).then(res => {
                     this.$message('恭喜你注册成功' + this.ruleForm.username);
                     this.resetForm();
+                    window.location.href = "http://127.0.0.1:8080";
                 }).catch(err => {
                     console.log(err);
                 })
@@ -288,7 +289,7 @@ let retrieve = {
                 console.log("===================================" + res.data);
                 this.resetForm();
                 // 修改密码成功后刷新界面
-                window.location.reload();
+                window.location.href = "http://127.0.0.1:8080";
                 alert("恭喜你找回成功! 温馨提示：为了方便您的记忆，我们重置了您的密码，密码为123456，请您登录系统第一时间修改密码，以保证自己的隐私信息");
             }).catch(err => {});
         }
