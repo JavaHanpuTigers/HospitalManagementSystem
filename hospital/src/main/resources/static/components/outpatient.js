@@ -289,7 +289,7 @@ let prescribe = {
             <span><el-button @click="state" style="float: right;" type="primary" plain>检查</el-button></span>
             <span><el-button @click="nogo" style="float: right;" type="primary" plain>未到</el-button></span>
             <el-divider></el-divider>
-        <div v-loading="loading">
+        <div v-loading="loading" element-loading-text="请先叫号！">
             <p>
             姓名:  {{list.name}}  ,性别:  {{list.sex}}  ,民族:  {{list.nation}}  <br/>
             身份证号码:  {{list.card}} <br/>
