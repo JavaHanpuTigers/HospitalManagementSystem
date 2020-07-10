@@ -618,7 +618,7 @@ var registration = {
             this.dialogVisibledept = true;
         },
         postReg() {
-            if (this.form.phone == null || this.form.date2 == null) {
+            if (this.form.phone == null || this.form.date2 == null|| this.form.phone == '') {
                 this.$message({
                     message: '信息没有输入',
                     type: 'warning'
@@ -628,6 +628,15 @@ var registration = {
             //
             if (this.form.is == null) {
                 if (this.form.name == null || this.form.sex == null || this.form.card == null || this.form.nation == null) {
+                    this.$message({
+                        message: '信息没有输入',
+                        type: 'warning'
+                    });
+                    return;
+                }
+            }
+            if (this.form.is == null) {
+                if (this.form.name == '' || this.form.sex == '' || this.form.card == '' || this.form.nation == '') {
                     this.$message({
                         message: '信息没有输入',
                         type: 'warning'
@@ -668,16 +677,24 @@ var registration = {
 
         },
         postdeptReg() {
-            if (this.form.phone == null || this.form.date2 == null) {
+            if (this.form.phone == null|| this.form.date2 == null || this.form.phone == '') {
                 this.$message({
                     message: '信息没有输入',
                     type: 'warning'
                 });
                 return;
             }
-            //
             if (this.form.is == null) {
                 if (this.form.name == null || this.form.sex == null || this.form.card == null || this.form.nation == null) {
+                    this.$message({
+                        message: '信息没有输入',
+                        type: 'warning'
+                    });
+                    return;
+                }
+            }
+            if (this.form.is == null) {
+                if (this.form.name == '' || this.form.sex == '' || this.form.card == '' || this.form.nation == '') {
                     this.$message({
                         message: '信息没有输入',
                         type: 'warning'
